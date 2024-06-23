@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.cubecode.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ParentElementMixin",
+    "RenderSystemMixin",
+    "WindowMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

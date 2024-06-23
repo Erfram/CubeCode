@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "cubecode",
+	"version": "${version}",
+	"name": "CubeCode",
+	"description": "test scripting impl",
+	"authors": ["TheBendy"],
+
+	"license": "MIT",
+	"icon": "assets/cubecode/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.cubecode.CubeCode"],
+		"client": [
+			"com.cubecode.CubeCodeClient"
+		]
+	},
+	"mixins": ["cubecode.mixins.json"],
+
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "${minecraft_version}",
+		"java": ">=${java_version}",
+		"fabric-api": ">=${fabric_version}"
+	}
+}

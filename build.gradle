@@ -1,0 +1,44 @@
+plugins {
+	id 'fabric-loom' version '1.7-SNAPSHOT'
+}
+
+version = mod_version
+group = maven_group
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+	include implementation("org.mozilla:rhino:${rhino_version}")
+
+	include implementation("io.github.spair:imgui-java-binding:${imgui_version}")
+	include implementation("io.github.spair:imgui-java-lwjgl3:${imgui_version}")
+	include implementation("io.github.spair:imgui-java-natives-windows:${imgui_version}")
+
+	include implementation("io.github.bonede:tree-sitter:0.22.6")
+	include implementation("io.github.bonede:tree-sitter-javascript:0.21.2")
+}
+
+processResources {
+	inputs.properties "version": version,
+					"loader_version": loader_version,
+					"fabric_version": fabric_version,
+					"minecraft_version": minecraft_version,
+					"java_version": java_version
+
+	filesMatching("fabric.mod.json") {
+		expand project.properties
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = Integer.getInteger(java_version)
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = Integer.getInteger(java_version)
+	targetCompatibility = Integer.getInteger(java_version)
+}
