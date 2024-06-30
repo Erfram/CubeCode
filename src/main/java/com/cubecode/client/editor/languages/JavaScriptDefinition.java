@@ -1,4 +1,4 @@
-package com.cubecode.api.editor.languages;
+package com.cubecode.client.editor.languages;
 
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
 

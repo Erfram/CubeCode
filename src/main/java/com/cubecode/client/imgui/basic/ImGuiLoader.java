@@ -21,13 +21,21 @@ public class ImGuiLoader {
 
     public static final ImGuiImplGlfw IMGUI_GLFW = new ImGuiImplGlfw();
     private static final ImGuiImplGl3 IMGUI_GL3 = new ImGuiImplGl3();
-    private static final ConcurrentLinkedQueue<View> RENDERSTACK = new ConcurrentLinkedQueue<>();
+    private static final ConcurrentLinkedQueue<View> RENDER_STACK = new ConcurrentLinkedQueue<>();
     private static ImFont MAIN_FONT;
 
     public static void onGlfwInit(long handle) {
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
+        loadFont(io);
+
+        io.setIniFilename(null);
+        IMGUI_GLFW.init(handle, true);
+        IMGUI_GL3.init();
+    }
+
+    private static void loadFont(ImGuiIO io) {
         final ImFontAtlas fontAtlas = io.getFonts();
         fontAtlas.addFontDefault();
 
@@ -38,10 +46,6 @@ public class ImGuiLoader {
             CubeCode.LOGGER.error(exception.getMessage());
         }
         fontAtlas.build();
-
-        io.setIniFilename(null);
-        IMGUI_GLFW.init(handle, true);
-        IMGUI_GL3.init();
     }
 
     public static void onFrameRender() {
@@ -49,18 +53,22 @@ public class ImGuiLoader {
         ImGui.newFrame();
 
         ImGui.pushFont(MAIN_FONT);
-        RENDERSTACK.forEach(view -> {
-            MinecraftClient.getInstance().getProfiler()
-                    .push(String.format("Section [%s]", view.getName()));
-            view.getTheme().preRender();
-            view.loop();
-            view.getTheme().postRender();
-            MinecraftClient.getInstance().getProfiler().pop();
-        });
+        renderViews();
         ImGui.popFont();
 
         ImGui.render();
         endFrameRender();
+    }
+
+    private static void renderViews() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        RENDER_STACK.forEach(view -> {
+            client.getProfiler().push(String.format("Section [%s]", view.getName()));
+            view.getTheme().preRender();
+            view.loop();
+            view.getTheme().postRender();
+            client.getProfiler().pop();
+        });
     }
 
     private static void endFrameRender() {
@@ -75,26 +83,26 @@ public class ImGuiLoader {
     }
 
     public static ConcurrentLinkedQueue<View> getRenderStack() {
-        return RENDERSTACK;
+        return RENDER_STACK;
     }
 
     public static void pushView(View view) {
-        RENDERSTACK.add(view);
+        RENDER_STACK.add(view);
     }
 
     public static void pushViews(View... views) {
-        RENDERSTACK.addAll(Arrays.asList(views));
+        RENDER_STACK.addAll(Arrays.asList(views));
     }
 
     public static void removeView(View view) {
-        RENDERSTACK.remove(view);
+        RENDER_STACK.remove(view);
     }
 
     public static void removeViews(View... views) {
-        RENDERSTACK.removeAll(Arrays.asList(views));
+        RENDER_STACK.removeAll(Arrays.asList(views));
     }
 
     public static void clearViews() {
-        RENDERSTACK.clear();
+        RENDER_STACK.clear();
     }
 }

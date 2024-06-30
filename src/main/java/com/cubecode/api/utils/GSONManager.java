@@ -32,7 +32,7 @@ public abstract class GSONManager {
         } catch (IOException ignored) {}
     }
 
-    public Object readJSON(Class<Object> clazz) {
+    public <T> T readJSON(Class<T> clazz) {
         try (FileReader reader = new FileReader(this.FILE)) {
             return this.GSON.fromJson(reader, clazz);
         } catch (IOException ignored) {

@@ -8,14 +8,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 
-@Mixin(value = RenderSystem.class, remap = false)
+@Mixin(RenderSystem.class)
 public abstract class RenderSystemMixin {
-
     @Inject(method = "flipFrame", at = @At("HEAD"))
     private static void injectFrameRender(CallbackInfo ci) {
         MinecraftClient.getInstance().getProfiler().push("Imgui start");
         ImGuiLoader.onFrameRender();
         MinecraftClient.getInstance().getProfiler().pop();
     }
-
 }

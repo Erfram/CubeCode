@@ -1,4 +1,4 @@
-package com.cubecode.api.editor;
+package com.cubecode.client.editor;
 
 import imgui.ImGui;
 import org.treesitter.*;

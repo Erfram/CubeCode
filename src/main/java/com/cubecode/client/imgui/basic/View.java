@@ -1,5 +1,7 @@
 package com.cubecode.client.imgui.basic;
 
+import com.cubecode.client.imgui.themes.DefaultTheme;
+
 import java.util.UUID;
 
 public abstract class View {
@@ -11,6 +13,11 @@ public abstract class View {
     public View(Theme theme) {
         this.uniqueID = UUID.randomUUID();
         this.theme = theme;
+    }
+
+    public View() {
+        this.uniqueID = UUID.randomUUID();
+        this.theme = new DefaultTheme();
     }
 
     /**

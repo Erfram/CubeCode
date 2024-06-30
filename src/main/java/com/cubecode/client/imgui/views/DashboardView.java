@@ -1,15 +1,10 @@
 package com.cubecode.client.imgui.views;
 
-import com.cubecode.client.imgui.themes.DefaultTheme;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
 import com.cubecode.client.imgui.basic.View;
 
 public class DashboardView extends View {
-    public DashboardView() {
-        super(new DefaultTheme());
-    }
-
     @Override
     public void render() {
         if (ImGui.beginMainMenuBar()) {
