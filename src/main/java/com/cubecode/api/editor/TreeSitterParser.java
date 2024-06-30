@@ -1,4 +1,4 @@
-package com.cubecode.client.editor;
+package com.cubecode.api.editor;
 
 import org.jetbrains.annotations.NotNull;
 import org.treesitter.*;

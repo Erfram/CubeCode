@@ -1,22 +1,20 @@
 package com.cubecode.client.imgui.views;
 
+import com.cubecode.client.imgui.themes.DefaultTheme;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
-import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 
-public class MainView extends View {
+public class DashboardView extends View {
+    public DashboardView() {
+        super(new DefaultTheme());
+    }
+
     @Override
     public void render() {
         if (ImGui.beginMainMenuBar()) {
             if (ImGui.beginMenu("Windows")) {
-                 if (ImGui.menuItem("Scripts")) {
-                     ImGuiLoader.pushView(new ScriptsView());
-                 }
-                if (ImGui.menuItem("CodeEditor")) {
-                    ImGuiLoader.pushView(new CodeEditorView());
-                }
-                 ImGui.endMenu();
+                ImGui.endMenu();
             }
             ImGui.endMainMenuBar();
         }

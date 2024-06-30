@@ -1,4 +1,4 @@
-package com.cubecode.client.editor;
+package com.cubecode.api.editor;
 
 import java.util.ArrayList;
 

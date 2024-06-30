@@ -1,21 +1,16 @@
 package com.cubecode.client.imgui.basic;
 
-import imgui.extension.texteditor.TextEditorLanguageDefinition;
-import com.cubecode.client.imgui.languages.JavaScriptDefinition;
-import com.cubecode.client.imgui.themes.DefaultTheme;
-
 import java.util.UUID;
 
 public abstract class View {
 
-    protected static final TextEditorLanguageDefinition javaScriptSyntax = JavaScriptDefinition.build();
-    protected boolean isInit;
-    protected UUID uniqueID;
+    private boolean isInit;
+    protected final UUID uniqueID;
     protected Theme theme;
 
-    public View() {
-        uniqueID = UUID.randomUUID();
-        theme = new DefaultTheme();
+    public View(Theme theme) {
+        this.uniqueID = UUID.randomUUID();
+        this.theme = theme;
     }
 
     /**
@@ -37,10 +32,11 @@ public abstract class View {
      */
     protected final void loop() {
         if (!isInit) {
-            init();
-            isInit = true;
+            this.init();
+            this.isInit = true;
         }
-        render();
+
+        this.render();
     }
 
     /**

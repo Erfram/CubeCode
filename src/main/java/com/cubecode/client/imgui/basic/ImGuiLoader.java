@@ -1,6 +1,9 @@
 package com.cubecode.client.imgui.basic;
 
-import imgui.*;
+import imgui.ImFont;
+import imgui.ImFontAtlas;
+import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
