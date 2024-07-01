@@ -14,12 +14,10 @@ import com.cubecode.client.imgui.basic.ImGuiLoader;
 
 @Mixin(Window.class)
 public abstract class WindowMixin {
-
     @Shadow @Final private long handle;
 
     @Inject(method = "<init>", at = @At("TAIL"), remap = false)
     private void onWindowInit(WindowEventHandler eventHandler, MonitorTracker monitorTracker, WindowSettings settings, String videoMode, String title, CallbackInfo ci){
         ImGuiLoader.onGlfwInit(handle);
     }
-
 }

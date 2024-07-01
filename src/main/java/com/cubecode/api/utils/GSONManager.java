@@ -8,35 +8,26 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public abstract class GSONManager {
-    protected final transient File FILE;
-    protected final transient Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+public class GSONManager {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    public GSONManager(File file) {
-        this.FILE = file;
+    private GSONManager() {}
 
-        try {
-            this.FILE.createNewFile();
-        } catch (IOException ignored) {
-
-        }
-    }
-
-    public File getFile() {
-        return this.FILE;
-    }
-
-    public void writeJSON(Object clazz) {
-        try (FileWriter writer = new FileWriter(this.FILE)) {
-            this.GSON.toJson(clazz, writer);
+    public void writeJSON(File file, Object object) {
+        try (FileWriter writer = new FileWriter(file)) {
+            GSON.toJson(object, writer);
         } catch (IOException ignored) {}
     }
 
-    public <T> T readJSON(Class<T> clazz) {
-        try (FileReader reader = new FileReader(this.FILE)) {
-            return this.GSON.fromJson(reader, clazz);
+    public static <T> T readJSON(File file, Class<T> clazz) {
+        try (FileReader reader = new FileReader(file)) {
+            return GSON.fromJson(reader, clazz);
         } catch (IOException ignored) {
             return null;
         }
+    }
+
+    public static <T> T readJSON(String json, Class<T> clazz) {
+        return GSON.fromJson(json, clazz);
     }
 }

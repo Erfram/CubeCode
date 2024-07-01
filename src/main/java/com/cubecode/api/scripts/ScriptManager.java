@@ -8,9 +8,10 @@ import com.cubecode.utils.CubeCodeException;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptManager extends DirectoryManager {
-    private Map<String, Script> scripts;
+    private ConcurrentHashMap<String, Script> scripts;
 
     public ScriptManager(File scriptsDirectory) {
         super(scriptsDirectory);
@@ -18,7 +19,7 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public void updateScripts() {
-        Map<String, Script> newScripts = new HashMap<>();
+        ConcurrentHashMap<String, Script> newScripts = new ConcurrentHashMap<>();
 
         this.getFiles().forEach(file -> {
             if (file.getName().endsWith(".js")) {
@@ -30,7 +31,11 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public void executeScript(String name, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        this.scripts.get(name).execute(name, properties);
+        Script script = scripts.get(name);
+        if (script == null) {
+            throw new CubeCodeException("Script not found: " + name, name);
+        }
+        script.execute(name, properties);
     }
 
     public static void evalCode(String code, int line, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
@@ -39,7 +44,7 @@ public class ScriptManager extends DirectoryManager {
         ScriptableObject scope = runContext.initStandardObjects();
 
         if (properties != null) {
-            for (var property : properties.entrySet()) {
+            for (Map.Entry<String, Object> property : properties.entrySet()) {
                 ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(property.getValue(), scope));
             }
         }
@@ -58,6 +63,6 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public Map<String, Script> getScripts() {
-        return this.scripts;
+        return new HashMap<>(this.scripts);
     }
 }

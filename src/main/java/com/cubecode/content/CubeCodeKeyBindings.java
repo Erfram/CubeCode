@@ -26,5 +26,4 @@ public final class CubeCodeKeyBindings {
     private static void registerKeyBindings(KeyBinding... keyBindings) {
         Arrays.stream(keyBindings).forEach(KeyBindingHelper::registerKeyBinding);
     }
-
 }
