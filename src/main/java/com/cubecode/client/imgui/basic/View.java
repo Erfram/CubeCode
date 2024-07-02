@@ -2,10 +2,11 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.client.imgui.themes.DefaultTheme;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class View {
-
+    private static final HashMap<String, Object> variables = new HashMap<>();
     private boolean isInit;
     protected final UUID uniqueID;
     protected Theme theme;
@@ -18,6 +19,10 @@ public abstract class View {
     public View() {
         this.uniqueID = UUID.randomUUID();
         this.theme = new DefaultTheme();
+    }
+
+    public HashMap<String, Object> getVariables() {
+        return variables;
     }
 
     /**
