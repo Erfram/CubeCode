@@ -1,4 +1,4 @@
-package com.cubecode.client.editor;
+package com.cubecode.client.treesitter;
 
 import org.jetbrains.annotations.NotNull;
 import org.treesitter.*;
@@ -51,7 +51,7 @@ public class TreeSitterParser {
         highlightsMap.put("debugger_statement", syntax);
         highlightsMap.put("decorator", syntax);
         highlightsMap.put("do_statement", syntax);
-        highlightsMap.put("else_clause", syntax);
+        //highlightsMap.put("else_clause", syntax);
         highlightsMap.put("empty_statement", syntax);
         highlightsMap.put("export_clause", syntax);
         highlightsMap.put("export_specifier", syntax);
@@ -233,15 +233,15 @@ public class TreeSitterParser {
         return (a << 24) | (b << 16) | (g << 8) | r;
     }
 
-    public static ArrayList<CodeLabel> parse(ArrayList<String> lines) {
+    public static HashMap<Integer, ArrayList<CodeLabel>> parse(ArrayList<String> lines) {
         StringBuilder code = new StringBuilder();
         for (String line : lines) {
-            code.append(line.replace(" ", "\s\s")).append("\n");
+            code.append(line).append("\n");
         }
         return parse(code.toString());
     }
 
-    public static ArrayList<CodeLabel> parse(String code) {
+    public static HashMap<Integer, ArrayList<CodeLabel>> parse(String code) {
         TSParser parser = new TSParser();
         TreeSitterJavascript js = new TreeSitterJavascript();
         parser.setLanguage(js);
@@ -249,13 +249,16 @@ public class TreeSitterParser {
         TSTree tree = parser.parseString(null, code.toString());
 
         ArrayList<HighLight> highlights = getHighLights(tree);
-        ArrayList<CodeLabel> all = new ArrayList<>();
+        HashMap<Integer, ArrayList<CodeLabel>> all = new HashMap<>();
 
         int i = 0;
         while (i < highlights.size()) {
             HighLight current = highlights.get(i);
             String highlight = code.substring(current.start(), current.end());
-            all.add(new CodeLabel(highlight, current.color(), current.point(), current.type()));
+
+            all.computeIfAbsent(current.point().getRow(), k -> new ArrayList<>())
+                    .add(new CodeLabel(highlight, current.color(), current.point(), current.type()));
+
 
             if (i == highlights.size() - 1) break;
 
@@ -266,10 +269,7 @@ public class TreeSitterParser {
                     i++;
                     continue;
                 }
-                String noneHighlight = code.substring(current.end(), next.start());
-                all.add(new CodeLabel(noneHighlight, defaultCode, current.point(), "tab"));
             }
-
             i++;
         }
 

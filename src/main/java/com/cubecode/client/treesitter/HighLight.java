@@ -1,4 +1,4 @@
-package com.cubecode.client.editor;
+package com.cubecode.client.treesitter;
 
 import org.treesitter.TSPoint;
 

@@ -5,10 +5,11 @@ import imgui.flag.ImGuiConfigFlags;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import com.cubecode.client.imgui.views.DashboardView;
+import com.cubecode.client.views.DashboardView;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 
 public class DashboardScreen extends Screen {
+
     public DashboardScreen() {
         super(Text.of("Dashboard"));
         ImGui.getIO().addConfigFlags(ImGuiConfigFlags.DockingEnable);

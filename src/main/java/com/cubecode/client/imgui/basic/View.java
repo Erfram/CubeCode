@@ -65,4 +65,21 @@ public abstract class View {
 
     }
 
+    public void handleKeyReleased(int keyCode, int scanCode, int modifiers) {
+
+    }
+
+    public void handleKeyPressed(int keyCode, int scanCode, int modifiers) {
+
+    }
+
+    public void handleScroll(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+    }
+
+    public void handleMouseClicked(double mouseX, double mouseY, int button) {
+
+    }
+
+    public void handleMouseReleased(double mouseX, double mouseY, int button) {
+    }
 }

@@ -105,4 +105,34 @@ public class ImGuiLoader {
     public static void clearViews() {
         RENDER_STACK.clear();
     }
+
+    public static void handleKeyReleased(int keyCode, int scanCode, int modifiers) {
+        RENDER_STACK.forEach(view -> {
+            view.handleKeyReleased(keyCode, scanCode, modifiers);
+        });
+    }
+
+    public static void handleKeyPressed(int keyCode, int scanCode, int modifiers) {
+        RENDER_STACK.forEach(view -> {
+            view.handleKeyPressed(keyCode, scanCode, modifiers);
+        });
+    }
+
+    public static void handleScroll(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        RENDER_STACK.forEach(view -> {
+            view.handleScroll(mouseX, mouseY, horizontalAmount, verticalAmount);
+        });
+    }
+
+    public static void handleMouseClicked(double mouseX, double mouseY, int button) {
+        RENDER_STACK.forEach(view -> {
+            view.handleMouseClicked(mouseX, mouseY, button);
+        });
+    }
+
+    public static void handleMouseReleased(double mouseX, double mouseY, int button) {
+        RENDER_STACK.forEach(view -> {
+            view.handleMouseReleased(mouseX, mouseY, button);
+        });
+    }
 }
