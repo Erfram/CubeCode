@@ -1,6 +1,13 @@
 package com.cubecode.utils;
 
+import com.cubecode.CubeCode;
+import com.cubecode.api.factory.FactoryManager;
+import com.cubecode.api.factory.block.BlockManager;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.network.PacketByteBuf;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class PacketByteBufUtils {
     public static void writeStringArray(PacketByteBuf buf, String[] strings) {
@@ -26,5 +33,17 @@ public class PacketByteBufUtils {
             strings[i] = buf.readString();
         }
         return strings;
+    }
+
+    public static PacketByteBuf createBlockByteBuf() {
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        ArrayList<File> blocks = new ArrayList<>();
+        for (String block : CubeCode.blockManager.getBlocksToRemove()) {
+            blocks.add(CubeCode.blockManager.getFile(block));
+        }
+
+        PacketByteBufUtils.writeStringArray(buf, FactoryManager.getBlockStringsFromFiles(blocks));
+        return buf;
     }
 }
