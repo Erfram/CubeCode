@@ -13,11 +13,11 @@ public class CubeImGui {
         view.getVariables().put(name, value);
     }
 
-    public static void removeVariable(View view,String name) {
+    public static void removeVariable(View view, String name) {
         view.getVariables().remove(name);
     }
 
-    public static <T> T getVariable(View view,String name) {
+    public static <T> T getVariable(View view, String name) {
         return (T) view.getVariables().get(name);
     }
 
@@ -310,9 +310,9 @@ public class CubeImGui {
         }
     }
 
-    public static void dragFloat(String label, Runnable dragFloatAction) {
-        putVariable(label, new float[0]);
-        if (ImGui.dragFloat(label, getVariable(label))) {
+    public static void dragFloat(View view, String label, Runnable dragFloatAction) {
+        putVariable(view, label, new float[0]);
+        if (ImGui.dragFloat(label, getVariable(view, label))) {
             dragFloatAction.run();
             ImGui.endCombo();
         }
