@@ -84,9 +84,9 @@ public class CubeImGui {
         }
     }
 
-    public static void mouseClicked(int button, Consumer<Boolean> mouseClickedAction) {
+    public static void mouseClicked(int button, Runnable mouseClickedAction) {
         if (ImGui.isMouseClicked(button)) {
-            mouseClickedAction.accept(true);
+            mouseClickedAction.run();
         }
     }
 
