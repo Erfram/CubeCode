@@ -6,6 +6,7 @@ import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
@@ -84,9 +85,9 @@ public class CubeImGui {
         }
     }
 
-    public static void mouseClicked(int button, Runnable mouseClickedAction) {
+    public static void mouseClicked(int button, BiConsumer<Float, Float> mouseClickedAction) {
         if (ImGui.isMouseClicked(button)) {
-            mouseClickedAction.run();
+            mouseClickedAction.accept(ImGui.getMousePos().x, ImGui.getMousePos().y);
         }
     }
 
