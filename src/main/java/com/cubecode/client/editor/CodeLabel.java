@@ -1,3 +1,5 @@
 package com.cubecode.client.editor;
 
-public record CodeLabel(String text, int color, String type) {}
+import org.treesitter.TSPoint;
+
+public record CodeLabel(String text, int color, TSPoint point, String type) {}
