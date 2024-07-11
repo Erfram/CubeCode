@@ -3,7 +3,6 @@
 </p>
 <h1 align="center">CubeCode</h1>
 <p align="center">
-  <img src="https://img.shields.io/github/license/Erfram/CubeCode.svg?style=for-the-badge&color=B0E99E&labelColor=302D41" alt="License">
   <img src="https://img.shields.io/github/stars/Erfram/CubeCode.svg?style=for-the-badge&color=d5c3f0&labelColor=302D41" alt="Stars">
   <img src="https://img.shields.io/github/contributors/Erfram/CubeCode.svg?style=for-the-badge&color=89c3f0&labelColor=302D41" alt="Contributors">
   <img src="https://img.shields.io/discord/1114465295436877824?style=for-the-badge&label=Discord&logo=discord&color=99DDDF&logoColor=d9e0ee&labelColor=302D41" alt="Discord">
