@@ -1,0 +1,63 @@
+{
+  "colors": {
+    "defaultCode":    "FFBBBBBB",
+    "punctuation":    "FFBBBBBB",
+    "number":         "FF6897BB",
+    "string":         "FF6A8759",
+    "keywords":       "FFCC7832",
+    "syntax":         "FFCC7832",
+    "commentSingle":  "88808080",
+    "commentMulti":   "88808080",
+    "background":     "FF1E1F22",
+    "cursor":         "FFBBBBBB",
+    "currentLineEdge":"FFBBBBBB",
+    "selection":      "FF0D293E",
+    "breakpoint":     "FFC75450",
+    "lineNumber":     "FFBBBBBB"
+  },
+  "categories": {
+    "syntax" : [
+      "declaration", "expression", "pattern", "statement", "array",
+      "array_pattern", "arrow_function", "assignment_pattern", "break_statement",
+      "catch_clause", "class", "class_body", "class_declaration", "class_heritage",
+      "class_static_block", "computed_property_name", "continue_statement",
+      "debugger_statement", "decorator", "do_statement", "empty_statement",
+      "export_clause", "export_specifier", "export_statement", "field_definition",
+      "finally_clause", "for_in_statement", "for_statement", "glimmer_closing_tag",
+      "glimmer_opening_tag", "glimmer_template", "import", "import_attribute",
+      "import_clause", "import_specifier", "import_statement", "jsx_attribute",
+      "jsx_closing_element", "jsx_element", "jsx_namespace_name", "jsx_opening_element",
+      "jsx_self_closing_element", "jsx_text", "labeled_statement", "lexical_declaration",
+      "meta_property", "method_definition", "named_imports", "namespace_export",
+      "namespace_import", "object", "object_assignment_pattern", "object_pattern",
+      "pair", "pair_pattern", "program", "rest_pattern", "return_statement",
+      "spread_element", "switch_body", "switch_case", "switch_default",
+      "switch_statement", "template_string", "template_substitution", "throw_statement",
+      "try_statement", "while_statement", "with_statement", "as", "async", "await",
+      "break", "case", "catch", "const", "continue", "debugger", "default", "delete",
+      "do", "else", "escape_sequence", "export", "extends", "false", "finally",
+      "for", "from", "function", "get", "identifier", "if", "in", "instanceof", "let",
+      "new", "null", "of", "optional_chain", "private_property_identifier",
+      "property_identifier", "return", "set", "shorthand_property_identifier",
+      "shorthand_property_identifier_pattern", "statement_identifier", "static",
+      "static get", "super", "switch", "target", "this", "throw", "true", "try",
+      "typeof", "undefined", "var", "void", "while", "with", "yield"
+    ],
+    "commentSingle": [
+      "comment", "html_comment"
+    ],
+    "string": [
+      "string", "regex", "hash_bang_line", "html_character_reference", "regex_flags", "regex_pattern"
+    ],
+    "number": [
+      "number"
+    ],
+    "punctuation": [
+      "!", "!=", "!==", "\"\"\"", "${", "%", "%=", "&", "&&", "&&=", "&=", "(", ")",
+      "**", "**=", "*=", "++", "+=", ",", "--", "-=", ".", "...", "/", "/=", "/>", ":",
+      ";", "<", "</", "</template>", "<<", "<<=", "<=", "<template>", "=", "==", "===",
+      "=>", ">", ">=", ">>=", ">>", ">>>=", ">>>", "?", "??", "??=", "@", "[", "]",
+      "^", "^=", "`", "{", "|", "|=", "||", "||=", "}", "~", "identifier"
+    ]
+  }
+}
