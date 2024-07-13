@@ -1,9 +1,12 @@
 package com.cubecode.client.views;
 
 import com.cubecode.client.imgui.basic.ImGuiLoader;
+import com.cubecode.client.imgui.basic.Theme;
 import com.cubecode.client.imgui.basic.View;
+import com.cubecode.client.imgui.themes.CodeTheme;
 import com.cubecode.client.treesitter.CodeLabel;
 import com.cubecode.client.treesitter.TreeSitterParser;
+import com.cubecode.utils.ColorUtils;
 import imgui.ImDrawList;
 import imgui.ImFont;
 import imgui.ImGui;
@@ -89,6 +92,11 @@ public class CodeEditorView extends View {
             if (!CLOSE.get()) {
                 ImGuiLoader.removeView(this);
             }
+            ImVec2 windowSize = ImGui.getWindowSize();
+
+            ImGui.pushStyleColor(ImGuiCol.ChildBg, this.getTheme().getColor("background"));
+            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
+            ImGui.beginChild(getName(), windowSize.x - 15, windowSize.y - 35, true, ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.AlwaysHorizontalScrollbar | ImGuiWindowFlags.NoMove);
             drawCode();
         }
         ImGui.end();
@@ -121,6 +129,11 @@ public class CodeEditorView extends View {
 
         int row = 0;
         for (String line : lines) {
+            if (String.valueOf(row).length() != numberOfDigits) {
+                drawList.addText(x, y + offsetY, this.getTheme().getColor("currentLineEdge"), " ".repeat(numberOfDigits + 1) + row);
+            } else {
+                drawList.addText(x, y + offsetY, this.getTheme().getColor("currentLineEdge"), String.valueOf(row));
+            }
             ArrayList<CodeLabel> lineTokens = linesHighlights.get(row);
             if (lineTokens != null) {
                 if (lineTokens.size() == 1) {
@@ -152,7 +165,7 @@ public class CodeEditorView extends View {
             row++;
         }
         if (cursor != null) {
-            drawList.addText(cursor.x, cursor.y, -1, "|");
+            drawList.addText(x + offsetX + cursor.x, y + cursor.y, this.getTheme().getColor("cursor"), "|");
         }
     }
 
@@ -174,7 +187,7 @@ public class CodeEditorView extends View {
     }
 
     private void handleEditorChanged() {
-        linesHighlights = TreeSitterParser.parse(lines);
+        linesHighlights = TreeSitterParser.parse(lines, this.getTheme());
     }
 
 }

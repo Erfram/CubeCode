@@ -1,7 +1,8 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.client.imgui.themes.DefaultTheme;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+
+import com.cubecode.client.imgui.themes.CodeTheme;
+import com.cubecode.client.views.CodeEditorView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public abstract class View {
 
     public View() {
         this.uniqueID = UUID.randomUUID();
-        this.theme = new DefaultTheme();
+        this.theme = CodeTheme.parseTheme(View.class.getClassLoader().getResourceAsStream("assets/cubecode/themes/darcula.json"));
     }
 
     public UUID getUniqueID() {
