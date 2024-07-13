@@ -13,24 +13,15 @@ import com.cubecode.utils.FactoryType;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.fabric.impl.resource.loader.ModNioResourcePack;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.impl.ModContainerImpl;
-import net.fabricmc.loader.impl.discovery.ModCandidate;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.NamespaceResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 
-import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class CubeCodeClient implements ClientModInitializer {
     public static final HashMap<FactoryType, FactoryManager> factoryManagers = new HashMap<>();
+    public static HashMap<FactoryType, List<String>> elementsLoaded = new HashMap<>();
 
     static {
         factoryManagers.put(FactoryType.BLOCK, new BlockManager());
@@ -41,41 +32,10 @@ public class CubeCodeClient implements ClientModInitializer {
         factoryManagers.put(FactoryType.ENCHANTMENT, new EnchantmentManager());
     }
 
-    public static HashMap<FactoryType, List<String>> elementsLoaded = new HashMap<>();
-
     @Override
     public void onInitializeClient() {
         NetworkingPackets.registerS2CPackets();
         CubeCodeKeyBindings.init();
         EventHandlerClient.init();
-
-
-        try {
-            List<ModResourcePack> packs = new ArrayList<>();
-
-            Optional<ModContainer> container = FabricLoader.getInstance().getModContainer(CubeCode.MOD_ID);
-
-            ModNioResourcePack pack = ModNioResourcePack.create(
-                    container.get().getMetadata().getId(), container.get(),
-                    "F:\\resource", ResourceType.CLIENT_RESOURCES, ResourcePackActivationType.ALWAYS_ENABLED,
-                    true
-            );
-
-
-            //pack.open(ResourceType.CLIENT_RESOURCES, );
-
-
-            MinecraftClient.getInstance().reloadResources();
-
-
-//            container.bindMetadata(MetadataCollection.from(null, ""));
-//            MinecraftClient.getInstance().resource.addModAsResource(container);
-//            FMLClientHandler.instance().refreshResources();
-//            LOGGER.info("######### Dynamic Ambience And Music successfully loaded #########");
-        } catch (Exception e) {
-            e.printStackTrace();
-            CubeCode.LOGGER.info(e.getMessage());
-        }
-        //RegionHandler.loadSounds();
     }
 }
