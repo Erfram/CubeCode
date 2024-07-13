@@ -1,16 +1,11 @@
 package com.cubecode.client.treesitter;
 
 import com.cubecode.client.imgui.basic.Theme;
-import com.cubecode.client.imgui.themes.CodeTheme;
-import com.cubecode.client.views.CodeEditorView;
-import com.cubecode.utils.ColorUtils;
 import org.jetbrains.annotations.NotNull;
 import org.treesitter.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class TreeSitterParser {
 
