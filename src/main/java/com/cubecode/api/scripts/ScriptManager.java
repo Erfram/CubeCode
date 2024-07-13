@@ -23,7 +23,7 @@ public class ScriptManager extends DirectoryManager {
 
         this.getFiles().forEach(file -> {
             if (file.getName().endsWith(".js")) {
-                newScripts.put(file.getName(), new Script(this.readFileString(file.getName())));
+                newScripts.put(file.getName(), new Script(this.readFileToString(file.getName())));
             }
         });
 

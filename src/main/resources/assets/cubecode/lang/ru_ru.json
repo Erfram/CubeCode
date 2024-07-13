@@ -1,0 +1,13 @@
+{
+  "imgui.cubecode.factory.block.title": "Создание блока",
+  "imgui.cubecode.factory.block.id": "Айди",
+  "imgui.cubecode.factory.block.name": "Имя",
+  "imgui.cubecode.factory.block.texture": "Текстура",
+  "imgui.cubecode.factory.block.dropsLike": "Дроп",
+  "imgui.cubecode.factory.block.resistance": "Сопротивление",
+  "imgui.cubecode.factory.block.slipperiness": "Скольжение",
+  "imgui.cubecode.factory.block.jumpVelocityMultiplier": "Множитель скорости прыжка",
+  "imgui.cubecode.factory.block.velocityMultiplier": "Множитель скорости",
+  "imgui.cubecode.factory.block.luminance": "Яркость",
+  "imgui.cubecode.factory.block.reset": "Сброс параметров"
+}

@@ -19,6 +19,7 @@ public final class CubeCodeKeyBindings {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (DASHBOARD.wasPressed()) {
                 client.setScreen(new DashboardScreen());
+                System.out.println(client.player.getInventory().getStack(0).getName());
             }
         });
     }

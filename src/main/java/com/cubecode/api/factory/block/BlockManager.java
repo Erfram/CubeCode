@@ -4,95 +4,80 @@ import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
 import com.cubecode.api.utils.GSONManager;
 import com.cubecode.utils.CubeRegistry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.DynamicTexture;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.chunk.WorldChunk;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 
 public class BlockManager extends FactoryManager {
-    private static final ArrayList<String> blocksToRemove = new ArrayList<>();
-
     public BlockManager(File directory) {
         super(directory);
     }
 
-    public ArrayList<String> getBlocksToRemove() {
-        return blocksToRemove;
+    public BlockManager() {
+        super();
     }
 
-    public void registerBlocks() {
-        CubeRegistry<?> blockRegistry = (CubeRegistry<?>) Registries.BLOCK;
-        CubeRegistry<?> itemRegistry = (CubeRegistry<?>) Registries.ITEM;
-
-        blockRegistry.unFreeze();
-        itemRegistry.unFreeze();
-
-        for (File fileBlock : this.getFiles()) {
-            DefaultBlock defaultBlock = GSONManager.readJSON(fileBlock, DefaultBlock.class);
-
-            FabricBlockSettings blockSettings = getFabricBlockSettings(defaultBlock);
-
-            ExampleBlock block = new ExampleBlock(blockSettings);
-
-            registerBlock(blockRegistry, defaultBlock.id, block);
-
-            if (defaultBlock.isCreateItemBlock) {
-                registerBlockItem(itemRegistry, defaultBlock.id, block);
-            }
-        }
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void registerBlocksClient(String[] blocks) {
-        CubeRegistry<?> blockRegistry = (CubeRegistry<?>) Registries.BLOCK;
-        CubeRegistry<?> itemRegistry = (CubeRegistry<?>) Registries.ITEM;
+    @Override
+    public void register(List<String> blocks) {
+        CubeRegistry<Block> blockRegistry = (CubeRegistry<Block>) Registries.BLOCK;
+        CubeRegistry<Item> itemRegistry = (CubeRegistry<Item>) Registries.ITEM;
 
         blockRegistry.unFreeze();
         itemRegistry.unFreeze();
 
         for (String jsonBlock : blocks) {
-            BlockManager.DefaultBlock defaultBlock = GSONManager.readJSON(jsonBlock, BlockManager.DefaultBlock.class);
+            var defaultBlock = GSONManager.readJSON(jsonBlock, DefaultBlock.class);
 
-            FabricBlockSettings blockSettings = BlockManager.getFabricBlockSettings(defaultBlock);
+            this.registerBlockAndItem(defaultBlock);
+        }
+    }
 
-            ExampleBlock block = new ExampleBlock(blockSettings);
+    @Override
+    public void unregister(List<String> blocks) {
+        CubeRegistry<Block> blockRegistry = (CubeRegistry<Block>) Registries.BLOCK;
+        CubeRegistry<Item> itemRegistry = (CubeRegistry<Item>) Registries.ITEM;
 
-            BlockManager.registerBlock(blockRegistry, defaultBlock.id, block);
+        blockRegistry.unFreeze();
+        itemRegistry.unFreeze();
+
+        for (String jsonBlock : blocks) {
+            var defaultBlock = GSONManager.readJSON(jsonBlock, DefaultBlock.class);
+
+            blockRegistry.remove(Registries.BLOCK, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
 
             if (defaultBlock.isCreateItemBlock) {
-                BlockManager.registerBlockItem(itemRegistry, defaultBlock.id, block);
+                itemRegistry.remove(Registries.ITEM, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
             }
         }
     }
 
-    public void unregisterBlocks() {
-        for (String block : blocksToRemove) {
-            CubeRegistry blockRegistry = (CubeRegistry<?>) Registries.BLOCK;
-            CubeRegistry itemRegistry = (CubeRegistry<?>) Registries.ITEM;
-            DefaultBlock defaultBlock = GSONManager.readJSON(this.getFile(block), DefaultBlock.class);
+    private void registerBlockAndItem(BlockManager.DefaultBlock defaultBlock) {
+        FabricBlockSettings blockSettings = getFabricBlockSettings(defaultBlock);
+        CubeBlock block = new CubeBlock(blockSettings);
 
-            blockRegistry.unFreeze();
-            itemRegistry.unFreeze();
-            blockRegistry.remove(Registries.BLOCK, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
-            itemRegistry.remove(Registries.ITEM, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
-        }
-    }
+        this.registerElement(Registries.BLOCK, defaultBlock.id, block);
 
-    @Environment(EnvType.CLIENT)
-    public static void unregisterBlocksClient(String[] blocks) {
-        for (String block : blocks) {
-            CubeRegistry blockRegistry = (CubeRegistry<?>) Registries.BLOCK;
-            CubeRegistry itemRegistry = (CubeRegistry<?>) Registries.ITEM;
-            DefaultBlock defaultBlock = GSONManager.readJSON(block, DefaultBlock.class);
-
-            blockRegistry.unFreeze();
-            itemRegistry.unFreeze();
-            blockRegistry.remove(Registries.BLOCK, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
-            itemRegistry.remove(Registries.ITEM, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
+        if (defaultBlock.isCreateItemBlock) {
+            CubeBlockItem blockItem = new CubeBlockItem(block, new FabricItemSettings(), defaultBlock.name, defaultBlock.description);
+            this.registerElement(Registries.ITEM, defaultBlock.id, blockItem);
         }
     }
 
@@ -110,7 +95,6 @@ public class BlockManager extends FactoryManager {
         blockSettings.jumpVelocityMultiplier(defaultBlock.jumpVelocityMultiplier);
         blockSettings.velocityMultiplier(defaultBlock.velocityMultiplier);
         blockSettings.dynamicBounds();
-        blockSettings.breakInstantly();
 
         if (!defaultBlock.dropsLike.isEmpty())
             blockSettings.dropsLike(Registries.BLOCK.get(new Identifier(splitIdentifier[0], splitIdentifier[1])));
@@ -131,6 +115,7 @@ public class BlockManager extends FactoryManager {
     public static class DefaultBlock {
         public String id;
         public String name;
+        public String description;
         public String texture;
         public String dropsLike;
         public float hardness;
@@ -146,5 +131,51 @@ public class BlockManager extends FactoryManager {
         public boolean burnable;
         public boolean blockBreakParticles;
         public boolean breakInstantly;
+    }
+
+    public void modifyingChunks(MinecraftServer server) {
+        for (String jsonBlock : CubeCode.blockManager.getElementsToRemove()) {
+            BlockManager.DefaultBlock defaultBlock = GSONManager.readJSON(jsonBlock, BlockManager.DefaultBlock.class);
+
+            for (ServerWorld world : server.getWorlds()) {
+                LongIterator longIterator = world.getForcedChunks().longIterator();
+                int changedBlocks = 0;
+                boolean isChunkUpdateSuspended = false;
+
+                while (longIterator.hasNext()) {
+                    long lng = longIterator.nextLong();
+                    ChunkPos chunkPos = new ChunkPos(lng);
+
+                    WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
+                    int startX = chunkPos.getStartX();
+                    int startZ = chunkPos.getStartZ();
+                    int startY = chunk.getBottomY();
+
+                    for (int x = startX; x < chunkPos.getEndX(); x++) {
+                        for (int z = startZ; z < chunkPos.getEndZ(); z++) {
+                            for (int y = startY; y < chunk.getTopY(); y++) {
+                                FabricBlockSettings blockSettings = BlockManager.getFabricBlockSettings(defaultBlock);
+                                CubeBlock block = new CubeBlock(blockSettings);
+                                BlockPos blockPos = new BlockPos(x, y, z);
+
+                                if (chunk.getBlockState(blockPos).getBlock().equals(block)) {
+                                    if (!isChunkUpdateSuspended && changedBlocks >= 50) {
+                                        chunk.setNeedsSaving(true);
+                                        isChunkUpdateSuspended = true;
+                                    }
+                                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW);
+                                    changedBlocks++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (isChunkUpdateSuspended || changedBlocks > 0) {
+                        chunk.setNeedsSaving(true);
+                        world.getChunkManager().markForUpdate(chunkPos.getCenterAtY(50));
+                    }
+                }
+            }
+        }
     }
 }

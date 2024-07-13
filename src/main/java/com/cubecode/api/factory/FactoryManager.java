@@ -1,123 +1,83 @@
 package com.cubecode.api.factory;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.factory.block.BlockManager;
-import com.cubecode.api.factory.block.ExampleBlock;
 import com.cubecode.api.utils.DirectoryManager;
-import com.cubecode.api.utils.GSONManager;
 import com.cubecode.utils.CubeRegistry;
-import it.unimi.dsi.fastutil.longs.LongIterator;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.AirBlockItem;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
+import com.cubecode.utils.FactoryUtils;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.chunk.WorldChunk;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FactoryManager extends DirectoryManager {
+    private final List<String> elementsToRemove = new ArrayList<>();
+    private List<String> elements = new ArrayList<>();
+
     public FactoryManager(File directory) {
         super(directory);
+
+        this.elements = this.readFilesToString(this.getFiles());
     }
 
-    public static void registerBlock(CubeRegistry registry, String id, Block block) {
-        Block existingBlock = Registries.BLOCK.get(new Identifier(CubeCode.MOD_ID, id));
-        int rawId = registry.getNextId();
-
-        if(existingBlock instanceof ExampleBlock) {
-            rawId = Registries.BLOCK.getRawId(existingBlock) == -1 ? registry.getNextId() : Registries.BLOCK.getRawId(existingBlock);
-        }
-
-        registry.set(rawId, Registries.BLOCK, new Identifier(CubeCode.MOD_ID, id), block);
+    public FactoryManager() {
+        super();
     }
 
-    public static void registerBlockItem(CubeRegistry registry, String id, Block block) {
-        Item existingItem = Registries.ITEM.get(new Identifier(CubeCode.MOD_ID, id));
-        int rawId = registry.getNextId();
-
-        if(!(existingItem instanceof AirBlockItem) || existingItem instanceof BlockItem) {
-            rawId = Registries.ITEM.getRawId(existingItem) == -1 ? registry.getNextId() : Registries.ITEM.getRawId(existingItem);
-        }
-
-        registry.set(rawId, Registries.ITEM, new Identifier(CubeCode.MOD_ID, id), new BlockItem(block, new FabricItemSettings()));
+    public List<String> getElements() {
+        return this.elements;
     }
 
-    public static String[] getBlockStringsFromFiles(ArrayList<File> blocks) {
-        if (blocks == null || blocks.isEmpty()) {
-            return new String[0];
-        }
+    public void register(List<String> elements) {
 
-        List<String> blockStrings = new ArrayList<>();
+    }
 
-        for (File block : blocks) {
-            try {
-                String content = FileUtils.readFileToString(block);
-                if (content != null && !content.isEmpty()) {
-                    blockStrings.add(content);
-                }
-            } catch (IOException e) {
-                System.err.println("Error reading file: " + block.getName() + ". " + e.getMessage());
+    public void register() {
+        this.register(this.getElements());
+    }
+
+    public void unregister(List<String> elements) {
+
+    }
+
+    public void unregister() {
+        this.unregister(this.getElementsToRemove());
+    }
+
+    public List<String> getElementsToRemove() {
+        return this.elementsToRemove;
+    }
+
+    public void addElementToRemove(String element) {
+        this.elementsToRemove.add(element);
+    }
+
+    public void updateElementToRemove() {
+        List<String> jsonElements = this.readFilesToString();
+        List<String> elements = new ArrayList<>(this.getElements());
+
+        this.getElements().forEach(element -> {
+            if (jsonElements.contains(element)) {
+                elements.remove(element);
             }
-        }
+        });
 
-        return blockStrings.toArray(new String[0]);
+        elements.forEach(this::addElementToRemove);
     }
 
-    public static void modifyingChunks(MinecraftServer server) {
-        for (ServerWorld world : server.getWorlds()) {
-            LongIterator longIterator = world.getForcedChunks().longIterator();
-            int changedBlocks = 0;
-            boolean isChunkUpdateSuspended = false;
-            for (File fileBlock : CubeCode.blockManager.getFiles()) {
-                BlockManager.DefaultBlock defaultBlock = GSONManager.readJSON(fileBlock, BlockManager.DefaultBlock.class);
+    public <V, T extends V> void registerElement(Registry<V> registry, String id, T cubeElement) {
+        if (FactoryUtils.isValidRegistriesId(id)) {
+            CubeRegistry<V> cubeRegistry = (CubeRegistry<V>) registry;
 
-                while (longIterator.hasNext()) {
-                    long lng = longIterator.nextLong();
-                    ChunkPos chunkPos = new ChunkPos(lng);
+            V existingElement = registry.get(new Identifier(CubeCode.MOD_ID, id));
+            int rawId = cubeRegistry.getNextId();
 
-                    WorldChunk chunk = world.getChunk(chunkPos.x, chunkPos.z);
-                    int startX = chunkPos.getStartX();
-                    int startZ = chunkPos.getStartZ();
-                    int startY = chunk.getBottomY();
-
-                    for (int x = startX; x < chunkPos.getEndX(); x++) {
-                        for (int z = startZ; z < chunkPos.getEndZ(); z++) {
-                            for (int y = startY; y < chunk.getTopY(); y++) {
-                                FabricBlockSettings blockSettings = BlockManager.getFabricBlockSettings(defaultBlock);
-                                ExampleBlock block = new ExampleBlock(blockSettings);
-                                BlockPos blockPos = new BlockPos(x, y, z);
-
-                                if (chunk.getBlockState(blockPos).getBlock().equals(block)) {
-                                    if (!isChunkUpdateSuspended && changedBlocks >= 50) {
-                                        chunk.setNeedsSaving(true);
-                                        isChunkUpdateSuspended = true;
-                                    }
-                                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NO_REDRAW);
-                                    changedBlocks++;
-                                }
-                            }
-                        }
-                    }
-
-                    if (isChunkUpdateSuspended || changedBlocks > 0) {
-                        chunk.setNeedsSaving(true);
-                        world.getChunkManager().markForUpdate(chunkPos.getCenterAtY(50));
-                    }
-                }
+            if (cubeElement.getClass().isInstance(existingElement)) {
+                rawId = registry.getRawId(existingElement) == -1 ? cubeRegistry.getNextId() : registry.getRawId(existingElement);
             }
+
+            cubeRegistry.set(rawId, registry, new Identifier(CubeCode.MOD_ID, id), cubeElement);
         }
     }
 }

@@ -66,12 +66,12 @@ public abstract class SimpleRegistryMixin<T> implements CubeRegistry<T> {
     }
 
     @Override
-    public RegistryEntry.Reference<T> set(int id, DefaultedRegistry<T> registry, Identifier identifier, T entry) {
+    public RegistryEntry.Reference<T> set(int id, Registry<T> registry, Identifier identifier, T entry) {
         return this.set(id, RegistryKey.of(registry.getKey(), identifier), entry, Lifecycle.stable());
     }
 
     @Override
-    public RegistryEntry.Reference<T> remove(DefaultedRegistry<T> registry, Identifier identifier) {
+    public RegistryEntry.Reference<T> remove(Registry<T> registry, Identifier identifier) {
         RegistryKey<T> key = RegistryKey.of(registry.getKey(), identifier);
         this.assertNotFrozen(key);
         Validate.notNull(key);

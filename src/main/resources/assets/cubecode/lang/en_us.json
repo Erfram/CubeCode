@@ -1,0 +1,13 @@
+{
+  "imgui.cubecode.factory.block.title": "Сreating block",
+  "imgui.cubecode.factory.block.id": "Id",
+  "imgui.cubecode.factory.block.name": "Name",
+  "imgui.cubecode.factory.block.texture": "Texture",
+  "imgui.cubecode.factory.block.dropsLike": "Drops like",
+  "imgui.cubecode.factory.block.resistance": "Resistance",
+  "imgui.cubecode.factory.block.slipperiness": "Slipperiness",
+  "imgui.cubecode.factory.block.jumpVelocityMultiplier": "Jump velocity multiplier",
+  "imgui.cubecode.factory.block.velocityMultiplier": "Velocity multiplier",
+  "imgui.cubecode.factory.block.luminance": "Luminance",
+  "imgui.cubecode.factory.block.reset": "Reset settings"
+}
