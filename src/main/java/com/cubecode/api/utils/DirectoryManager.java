@@ -5,8 +5,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public abstract class DirectoryManager {
     protected final File DIRECTORY;
@@ -14,6 +13,10 @@ public abstract class DirectoryManager {
     public DirectoryManager(File directory) {
         this.DIRECTORY = directory;
         this.DIRECTORY.mkdirs();
+    }
+
+    public DirectoryManager() {
+        this.DIRECTORY = null;
     }
 
     public File getFile(String name) {
@@ -24,7 +27,31 @@ public abstract class DirectoryManager {
         return Set.of(Objects.requireNonNull(this.DIRECTORY.listFiles()));
     }
 
-    public String readFileString(String name) {
+    public List<String> readFilesToString(Collection<File> files) {
+        try {
+            List<String> strings = new ArrayList<>();
+            for (File file : files) {
+                strings.add(FileUtils.readFileToString(file, Charset.defaultCharset()));
+            }
+            return strings;
+        } catch (IOException ignored) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<String> readFilesToString() {
+        try {
+            List<String> strings = new ArrayList<>();
+            for (File file : this.getFiles()) {
+                strings.add(FileUtils.readFileToString(file, Charset.defaultCharset()));
+            }
+            return strings;
+        } catch (IOException ignored) {
+            return new ArrayList<>();
+        }
+    }
+
+    public String readFileToString(String name) {
         try {
             return FileUtils.readFileToString(this.getFile(name), Charset.defaultCharset());
         } catch (IOException ignored) {

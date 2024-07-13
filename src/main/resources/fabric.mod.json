@@ -3,10 +3,9 @@
 	"id": "cubecode",
 	"version": "${version}",
 	"name": "CubeCode",
-	"description": "test scripting impl",
-	"authors": ["TheBendy"],
-
-	"license": "MIT",
+	"description": "CubeCode is a mod that adds a flexible scripting system to Minecraft. It will allow players to create their own scripts in the JavaScript(Rhino) programming language.\n\nWith its intuitive syntax and extensive documentation, CubeCode opens up limitless possibilities for creativity in Minecraft.",
+	"authors": ["TheBendy", "Llama", "Liray", "TorayLife"],
+	"license": "Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International",
 	"icon": "assets/cubecode/icon.png",
 	"environment": "*",
 	"entrypoints": {

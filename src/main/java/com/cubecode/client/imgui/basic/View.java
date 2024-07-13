@@ -1,13 +1,16 @@
 package com.cubecode.client.imgui.basic;
 
+
 import com.cubecode.client.imgui.themes.CodeTheme;
 import com.cubecode.client.views.CodeEditorView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class View {
-    private static final HashMap<String, Object> variables = new HashMap<>();
+    private final HashMap<String, Object> variables = new HashMap<>();
     private boolean isInit;
     protected final UUID uniqueID;
     protected Theme theme;
@@ -22,8 +25,24 @@ public abstract class View {
         this.theme = CodeTheme.parseTheme(View.class.getClassLoader().getResourceAsStream("assets/cubecode/themes/darcula.json"));
     }
 
-    public HashMap<String, Object> getVariables() {
-        return variables;
+    public UUID getUniqueID() {
+        return this.uniqueID;
+    }
+
+    public <T> void putVariable(String name, T value) {
+        this.variables.putIfAbsent(name, value);
+    }
+
+    public <T> void setVariable(String name, T value) {
+        this.variables.put(name, value);
+    }
+
+    public void removeVariable(String name) {
+        this.variables.remove(name);
+    }
+
+    public <T> T getVariable(String name) {
+        return (T) this.variables.get(name);
     }
 
     /**

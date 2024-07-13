@@ -2,8 +2,8 @@ package com.cubecode.api.factory.block;
 
 import net.minecraft.block.Block;
 
-public class ExampleBlock extends Block {
-    public ExampleBlock(Settings settings) {
+public class CubeBlock extends Block {
+    public CubeBlock(Settings settings) {
         super(settings);
     }
 }

@@ -7,15 +7,15 @@ import net.minecraft.util.Identifier;
 import com.cubecode.mixin.SimpleRegistryMixin;
 
 public interface CubeRegistry<T> {
-    /** {@link SimpleRegistryMixin#unFreeze()} ()} */
+    /** {@link SimpleRegistryMixin#unFreeze()} */
     void unFreeze();
     /** {@link SimpleRegistryMixin#freeze()} */
     Registry<T> freeze();
 
     /** {@link SimpleRegistryMixin#set} */
-    RegistryEntry.Reference<T> set(int id, DefaultedRegistry<T> registry, Identifier identifier, T entry);
+    RegistryEntry.Reference<T> set(int id, Registry<T> registry, Identifier identifier, T entry);
     /** {@link SimpleRegistryMixin#remove} */
-    RegistryEntry.Reference<T> remove(DefaultedRegistry<T> registry, Identifier identifier);
+    RegistryEntry.Reference<T> remove(Registry<T> registry, Identifier identifier);
 
     int getNextId();
 }
