@@ -33,6 +33,11 @@ public class CubeBlockItem extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         tooltip.set(0, TextUtils.formatText(this.name));
+
+        if (description == null) {
+            description = "";
+        }
+
         if (!description.isEmpty()) {
             String[] lines = this.description.split("\n");
 

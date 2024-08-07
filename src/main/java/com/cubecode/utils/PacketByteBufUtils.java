@@ -9,9 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -47,6 +45,15 @@ public class PacketByteBufUtils {
 
         buf.writeString(type.name());
         PacketByteBufUtils.writeStringArray(buf, elements.toArray(new String[0]));
+
+        return buf;
+    }
+
+    public static PacketByteBuf createElementFileByteBuf(String path, String json) {
+        PacketByteBuf buf = PacketByteBufs.create();
+
+        buf.writeString(path);
+        buf.writeString(json);
 
         return buf;
     }

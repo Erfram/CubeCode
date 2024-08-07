@@ -63,7 +63,7 @@ public abstract class DirectoryManager {
         return this.getFile(name).delete();
     }
 
-    public boolean fileExist(String name) {
+    public boolean existFile(String name) {
         return this.getFile(name).exists();
     }
 

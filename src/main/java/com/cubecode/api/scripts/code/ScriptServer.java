@@ -1,5 +1,7 @@
 package com.cubecode.api.scripts.code;
 
+import com.cubecode.client.config.CubeCodeConfig;
+import com.cubecode.utils.CubeCodeException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
@@ -71,10 +73,17 @@ public class ScriptServer {
         return new CubeCodeStates(this.server);
     }
 
-    public void executeScript(String scriptName) throws Exception {
+    public void executeScript(String scriptName) throws CubeCodeException {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("Server", this);
+        properties.put(CubeCodeConfig.getScriptConfig().contextName, new ScriptEvent(
+                scriptName,
+                null,
+                null,
+                null,
+                null,
+                this
+        ));
 
         CubeCode.scriptManager.executeScript(scriptName, properties);
     }

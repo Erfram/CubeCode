@@ -95,7 +95,7 @@ public class ScriptBlockState {
         return this.blockState.getBlock().getJumpVelocityMultiplier();
     }
 
-    public Object getProperty(String name) throws Exception {
+    public Object getProperty(String name) throws CubeCodeException {
         return this.blockState.getProperties().stream()
                 .filter(property -> property.getName().equalsIgnoreCase(name))
                 .findFirst()

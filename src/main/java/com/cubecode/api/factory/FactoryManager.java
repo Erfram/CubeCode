@@ -38,7 +38,8 @@ public class FactoryManager extends DirectoryManager {
     }
 
     public void unregister(List<String> elements) {
-
+        if (elements == null)
+            return;
     }
 
     public void unregister() {

@@ -8,12 +8,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class GSONManager {
+public class GsonManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private GSONManager() {}
+    private GsonManager() {}
 
-    public void writeJSON(File file, Object object) {
+    public static void writeJSON(File file, Object object) {
         try (FileWriter writer = new FileWriter(file)) {
             GSON.toJson(object, writer);
         } catch (IOException ignored) {}

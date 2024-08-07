@@ -13,13 +13,16 @@ public final class CubeCodeKeyBindings {
     private static final String CUBECODE_CATEGORY = "CubeCode";
     private static final KeyBinding DASHBOARD = new KeyBinding("Dashboard", GLFW.GLFW_KEY_EQUAL, CUBECODE_CATEGORY);
 
+    public static final int VANILLA_OP_LEVEL = 2;
+
     public static void init() {
         CubeCodeKeyBindings.registerKeyBindings(DASHBOARD);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (DASHBOARD.wasPressed()) {
-                client.setScreen(new DashboardScreen());
-                System.out.println(client.player.getInventory().getStack(0).getName());
+                if (client.player.hasPermissionLevel(VANILLA_OP_LEVEL)) {
+                    client.setScreen(new DashboardScreen());
+                }
             }
         });
     }

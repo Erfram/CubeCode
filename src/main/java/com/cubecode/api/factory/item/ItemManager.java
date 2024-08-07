@@ -2,7 +2,7 @@ package com.cubecode.api.factory.item;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import com.cubecode.utils.CubeRegistry;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
@@ -32,7 +32,7 @@ public class ItemManager extends FactoryManager {
 
         registry.unFreeze();
         for (String jsonItem : items) {
-            ItemManager.DefaultItem defaultItem = GSONManager.readJSON(jsonItem, ItemManager.DefaultItem.class);
+            ItemManager.DefaultItem defaultItem = GsonManager.readJSON(jsonItem, ItemManager.DefaultItem.class);
 
             Item.Settings itemSettings = this.getItemSettings(defaultItem);
 
@@ -67,10 +67,11 @@ public class ItemManager extends FactoryManager {
 
     @Override
     public void unregister(List<String> items) {
+        super.unregister(items);
         CubeRegistry<Item> registry = (CubeRegistry<Item>) Registries.ITEM;
         registry.unFreeze();
         for (String jsonItem : items) {
-            var defaultItem = GSONManager.readJSON(jsonItem, ItemManager.DefaultItem.class);
+            var defaultItem = GsonManager.readJSON(jsonItem, ItemManager.DefaultItem.class);
 
             registry.remove(Registries.ITEM, new Identifier(CubeCode.MOD_ID, defaultItem.id));
         }

@@ -1,7 +1,7 @@
 package com.cubecode.api.factory.material;
 
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
@@ -31,7 +31,7 @@ public class ToolMaterialManager extends FactoryManager {
     @Override
     public void register(List<String> toolMaterials) {
         for (String jsonToolMaterial : toolMaterials) {
-            var defaultToolMaterial = GSONManager.readJSON(jsonToolMaterial, ToolMaterialManager.DefaultToolMaterial.class);
+            var defaultToolMaterial = GsonManager.readJSON(jsonToolMaterial, ToolMaterialManager.DefaultToolMaterial.class);
 
             final ArrayList<Item> items = new ArrayList<>();
 

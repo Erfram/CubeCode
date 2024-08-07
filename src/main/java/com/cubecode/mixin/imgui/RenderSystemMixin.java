@@ -1,4 +1,4 @@
-package com.cubecode.mixin;
+package com.cubecode.mixin.imgui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;

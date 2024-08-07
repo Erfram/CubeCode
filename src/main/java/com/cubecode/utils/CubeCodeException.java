@@ -13,5 +13,4 @@ public class CubeCodeException extends Exception {
         super(message);
         this.sourceName = "";
     }
-
 }

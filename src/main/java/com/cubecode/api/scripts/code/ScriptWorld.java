@@ -3,6 +3,7 @@ package com.cubecode.api.scripts.code;
 import com.mojang.brigadier.StringReader;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.command.EntitySelectorReader;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -50,7 +51,7 @@ public class ScriptWorld {
         return new ScriptServer(this.world.getServer());
     }
 
-    public List<ScriptEntity<?>> getEntities(String selector) {
+    public List<ScriptEntity<? extends Entity>> getEntities(String selector) {
         List<ScriptEntity<?>> entities = new ArrayList<>();
 
         try {
@@ -82,8 +83,8 @@ public class ScriptWorld {
         return this.world.getTime();
     }
 
-    public List<ScriptEntity> getEntities(ScriptEntity entity, double x1, double y1, double z1, double x2, double y2, double z2) {
-        List<ScriptEntity> scriptEntities = new ArrayList<>();
+    public List<ScriptEntity<?>> getEntities(ScriptEntity<?> entity, double x1, double y1, double z1, double x2, double y2, double z2) {
+        List<ScriptEntity<?>> scriptEntities = new ArrayList<>();
 
         this.world.getOtherEntities(entity.getMinecraftEntity(), new Box(x1, y1, z1, x2, y2, z2)).forEach((otherEntity -> {
             scriptEntities.add(ScriptEntity.create(otherEntity));
@@ -92,7 +93,7 @@ public class ScriptWorld {
         return scriptEntities;
     }
 
-    public void getEntities(ScriptEntity entity, ScriptVector vector1, ScriptVector vector2) {
-        this.getEntities(entity, vector1.x, vector1.y, vector1.z, vector2.x, vector2.y, vector2.z);
+    public List<ScriptEntity<?>> getEntities(ScriptEntity<?> entity, ScriptVector vector1, ScriptVector vector2) {
+        return this.getEntities(entity, vector1.x, vector1.y, vector1.z, vector2.x, vector2.y, vector2.z);
     }
 }

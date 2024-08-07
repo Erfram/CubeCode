@@ -7,21 +7,27 @@ import com.cubecode.api.factory.enchantment.EnchantmentManager;
 import com.cubecode.api.factory.item.ItemManager;
 import com.cubecode.api.factory.material.ToolMaterialManager;
 import com.cubecode.api.factory.potion.PotionManager;
+import com.cubecode.api.scripts.Script;
+import com.cubecode.client.config.ConfigManager;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.NetworkingPackets;
 import com.cubecode.utils.FactoryType;
+import com.cubecode.utils.Icons;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.impl.FabricLoaderImpl;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class CubeCodeClient implements ClientModInitializer {
-    public static final HashMap<FactoryType, FactoryManager> factoryManagers = new HashMap<>();
-    public static HashMap<FactoryType, List<String>> elementsLoaded = new HashMap<>();
+    public static Map<String, Script> scripts = new HashMap<>();
+    public static final Map<FactoryType, FactoryManager> factoryManagers = new HashMap<>();
+    public static Map<FactoryType, List<String>> elementsLoaded = new HashMap<>();
 
     static {
         factoryManagers.put(FactoryType.BLOCK, new BlockManager());
@@ -37,5 +43,6 @@ public class CubeCodeClient implements ClientModInitializer {
         NetworkingPackets.registerS2CPackets();
         CubeCodeKeyBindings.init();
         EventHandlerClient.init();
+        CubeCodeConfig.loadConfig();
     }
 }

@@ -30,25 +30,25 @@ public class EventHandler {
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             File worldDirectory = server.getSavePath(WorldSavePath.ROOT).getParent().toFile();
-            File cubeCodeDirectory = new File(worldDirectory, CubeCode.MOD_ID);
-            File factoryDirectory = new File(cubeCodeDirectory, "factory");
-            File contentDirectory = new File(factoryDirectory, "content");
+            CubeCode.cubeCodeDirectory = new File(worldDirectory, CubeCode.MOD_ID);
+            CubeCode.factoryDirectory = new File(CubeCode.cubeCodeDirectory, "factory");
+            CubeCode.contentDirectory = new File(CubeCode.factoryDirectory, "content");
 
-            if (cubeCodeDirectory.mkdirs()) {
+            if (CubeCode.cubeCodeDirectory.mkdirs()) {
                 CubeCode.LOGGER.info(String.format("#### Creating a mod directory %s for the world. ####", CubeCode.MOD_ID));
             }
 
-            CubeCode.scriptManager = new ScriptManager(new File(cubeCodeDirectory, "scripts"));
+            CubeCode.scriptManager = new ScriptManager(new File(CubeCode.cubeCodeDirectory, "scripts"));
 
-            CubeCode.factoryManager = new FactoryManager(new File(cubeCodeDirectory, "factory"));
-            CubeCode.textureManager = new TextureManager(new File(factoryDirectory, "textures"));
+            CubeCode.factoryManager = new FactoryManager(new File(CubeCode.cubeCodeDirectory, "factory"));
+            CubeCode.textureManager = new TextureManager(new File(CubeCode.factoryDirectory, "textures"));
 
-            CubeCode.blockManager = new BlockManager(new File(contentDirectory, "block"));
-            CubeCode.itemManager = new ItemManager(new File(contentDirectory, "item"));
-            CubeCode.toolMaterialManager = new ToolMaterialManager(new File(contentDirectory, "toolMaterial"));
-            CubeCode.effectManager = new EffectManager(new File(contentDirectory, "effect"));
-            CubeCode.potionManager = new PotionManager(new File(contentDirectory, "potion"));
-            CubeCode.enchantmentManager = new EnchantmentManager(new File(contentDirectory, "enchantment"));
+            CubeCode.blockManager = new BlockManager(new File(CubeCode.contentDirectory, "block"));
+            CubeCode.itemManager = new ItemManager(new File(CubeCode.contentDirectory, "item"));
+            CubeCode.toolMaterialManager = new ToolMaterialManager(new File(CubeCode.contentDirectory, "toolMaterial"));
+            CubeCode.effectManager = new EffectManager(new File(CubeCode.contentDirectory, "effect"));
+            CubeCode.potionManager = new PotionManager(new File(CubeCode.contentDirectory, "potion"));
+            CubeCode.enchantmentManager = new EnchantmentManager(new File(CubeCode.contentDirectory, "enchantment"));
 
             CubeCode.factoryManagers = new LinkedHashMap<>();
 

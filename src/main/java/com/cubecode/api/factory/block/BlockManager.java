@@ -2,18 +2,13 @@ package com.cubecode.api.factory.block;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import com.cubecode.utils.CubeRegistry;
 import it.unimi.dsi.fastutil.longs.LongIterator;
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.DynamicTexture;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -44,7 +39,7 @@ public class BlockManager extends FactoryManager {
         itemRegistry.unFreeze();
 
         for (String jsonBlock : blocks) {
-            var defaultBlock = GSONManager.readJSON(jsonBlock, DefaultBlock.class);
+            var defaultBlock = GsonManager.readJSON(jsonBlock, DefaultBlock.class);
 
             this.registerBlockAndItem(defaultBlock);
         }
@@ -59,7 +54,7 @@ public class BlockManager extends FactoryManager {
         itemRegistry.unFreeze();
 
         for (String jsonBlock : blocks) {
-            var defaultBlock = GSONManager.readJSON(jsonBlock, DefaultBlock.class);
+            var defaultBlock = GsonManager.readJSON(jsonBlock, DefaultBlock.class);
 
             blockRegistry.remove(Registries.BLOCK, new Identifier(CubeCode.MOD_ID, defaultBlock.id));
 
@@ -135,7 +130,7 @@ public class BlockManager extends FactoryManager {
 
     public void modifyingChunks(MinecraftServer server) {
         for (String jsonBlock : CubeCode.blockManager.getElementsToRemove()) {
-            BlockManager.DefaultBlock defaultBlock = GSONManager.readJSON(jsonBlock, BlockManager.DefaultBlock.class);
+            BlockManager.DefaultBlock defaultBlock = GsonManager.readJSON(jsonBlock, BlockManager.DefaultBlock.class);
 
             for (ServerWorld world : server.getWorlds()) {
                 LongIterator longIterator = world.getForcedChunks().longIterator();

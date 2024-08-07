@@ -2,7 +2,7 @@ package com.cubecode.api.factory.effect;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import com.cubecode.utils.CubeRegistry;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
@@ -27,7 +27,7 @@ public class EffectManager extends FactoryManager {
 
         registry.unFreeze();
         for (String jsonEffect : effects) {
-            var defaultEffect = GSONManager.readJSON(jsonEffect, EffectManager.DefaultEffect.class);
+            var defaultEffect = GsonManager.readJSON(jsonEffect, EffectManager.DefaultEffect.class);
 
             CubeEffect cubeEffect = new CubeEffect(StatusEffectCategory.valueOf(defaultEffect.category.toUpperCase()), defaultEffect.color, defaultEffect.name);
 
@@ -42,7 +42,7 @@ public class EffectManager extends FactoryManager {
         registry.unFreeze();
 
         for (String jsonEffect : effects) {
-            var defaultEffect = GSONManager.readJSON(jsonEffect, EffectManager.DefaultEffect.class);
+            var defaultEffect = GsonManager.readJSON(jsonEffect, EffectManager.DefaultEffect.class);
 
             registry.remove(Registries.STATUS_EFFECT, new Identifier(CubeCode.MOD_ID, defaultEffect.id));
         }

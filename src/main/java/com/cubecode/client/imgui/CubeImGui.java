@@ -7,11 +7,16 @@ import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.item.ItemStack;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
+
+
     public static void begin(View view, String title, Consumer<Boolean> beginAction) {
         String titleKey = title + view.getUniqueID();
 
@@ -31,8 +36,8 @@ public class CubeImGui {
 
         if (ImGui.begin(title, close, windowFlags)) {
             beginAction.accept(close.get());
-
         }
+
         ImGui.end();
     }
 
@@ -792,7 +797,7 @@ public class CubeImGui {
      */
     public static void dragInt(View view, int type, String label, float speed, float min, float max, Consumer<Integer> dragIntAction) {
         String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[1]);
+        view.putVariable(labelkey, new int[type]);
 
         int[] variable = view.getVariable(labelkey);
         if (
@@ -1185,12 +1190,20 @@ public class CubeImGui {
         }
     }
 
+    /**
+     * available variables:
+     * "width_" + uniqueId
+     * "height_" + uniqueId
+     */
     public static void manageDocking(View view) {
         boolean isDocked = ImGui.isWindowDocked();
+
         view.putVariable(view.getUniqueID().toString(), false);
         view.putVariable("width_"+view.getUniqueID().toString(), 0F);
         view.putVariable("height_"+view.getUniqueID().toString(), 0F);
+
         boolean wasDocked = view.getVariable(view.getUniqueID().toString());
+
         float undockedWidth = view.getVariable("width_"+view.getUniqueID().toString());
         float undockedHeight = view.getVariable("height_"+view.getUniqueID().toString());
 

@@ -1,5 +1,7 @@
 package com.cubecode.content;
 
+import com.cubecode.api.scripts.code.ScriptEvent;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -24,18 +26,18 @@ public final class CubeCodeCommand {
     public static void init(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal("cubecode").then(literal("script")
                 .then(literal("eval").then(argument("script", MessageArgumentType.message()).executes(CubeCodeCommand::evalCode)))
-                .then(literal("exec").then(argument("scriptId", MessageArgumentType.message()).executes(CubeCodeCommand::execScript)))
+                .then(literal("exec").then(argument("scriptName", MessageArgumentType.message()).executes(CubeCodeCommand::execScript)))
         ));
     }
 
     private static int execScript(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        HashMap<String, Object> properties = CubeCodeCommand.createProperties(context);
-        String scriptId = MessageArgumentType.getMessage(context, "scriptId").getString();
+        String scriptName = MessageArgumentType.getMessage(context, "scriptName").getString();
+        HashMap<String, Object> properties = CubeCodeCommand.createProperties(scriptName, context);
 
         CubeCode.scriptManager.updateScripts();
 
         try {
-            CubeCode.scriptManager.executeScript(scriptId, properties);
+            CubeCode.scriptManager.executeScript(scriptName, properties);
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }
@@ -44,11 +46,11 @@ public final class CubeCodeCommand {
     }
 
     private static int evalCode(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        HashMap<String, Object> properties = CubeCodeCommand.createProperties(context);
+        HashMap<String, Object> properties = CubeCodeCommand.createProperties(null, context);
         String code = MessageArgumentType.getMessage(context, "script").getString();
 
         try {
-            ScriptManager.evalCode(code, 1, "eval", properties);
+            ScriptManager.evalCode(code, 0, "eval", properties);
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }
@@ -56,11 +58,17 @@ public final class CubeCodeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static HashMap<String, Object> createProperties(CommandContext<ServerCommandSource> context) {
+    private static HashMap<String, Object> createProperties(String scriptName, CommandContext<ServerCommandSource> context) {
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("Player", ScriptEntity.create(context.getSource().getPlayer()));
-        properties.put("Server", new ScriptServer(context.getSource().getServer()));
-        properties.put("World", new ScriptWorld(context.getSource().getWorld()));
+        properties.put(CubeCodeConfig.getScriptConfig().contextName, new ScriptEvent(
+                scriptName,
+                null,
+                ScriptEntity.create(context.getSource().getPlayer()),
+                null,
+                new ScriptWorld(context.getSource().getWorld()),
+                new ScriptServer(context.getSource().getServer())
+        ));
+
         properties.put("CubeCode", new ScriptFactory());
 
         return properties;

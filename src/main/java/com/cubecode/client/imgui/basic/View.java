@@ -3,6 +3,7 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.client.imgui.themes.CodeTheme;
 import com.cubecode.client.views.CodeEditorView;
+import net.minecraft.client.MinecraftClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,9 @@ public abstract class View {
     private boolean isInit;
     protected final UUID uniqueID;
     protected Theme theme;
+
+    protected final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
+    protected final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
 
     public View(Theme theme) {
         this.uniqueID = UUID.randomUUID();

@@ -8,9 +8,9 @@
   ],
   "client": [
     "FabricLoaderImplMixin",
-    "ParentElementMixin",
-    "RenderSystemMixin",
-    "WindowMixin"
+    "imgui.ParentElementMixin",
+    "imgui.RenderSystemMixin",
+    "imgui.WindowMixin"
   ],
   "server": [
   ],

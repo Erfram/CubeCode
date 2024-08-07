@@ -11,12 +11,10 @@ import net.fabricmc.loader.impl.entrypoint.EntrypointStorage;
 import net.fabricmc.loader.impl.metadata.EntrypointMetadata;
 import org.spongepowered.asm.mixin.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Mixin(FabricLoaderImpl.class)
 public abstract class FabricLoaderImplMixin {
-
     @Shadow
     protected abstract void addMod(ModCandidate candidate) throws ModResolutionException;
 
@@ -26,7 +24,7 @@ public abstract class FabricLoaderImplMixin {
 
 
     @Unique
-    private void setupDynamic() {
+    public void setupDynamic() {
         ModCandidate candidate = ModCandidateImpl.create("F:\\cubecode\\");
         if (candidate != null) {
             try {

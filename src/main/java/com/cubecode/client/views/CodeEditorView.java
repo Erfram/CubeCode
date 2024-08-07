@@ -2,6 +2,7 @@ package com.cubecode.client.views;
 
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
+import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.treesitter.CodeLabel;
 import com.cubecode.client.treesitter.TreeSitterParser;
 import imgui.*;
@@ -9,6 +10,7 @@ import imgui.flag.*;
 import imgui.type.ImBoolean;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -100,31 +102,32 @@ public class CodeEditorView extends View {
 
     @Override
     public void render() {
-        if (ImGui.begin(getName(), CLOSE, ImGuiWindowFlags.NoScrollbar)) {
-            if (!CLOSE.get()) {
-                ImGuiLoader.removeView(this);
-            }
-            ImVec2 windowSize = ImGui.getWindowSize();
+        Window.create()
+                .title(getName())
+                .flags(ImGuiWindowFlags.NoScrollbar)
+                .callback(() -> {
+                    ImVec2 windowSize = ImGui.getWindowSize();
 
-            ImGui.pushStyleColor(ImGuiCol.ChildBg, this.getTheme().getColor("background"));
-            ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
-            ImGui.beginChild(getName(), windowSize.x - 15, windowSize.y - 35, true, ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.AlwaysHorizontalScrollbar | ImGuiWindowFlags.NoMove);
-            drawCode();
-            handleKeyboardInputs();
-            handleCursor();
-            ImGui.endChild();
-            ImGui.popStyleVar();
-            ImGui.popStyleColor();
-        }
-        ImGui.end();
+                    ImGui.pushStyleColor(ImGuiCol.ChildBg, this.getTheme().getColor("background"));
+                    ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, 0, 0);
+                    ImGui.beginChild(getName(), windowSize.x - 15, windowSize.y - 35, true, ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.AlwaysHorizontalScrollbar | ImGuiWindowFlags.NoMove);
+                    drawCode();
+                    handleKeyboardInputs();
+                    handleCursor();
+                    ImGui.endChild();
+                    ImGui.popStyleVar();
+                    ImGui.popStyleColor();
+        }).render(this);
     }
 
     @Override
     public void handleKeyReleased(int keyCode, int scanCode, int modifiers) {
         try {
-            char enteredChar = InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().charAt(0);
-            boolean isShiftPressed = (modifiers & GLFW.GLFW_MOD_SHIFT) != 0;
-            enterCharacter(enteredChar, isShiftPressed);
+            if (InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().length() == 1) {
+                char enteredChar = InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().charAt(0);
+                boolean isShiftPressed = (modifiers & GLFW.GLFW_MOD_SHIFT) != 0;
+                enterCharacter(enteredChar, isShiftPressed);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -357,14 +360,27 @@ public class CodeEditorView extends View {
 
     }
 
-    private void enterCharacter(char c, boolean b) {
+    private void enterCharacter(char character, boolean shift) {
         if (cursorText != null) {
             try {
-                String string = lines.get((int) cursorText.y);
-                StringBuilder builder = new StringBuilder(string);
-                builder.insert((int) cursorText.x, c);
-                lines.set((int) cursorText.y, builder.toString());
-                cursorText.x += 1;
+                int lineIndex = (int) cursorText.y;
+                int columnIndex = (int) cursorText.x;
+
+                if (character == '\n') {
+                    String currentLine = lines.get(lineIndex);
+                    String newLine = currentLine.substring(columnIndex);
+                    lines.set(lineIndex, currentLine.substring(0, columnIndex));
+                    lines.add(lineIndex + 1, newLine);
+                    cursorText = new ImVec2(0, lineIndex + 1);
+                } else {
+                    String line = lines.get(lineIndex);
+                    StringBuilder builder = new StringBuilder(line);
+                    builder.insert(columnIndex, character);
+                    lines.set(lineIndex, builder.toString());
+                    cursorText = new ImVec2(columnIndex + 1, lineIndex);
+                }
+
+                updateCursorPosition();
                 handleEditorChanged();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -381,10 +397,58 @@ public class CodeEditorView extends View {
     }
 
     private void delete() {
+        if (cursorText != null) {
+            try {
+                int lineIndex = (int) cursorText.y;
+                String line = lines.get(lineIndex);
 
+                if ((int) cursorText.x < line.length()) {
+                    StringBuilder builder = new StringBuilder(line);
+                    builder.deleteCharAt((int) cursorText.x);
+                    lines.set(lineIndex, builder.toString());
+
+                    updateCursorPosition();
+                    handleEditorChanged();
+                } else if (lineIndex < lines.size() - 1) {
+                    String nextLine = lines.get(lineIndex + 1);
+                    lines.set(lineIndex, line + nextLine);
+                    lines.remove(lineIndex + 1);
+                    updateCursorPosition();
+                    handleEditorChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void backspace() {
+        if (cursorText != null) {
+            try {
+                int lineIndex = (int) cursorText.y;
+                String line = lines.get(lineIndex);
+
+                if ((int) cursorText.x > 0) {
+                    StringBuilder builder = new StringBuilder(line);
+                    builder.deleteCharAt((int) cursorText.x - 1);
+                    lines.set(lineIndex, builder.toString());
+
+                    cursorText.x -= 1;
+                    updateCursorPosition();
+                    handleEditorChanged();
+                } else if (lineIndex > 0) {
+                    String previousLine = lines.get(lineIndex - 1);
+                    cursorText.x = previousLine.length();
+                    cursorText.y -= 1;
+                    lines.set(lineIndex - 1, previousLine + line);
+                    lines.remove(lineIndex);
+                    updateCursorPosition();
+                    handleEditorChanged();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void paste() {
@@ -399,19 +463,129 @@ public class CodeEditorView extends View {
 
     }
 
-    private void moveRight(int i, boolean shift, boolean ctrl) {
+    private void moveRight(int amount, boolean shift, boolean ctrl) {
+        if (cursorText != null) {
+            int lineIndex = (int) cursorText.y;
+            int columnIndex = (int) cursorText.x;
 
+            if (ctrl) {
+                // Перемещение по словам
+                while (amount > 0 && lineIndex < lines.size()) {
+                    String line = lines.get(lineIndex);
+                    if (columnIndex == line.length()) {
+                        // Переход на следующую строку
+                        if (lineIndex < lines.size() - 1) {
+                            lineIndex++;
+                            columnIndex = 0;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        // Пропускаем текущее слово
+                        while (columnIndex < line.length() && Character.isLetterOrDigit(line.charAt(columnIndex))) {
+                            columnIndex++;
+                        }
+                        // Пропускаем пробелы и знаки препинания
+                        while (columnIndex < line.length() && !Character.isLetterOrDigit(line.charAt(columnIndex))) {
+                            columnIndex++;
+                        }
+                        amount--;
+                    }
+                }
+            } else {
+                // Обычное перемещение
+                while (amount > 0 && lineIndex < lines.size()) {
+                    String line = lines.get(lineIndex);
+                    if (columnIndex == line.length()) {
+                        // Переход на следующую строку
+                        if (lineIndex < lines.size() - 1) {
+                            lineIndex++;
+                            columnIndex = 0;
+                        } else {
+                            break;
+                        }
+                    } else {
+                        columnIndex++;
+                    }
+                    amount--;
+                }
+            }
+
+            cursorText = new ImVec2(columnIndex, lineIndex);
+            updateCursorPosition();
+        }
     }
 
-    private void moveLeft(int i, boolean shift, boolean ctrl) {
+    private void moveLeft(int amount, boolean shift, boolean ctrl) {
+        if (cursorText != null) {
+            int lineIndex = (int) cursorText.y;
+            int columnIndex = (int) cursorText.x;
+
+            if (ctrl) {
+                // Перемещение по словам
+                while (amount > 0 && (lineIndex > 0 || columnIndex > 0)) {
+                    if (columnIndex == 0) {
+                        // Переход на предыдущую строку
+                        lineIndex--;
+                        columnIndex = lines.get(lineIndex).length();
+                    } else {
+                        String line = lines.get(lineIndex);
+                        // Пропускаем пробелы и знаки препинания слева
+                        while (columnIndex > 0 && !Character.isLetterOrDigit(line.charAt(columnIndex - 1))) {
+                            columnIndex--;
+                        }
+                        // Двигаемся до начала слова или строки
+                        while (columnIndex > 0 && Character.isLetterOrDigit(line.charAt(columnIndex - 1))) {
+                            columnIndex--;
+                        }
+                        amount--;
+                    }
+                }
+            } else {
+                // Обычное перемещение
+                while (amount > 0 && (lineIndex > 0 || columnIndex > 0)) {
+                    if (columnIndex == 0) {
+                        // Переход на предыдущую строку
+                        lineIndex--;
+                        columnIndex = lines.get(lineIndex).length();
+                    } else {
+                        columnIndex--;
+                    }
+                    amount--;
+                }
+            }
+
+            cursorText = new ImVec2(columnIndex, lineIndex);
+            updateCursorPosition();
+        }
     }
 
-    private void moveDown(int i, boolean shift) {
+    private void moveDown(int amount, boolean shift) {
+        if (cursorText != null) {
+            int lineIndex = (int) cursorText.y;
+            int columnIndex = (int) cursorText.x;
 
+            lineIndex = Math.min(lineIndex + amount, lines.size() - 1);
+            String newLine = lines.get(lineIndex);
+            columnIndex = Math.min(columnIndex, newLine.length());
+
+            cursorText = new ImVec2(columnIndex, lineIndex);
+            updateCursorPosition();
+        }
     }
 
-    private void moveUp(int i, boolean shift) {
+    private void moveUp(int amount, boolean shift) {
+        if (cursorText != null) {
+            int lineIndex = (int) cursorText.y;
+            int columnIndex = (int) cursorText.x;
 
+            lineIndex = Math.max(lineIndex - amount, 0);
+            String newLine = lines.get(lineIndex);
+            columnIndex = Math.min(columnIndex, newLine.length());
+
+            cursorText = new ImVec2(columnIndex, lineIndex);
+            updateCursorPosition();
+        }
     }
 
     private void redo() {
@@ -420,6 +594,24 @@ public class CodeEditorView extends View {
 
     private void undo() {
 
+    }
+
+    private void updateCursorPosition() {
+        if (cursorText != null) {
+            int lineIndex = (int) cursorText.y;
+            int columnIndex = (int) cursorText.x;
+
+            if (lineIndex >= 0 && lineIndex < lines.size()) {
+                String line = lines.get(lineIndex);
+                if (columnIndex > line.length()) {
+                    columnIndex = line.length();
+                }
+                float xPos = ImGui.calcTextSize(line.substring(0, columnIndex)).x;
+                float yPos = lineIndex * getFontSize();
+
+                cursor = new ImVec2(xPos, yPos);
+            }
+        }
     }
 
     private ImVec2 getCursorPosInWindow() {

@@ -33,7 +33,7 @@ public class ScriptEntity<T extends Entity> {
         this.entity = entity;
     }
 
-    public T getMinecraftEntity() {
+    public Entity getMinecraftEntity() {
         return this.entity;
     }
 
@@ -83,7 +83,7 @@ public class ScriptEntity<T extends Entity> {
         this.entity.setVelocity(x, y, z);
     }
 
-    public ScriptVector getVelocity(double x, double y, double z) {
+    public ScriptVector getVelocity() {
         return new ScriptVector(this.entity.getVelocity());
     }
 
@@ -155,11 +155,11 @@ public class ScriptEntity<T extends Entity> {
         return new ScriptVector(this.entity.getRotationVector());
     }
 
-    public float getHp() {
+    public float getHealth() {
         return ((LivingEntity)this.entity).getHealth();
     }
 
-    public float getMaxHp() {
+    public float getMaxHealth() {
         return ((LivingEntity)this.entity).getMaxHealth();
     }
 
@@ -214,6 +214,10 @@ public class ScriptEntity<T extends Entity> {
 
     public double getEyeHeight() {
         return this.entity.getEyePos().y;
+    }
+
+    public ScriptVector getEyePos() {
+        return new ScriptVector(this.entity.getEyePos());
     }
 
     public ScriptRayTrace rayTraceBlock(double maxDistance, boolean includesFluids) {

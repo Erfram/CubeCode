@@ -1,10 +1,13 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.api.utils.DirectoryManager;
+import com.cubecode.api.utils.FileManager;
 import org.jetbrains.annotations.Nullable;
 import org.mozilla.javascript.*;
 import com.cubecode.utils.CubeCodeException;
+import org.mozilla.javascript.debug.DebuggableScript;
 
+import javax.script.ScriptException;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +19,14 @@ public class ScriptManager extends DirectoryManager {
     public ScriptManager(File scriptsDirectory) {
         super(scriptsDirectory);
         this.updateScripts();
+    }
+
+    public void setScript(String scriptName, String code) {
+        this.getFiles().forEach(file -> {
+            if (file.getName().equals(scriptName)) {
+                FileManager.writeJsonToFile(file.getPath(), code);
+            }
+        });
     }
 
     public void updateScripts() {
@@ -41,25 +52,27 @@ public class ScriptManager extends DirectoryManager {
     public static void evalCode(String code, int line, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
         Context runContext = Context.enter();
         runContext.setLanguageVersion(Context.VERSION_ES6);
-        ScriptableObject scope = runContext.initStandardObjects();
-
-        if (properties != null) {
-            for (Map.Entry<String, Object> property : properties.entrySet()) {
-                ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(property.getValue(), scope));
-            }
-        }
-
         try {
-            runContext.evaluateString(scope, code, sourceName, line, null);
-        } catch (EvaluatorException evaluatorException) {
-            throw new CubeCodeException("SyntaxError: "+evaluatorException.details().replaceFirst("TypeError: ", ""), sourceName);
-        } catch (EcmaError ecmaError) {
-            throw new CubeCodeException("EcmaError: "+ecmaError.details().replaceFirst("TypeError: ", ""), sourceName);
-        } catch (Exception e) {
-            throw new CubeCodeException(e.getLocalizedMessage(), sourceName);
-        }
+            ScriptableObject scope = runContext.initStandardObjects();
 
-        runContext.close();
+            if (properties != null) {
+                for (Map.Entry<String, Object> property : properties.entrySet()) {
+                    ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(property.getValue(), scope));
+                }
+            }
+
+            try {
+                runContext.evaluateString(scope, code, sourceName, line, null);
+            } catch (EvaluatorException | EcmaError e) {
+                String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
+                String details = e.details().replaceFirst("TypeError: ", "");
+                throw new CubeCodeException(errorType + ": " + details, sourceName);
+            } catch (Exception e) {
+                throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
+            }
+        } finally {
+            Context.exit();
+        }
     }
 
     public Map<String, Script> getScripts() {

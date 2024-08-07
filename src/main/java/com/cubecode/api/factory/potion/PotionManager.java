@@ -2,10 +2,9 @@ package com.cubecode.api.factory.potion;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import com.cubecode.utils.CubeRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
@@ -28,7 +27,7 @@ public class PotionManager extends FactoryManager {
 
         registry.unFreeze();
         for (String jsonPotion : potions) {
-            var defaultPotion = GSONManager.readJSON(jsonPotion, PotionManager.DefaultPotion.class);
+            var defaultPotion = GsonManager.readJSON(jsonPotion, PotionManager.DefaultPotion.class);
             StatusEffectInstance statusEffect = new StatusEffectInstance(
                     Registries.STATUS_EFFECT.get(new Identifier(defaultPotion.effect)),
                     defaultPotion.duration,
@@ -49,7 +48,7 @@ public class PotionManager extends FactoryManager {
         registry.unFreeze();
 
         for (String jsonPotion : potions) {
-            var defaultPotion = GSONManager.readJSON(jsonPotion, PotionManager.DefaultPotion.class);
+            var defaultPotion = GsonManager.readJSON(jsonPotion, PotionManager.DefaultPotion.class);
 
             registry.remove(Registries.POTION, new Identifier(CubeCode.MOD_ID, defaultPotion.id));
         }

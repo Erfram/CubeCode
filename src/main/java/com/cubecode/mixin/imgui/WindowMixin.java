@@ -1,4 +1,4 @@
-package com.cubecode.mixin;
+package com.cubecode.mixin.imgui;
 
 import net.minecraft.client.WindowEventHandler;
 import net.minecraft.client.WindowSettings;

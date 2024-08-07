@@ -2,8 +2,7 @@ package com.cubecode.api.factory.enchantment;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.factory.FactoryManager;
-import com.cubecode.api.scripts.ScriptManager;
-import com.cubecode.api.utils.GSONManager;
+import com.cubecode.api.utils.GsonManager;
 import com.cubecode.utils.CubeRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -29,7 +28,7 @@ public class EnchantmentManager extends FactoryManager {
 
         registry.unFreeze();
         for (String jsonEnchantment : enchantments) {
-            var defaultEnchantment = GSONManager.readJSON(jsonEnchantment, DefaultEnchantment.class);
+            var defaultEnchantment = GsonManager.readJSON(jsonEnchantment, DefaultEnchantment.class);
 
             EquipmentSlot[] slotTypes = new EquipmentSlot[defaultEnchantment.slotTypes.length];
             for (int i = 0; i < defaultEnchantment.slotTypes.length; i++) {
@@ -58,7 +57,7 @@ public class EnchantmentManager extends FactoryManager {
         registry.unFreeze();
 
         for (String jsonEnchantment : enchantments) {
-            var defaultEnchantment = GSONManager.readJSON(jsonEnchantment, DefaultEnchantment.class);
+            var defaultEnchantment = GsonManager.readJSON(jsonEnchantment, DefaultEnchantment.class);
 
             registry.remove(Registries.ENCHANTMENT, new Identifier(CubeCode.MOD_ID, defaultEnchantment.id));
         }

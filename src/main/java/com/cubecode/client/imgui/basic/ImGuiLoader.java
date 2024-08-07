@@ -1,12 +1,18 @@
 package com.cubecode.client.imgui.basic;
 
+import com.cubecode.utils.Icons;
+import com.cubecode.utils.TextureManager;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
 import com.cubecode.CubeCode;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.util.Identifier;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -28,20 +34,27 @@ public class ImGuiLoader {
         loadFont(io);
 
         io.setIniFilename(null);
+        //io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         IMGUI_GLFW.init(handle, true);
         IMGUI_GL3.init();
     }
 
     private static void loadFont(ImGuiIO io) {
         final ImFontAtlas fontAtlas = io.getFonts();
-        fontAtlas.addFontDefault();
+        fontAtlas.clear();
 
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("imgui/fonts/default.ttf")) {
+        ImFontConfig fontConfig = new ImFontConfig();
+        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
+
+        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/default.ttf")) {
             byte[] bytes = inputStream.readAllBytes();
             MAIN_FONT = fontAtlas.addFontFromMemoryTTF(bytes, 16, new ImFontConfig(), io.getFonts().getGlyphRangesCyrillic());
         } catch (Exception exception) {
             CubeCode.LOGGER.error(exception.getMessage());
         }
+
+        fontConfig.destroy();
+
         fontAtlas.build();
     }
 
