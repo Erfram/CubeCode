@@ -18,6 +18,7 @@ public class Window {
 	private int flags = 0;
 	private final List<Component> components = new ArrayList<>();
 	private Runnable callback = () -> {};
+	private Runnable onExit = () -> {};
 
 	public static Window create() {
 		return new Window();
@@ -40,6 +41,11 @@ public class Window {
 
 	public Window callback(Runnable callback) {
 		this.callback = callback;
+		return this;
+	}
+
+	public Window onExit(Runnable callback) {
+		this.onExit = callback;
 		return this;
 	}
 
@@ -74,6 +80,7 @@ public class Window {
 
 		if (ImGui.begin(this.title, close, this.flags)) {
 			if (!close.get()) {
+				this.onExit.run();
 				ImGuiLoader.removeView(view);
 			}
 

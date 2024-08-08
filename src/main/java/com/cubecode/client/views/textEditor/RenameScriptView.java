@@ -36,18 +36,18 @@ public class RenameScriptView extends View {
 
     @Override
     protected String getName() {
-        return String.format("Rename Script##%s", uniqueID);
+        return String.format(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.name").getString() + "##%s", uniqueID);
     }
 
     @Override
     public void render() {
         Window.create()
-                .flags(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking)
-                .title(getName())
+            .flags(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking)
+            .title(getName())
             .draw(
                 Text.builder()
-                    .title("Name")
-                    .rxy(0.4f, 0.3f)
+                    .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.text.name").getString())
+                    .rxy(0.5f, 0.3f)
                     .build(),
                 InputText.builder()
                     .rxy(0.2f, 0.5f)
@@ -55,7 +55,7 @@ public class RenameScriptView extends View {
                     .build(),
                 Button.builder()
                         .rxy(0.32f, 0.75f)
-                        .title("Rename")
+                        .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.button.rename.title").getString())
                         .callback(() -> {
                             ClientPlayNetworking.send(NetworkingPackets.RENAME_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(this.oldName).writeString(((ImString)this.getVariable("scriptName")).get()));
                         })

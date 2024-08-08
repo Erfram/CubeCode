@@ -1,4 +1,6 @@
 {
+  "key.cubecode.dashboard": "Панель управления",
+
   "imgui.cubecode.dashboard.windows.title": "Окна",
   "imgui.cubecode.dashboard.factory.title": "Создание",
   "imgui.cubecode.dashboard.settings.title": "Настройки",
@@ -14,6 +16,14 @@
   "imgui.cubecode.windows.codeEditor.file.run.title": "Запустить",
   "imgui.cubecode.windows.codeEditor.file.create.title": "Создать",
   "imgui.cubecode.windows.codeEditor.file.save.title": "Сохранить",
+
+  "imgui.cubecode.windows.codeEditor.file.create.name": "Создание скрипта",
+  "imgui.cubecode.windows.codeEditor.file.create.text.name": "Название",
+  "imgui.cubecode.windows.codeEditor.file.create.button.create.title": "Создать",
+
+  "imgui.cubecode.windows.codeEditor.file.rename.name": "Переименование скрипта",
+  "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Название",
+  "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Переименовать",
 
   "imgui.cubecode.windows.codeEditor.documentation.title": "Документация",
   "imgui.cubecode.windows.codeEditor.documentation.open.title": "Открыть",

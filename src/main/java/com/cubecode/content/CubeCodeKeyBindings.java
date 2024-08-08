@@ -11,7 +11,7 @@ import java.util.Arrays;
 public final class CubeCodeKeyBindings {
 
     private static final String CUBECODE_CATEGORY = "CubeCode";
-    private static final KeyBinding DASHBOARD = new KeyBinding("Dashboard", GLFW.GLFW_KEY_EQUAL, CUBECODE_CATEGORY);
+    private static final KeyBinding DASHBOARD = new KeyBinding("key.cubecode.dashboard", GLFW.GLFW_KEY_EQUAL, CUBECODE_CATEGORY);
 
     public static final int VANILLA_OP_LEVEL = 2;
 

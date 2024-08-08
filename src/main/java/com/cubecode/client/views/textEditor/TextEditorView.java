@@ -5,6 +5,7 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import com.cubecode.client.screens.DashboardScreen;
 import com.cubecode.network.NetworkingPackets;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
@@ -13,8 +14,10 @@ import imgui.type.ImBoolean;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +75,12 @@ public class TextEditorView extends View {
                     ImGui.sameLine();
 
                     CubeImGui.beginChild("CubeCode IDEA", 0, 0, true, () -> {
-                        CODE_EDITOR.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
+                        if (selectedScript != -1) {
+                            CODE_EDITOR.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
+                        }
                     });
                 })
+                .onExit(this::saveScript)
                 .render(this);
     }
 
@@ -91,6 +97,7 @@ public class TextEditorView extends View {
             if (ImGui.selectable(scriptsName.get(i), selectedScript == i)) {
                 String textToSave = CODE_EDITOR.getText();
 
+                saveScript();
                 selectedScript = i;
                 CODE_EDITOR.setReadOnly(false);
                 CODE_EDITOR.setText(scripts.get(selectedScript).code);
@@ -127,16 +134,7 @@ public class TextEditorView extends View {
             }
 
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.save.title").getString())) {
-                String script = CODE_EDITOR.getText();
-
-                PacketByteBuf buf = PacketByteBufs.create();
-
-                String scriptName = scriptsName.get(selectedScript);
-
-                buf.writeString(scriptName);
-                buf.writeString(script);
-
-                ClientPlayNetworking.send(NetworkingPackets.SAVE_SCRIPT_C2S_PACKET, buf);
+                saveScript();
             }
             ImGui.endMenu();
         }
@@ -181,6 +179,9 @@ public class TextEditorView extends View {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.paste.title").getString(), "Ctrl-V", !readOnly && ImGui.getClipboardText() != null)) {
                 CODE_EDITOR.paste();
             }
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.save.title").getString(), "Ctrl-S", !readOnly)) {
+                saveScript();
+            }
 
             ImGui.endMenu();
         }
@@ -200,6 +201,37 @@ public class TextEditorView extends View {
             }
 
             ImGui.endPopup();
+        }
+    }
+
+    private void saveScript() {
+        if (selectedScript != -1) {
+            String script = CODE_EDITOR.getText().substring(0, CODE_EDITOR.getText().length() - 1);
+
+            PacketByteBuf buf = PacketByteBufs.create();
+
+            String scriptName = scriptsName.get(selectedScript);
+
+            buf.writeString(scriptName);
+            buf.writeString(script);
+
+            ClientPlayNetworking.send(NetworkingPackets.SAVE_SCRIPT_C2S_PACKET, buf);
+        }
+    }
+
+    @Override
+    public void handleKeyPressed(int keyCode, int scanCode, int modifiers) {
+        try {
+            if (InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().length() == 1) {
+                char enteredChar = InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().charAt(0);
+                boolean isCtrlPressed = (modifiers & GLFW.GLFW_MOD_CONTROL) != 0;
+
+                if (isCtrlPressed && enteredChar == 'S') {
+                    saveScript();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

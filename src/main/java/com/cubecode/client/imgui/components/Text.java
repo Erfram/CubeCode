@@ -31,8 +31,8 @@ public class Text implements Component {
         if (this.commonProperties.x >= 0 && this.commonProperties.y >= 0) {
             ImGui.setCursorPos(this.commonProperties.x, this.commonProperties.y);
         } else if (this.commonProperties.rx >= 0 && this.commonProperties.ry >= 0) {
-            float actualX = (ImGui.getWindowWidth() - this.commonProperties.width) * this.commonProperties.rx;
-            float actualY = (ImGui.getWindowHeight() - this.commonProperties.height) * this.commonProperties.ry;
+            float actualX = (ImGui.getWindowWidth() - ImGui.calcTextSize(this.title).x) * this.commonProperties.rx;
+            float actualY = (ImGui.getWindowHeight() - ImGui.calcTextSize(this.title).y) * this.commonProperties.ry;
             ImGui.setCursorPos(actualX, actualY);
         }
 

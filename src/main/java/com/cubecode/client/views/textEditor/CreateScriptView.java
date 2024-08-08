@@ -30,7 +30,7 @@ public class CreateScriptView extends View {
 
     @Override
     protected String getName() {
-        return String.format("Create Script##%s", uniqueID);
+        return String.format(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.create.name").getString() + "##%s", uniqueID);
     }
 
     @Override
@@ -40,16 +40,16 @@ public class CreateScriptView extends View {
                 .title(getName())
             .draw(
                 Text.builder()
-                    .title("Name")
-                    .rxy(0.4f, 0.3f)
+                    .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.create.text.name").getString())
+                    .rxy(0.5f, 0.3f)
                     .build(),
                 InputText.builder()
                     .rxy(0.2f, 0.5f)
                     .id("scriptName")
                     .build(),
                 Button.builder()
-                        .rxy(0.32f, 0.75f)
-                        .title("Create")
+                        .rxy(0.8f, 0.75f)
+                        .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.create.button.create.title").getString())
                         .callback(() -> {
                             ClientPlayNetworking.send(NetworkingPackets.CREATE_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(((ImString)this.getVariable("scriptName")).get()));
                         })

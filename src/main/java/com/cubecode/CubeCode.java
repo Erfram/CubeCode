@@ -10,7 +10,6 @@ import com.cubecode.api.factory.material.ToolMaterialManager;
 import com.cubecode.api.factory.potion.PotionManager;
 import com.cubecode.network.NetworkingPackets;
 import com.cubecode.utils.FactoryType;
-import com.cubecode.utils.Icons;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import java.io.File;
 import java.util.LinkedHashMap;
 
 public class CubeCode implements ModInitializer {
-
     public static final Logger LOGGER;
 
     public static final String MOD_ID;

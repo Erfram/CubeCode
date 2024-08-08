@@ -76,7 +76,7 @@ public class ScriptEntity<T extends Entity> {
     }
 
     public void addVelocity(double x, double y, double z) {
-        this.entity.addVelocity(x, y, z);
+        this.entity.setVelocity(x, y, z);
     }
 
     public void setVelocity(double x, double y, double z) {

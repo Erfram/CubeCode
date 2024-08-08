@@ -41,5 +41,4 @@ public interface ParentElementMixin {
         ImGuiLoader.IMGUI_GLFW.mouseButtonCallback(MinecraftClient.getInstance().getWindow().getHandle(), button, GLFW.GLFW_RELEASE, 0);
         ImGuiLoader.handleMouseReleased(mouseX, mouseY, button);
     }
-
 }

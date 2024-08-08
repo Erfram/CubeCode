@@ -31,7 +31,7 @@ public class Button implements Component {
         if (this.commonProperties.x >= 0 && this.commonProperties.y >= 0) {
             ImGui.setCursorPos(this.commonProperties.x, this.commonProperties.y);
         } else if (this.commonProperties.rx >= 0 && this.commonProperties.ry >= 0) {
-            float actualX = (ImGui.getWindowWidth() - this.commonProperties.width) * this.commonProperties.rx;
+            float actualX = (ImGui.getWindowWidth() - ImGui.calcItemWidth()) * this.commonProperties.rx;
             float actualY = (ImGui.getWindowHeight() - this.commonProperties.height) * this.commonProperties.ry;
             ImGui.setCursorPos(actualX, actualY);
         }

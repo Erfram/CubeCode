@@ -72,9 +72,11 @@ public class ScriptManager extends DirectoryManager {
 
     public void executeScript(String name, @Nullable Map<String, Object> properties) throws CubeCodeException {
         Script script = scripts.get(name);
+
         if (script == null) {
             throw new CubeCodeException("Script not found: " + name, name);
         }
+
         script.execute(name, properties);
     }
 

@@ -1,4 +1,6 @@
 {
+  "key.cubecode.dashboard": "Dashboard",
+
   "imgui.cubecode.dashboard.windows.title": "Windows",
   "imgui.cubecode.dashboard.factory.title": "Factory",
   "imgui.cubecode.dashboard.settings.title": "Settings",
@@ -15,6 +17,14 @@
   "imgui.cubecode.windows.codeEditor.file.create.title": "Create",
   "imgui.cubecode.windows.codeEditor.file.save.title": "Save",
 
+  "imgui.cubecode.windows.codeEditor.file.create.name": "Create Script",
+  "imgui.cubecode.windows.codeEditor.file.create.text.name": "Name",
+  "imgui.cubecode.windows.codeEditor.file.create.button.create.title": "Create",
+
+  "imgui.cubecode.windows.codeEditor.file.rename.name": "Rename Script",
+  "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Name",
+  "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Rename",
+
   "imgui.cubecode.windows.codeEditor.documentation.title": "Documentation",
   "imgui.cubecode.windows.codeEditor.documentation.open.title": "Open",
 
@@ -26,6 +36,7 @@
   "imgui.cubecode.windows.codeEditor.edit.cut.title": "Cut",
   "imgui.cubecode.windows.codeEditor.edit.delete.title": "Delete",
   "imgui.cubecode.windows.codeEditor.edit.paste.title": "Paste",
+  "imgui.cubecode.windows.codeEditor.edit.save.title": "Save",
 
   "imgui.cubecode.settings.window.name": "Window Settings",
 
