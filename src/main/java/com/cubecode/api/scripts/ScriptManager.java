@@ -3,14 +3,15 @@ package com.cubecode.api.scripts;
 import com.cubecode.CubeCode;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.FileManager;
-import netscape.javascript.JSObject;
+import dev.latvian.mods.rhino.Context;
+import dev.latvian.mods.rhino.EcmaError;
+import dev.latvian.mods.rhino.EvaluatorException;
+import dev.latvian.mods.rhino.ScriptableObject;
+import dev.latvian.mods.rhino.mod.util.RemappingHelper;
+import dev.latvian.mods.rhino.util.Remapper;
 import org.jetbrains.annotations.Nullable;
-import org.mozilla.javascript.*;
 import com.cubecode.utils.CubeCodeException;
-import org.mozilla.javascript.debug.DebuggableScript;
 
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,6 +22,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ScriptManager extends DirectoryManager {
+    static final public Context context = Context.enter();
+    public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
     private ConcurrentHashMap<String, Script> scripts;
 
     public ScriptManager(File scriptsDirectory) {
@@ -81,28 +84,22 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public static void evalCode(String code, int line, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        Context runContext = Context.enter();
-        runContext.setLanguageVersion(Context.VERSION_ES6);
+        ScriptableObject scope = context.initStandardObjects();
+
+        if (properties != null) {
+            for (Map.Entry<String, Object> property : properties.entrySet()) {
+                ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(context, property.getValue(), scope), context);
+            }
+        }
+
         try {
-            ScriptableObject scope = runContext.initStandardObjects();
-
-            if (properties != null) {
-                for (Map.Entry<String, Object> property : properties.entrySet()) {
-                    ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(property.getValue(), scope));
-                }
-            }
-
-            try {
-                runContext.evaluateString(scope, code, sourceName, line, null);
-            } catch (EvaluatorException | EcmaError e) {
-                String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
-                String details = e.details().replaceFirst("TypeError: ", "");
-                throw new CubeCodeException(errorType + ": " + details, sourceName);
-            } catch (Exception e) {
-                throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
-            }
-        } finally {
-            Context.exit();
+            context.evaluateString(scope, code, sourceName, line, null);
+        } catch (EvaluatorException | EcmaError e) {
+            String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
+            String details = e.details().replaceFirst("TypeError: ", "");
+            throw new CubeCodeException(errorType + ": " + details, sourceName);
+        } catch (Exception e) {
+            throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
         }
     }
 
