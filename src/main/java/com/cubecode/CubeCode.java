@@ -8,6 +8,7 @@ import com.cubecode.api.factory.enchantment.EnchantmentManager;
 import com.cubecode.api.factory.item.ItemManager;
 import com.cubecode.api.factory.material.ToolMaterialManager;
 import com.cubecode.api.factory.potion.PotionManager;
+import com.cubecode.network.Dispatcher;
 import com.cubecode.network.NetworkingPackets;
 import com.cubecode.utils.FactoryType;
 import com.mojang.logging.LogUtils;
@@ -46,6 +47,7 @@ public class CubeCode implements ModInitializer {
     @Override
     public void onInitialize() {
         EventHandler.init();
+        Dispatcher.register();
         NetworkingPackets.registerC2SPackets();
     }
 }

@@ -10,15 +10,22 @@ import com.cubecode.api.factory.material.ToolMaterialManager;
 import com.cubecode.api.factory.potion.PotionManager;
 import com.cubecode.api.scripts.ScriptManager;
 import com.cubecode.content.CubeCodeCommand;
+import com.cubecode.network.Dispatcher;
 import com.cubecode.network.NetworkingPackets;
+import com.cubecode.network.packets.TestS2CPacket;
 import com.cubecode.utils.FactoryType;
 import com.cubecode.utils.PacketByteBufUtils;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.WorldSavePath;
 
 import java.io.File;
@@ -68,6 +75,10 @@ public class EventHandler {
             CubeCode.blockManager.modifyingChunks(server);
 
             CubeCode.factoryManagers.forEach((key, value) -> value.unregister());
+        });
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            Dispatcher.sendTo(new TestS2CPacket("lox"), handler.player);
         });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {

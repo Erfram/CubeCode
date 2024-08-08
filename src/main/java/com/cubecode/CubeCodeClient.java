@@ -11,6 +11,7 @@ import com.cubecode.api.scripts.Script;
 import com.cubecode.client.config.ConfigManager;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.content.CubeCodeKeyBindings;
+import com.cubecode.network.Dispatcher;
 import com.cubecode.network.NetworkingPackets;
 import com.cubecode.utils.FactoryType;
 import com.cubecode.utils.Icons;
@@ -41,6 +42,7 @@ public class CubeCodeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         NetworkingPackets.registerS2CPackets();
+        Dispatcher.register();
         CubeCodeKeyBindings.init();
         EventHandlerClient.init();
         CubeCodeConfig.loadConfig();
