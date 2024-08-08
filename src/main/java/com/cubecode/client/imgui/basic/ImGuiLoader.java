@@ -139,4 +139,8 @@ public class ImGuiLoader {
             view.handleMouseReleased(mouseX, mouseY, button);
         });
     }
+
+    public static void onClose() {
+        RENDER_STACK.forEach(View::onClose);
+    }
 }

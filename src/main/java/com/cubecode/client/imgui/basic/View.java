@@ -2,12 +2,9 @@ package com.cubecode.client.imgui.basic;
 
 
 import com.cubecode.client.imgui.themes.CodeTheme;
-import com.cubecode.client.views.CodeEditorView;
 import net.minecraft.client.MinecraftClient;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public abstract class View {
@@ -105,5 +102,8 @@ public abstract class View {
     }
 
     public void handleMouseReleased(double mouseX, double mouseY, int button) {
+    }
+
+    public void onClose() {
     }
 }

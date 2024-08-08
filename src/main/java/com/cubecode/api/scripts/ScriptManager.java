@@ -92,6 +92,8 @@ public class ScriptManager extends DirectoryManager {
             }
         }
 
+        context.setRemapper(remapper);
+
         try {
             context.evaluateString(scope, code, sourceName, line, null);
         } catch (EvaluatorException | EcmaError e) {

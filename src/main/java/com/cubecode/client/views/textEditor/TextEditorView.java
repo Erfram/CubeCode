@@ -53,8 +53,6 @@ public class TextEditorView extends View {
         ClientPlayNetworking.send(NetworkingPackets.UPDATE_SCRIPTS_C2S_PACKET, PacketByteBufs.empty());
 
         selectedScript = -1;
-        CODE_EDITOR.setText("");
-        CODE_EDITOR.setReadOnly(true);
     }
 
     @Override
@@ -99,7 +97,6 @@ public class TextEditorView extends View {
 
                 saveScript();
                 selectedScript = i;
-                CODE_EDITOR.setReadOnly(false);
                 CODE_EDITOR.setText(scripts.get(selectedScript).code);
             }
 
@@ -124,6 +121,8 @@ public class TextEditorView extends View {
     private void renderFileMenu() {
         if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.file.title").getString())) {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.run.title").getString())) {
+                saveScript();
+
                 String code = CODE_EDITOR.getText();
 
                 ClientPlayNetworking.send(NetworkingPackets.RUN_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(code));
@@ -193,7 +192,6 @@ public class TextEditorView extends View {
                 ClientPlayNetworking.send(NetworkingPackets.DELETE_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(scriptsName.get(selectedScript)));
                 selectedScript = -1;
                 CODE_EDITOR.setText("");
-                CODE_EDITOR.setReadOnly(true);
             }
 
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.rename.title").getString())) {
@@ -217,6 +215,11 @@ public class TextEditorView extends View {
 
             ClientPlayNetworking.send(NetworkingPackets.SAVE_SCRIPT_C2S_PACKET, buf);
         }
+    }
+
+    @Override
+    public void onClose() {
+        saveScript();
     }
 
     @Override
