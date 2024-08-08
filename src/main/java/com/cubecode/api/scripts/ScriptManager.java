@@ -1,14 +1,21 @@
 package com.cubecode.api.scripts;
 
+import com.cubecode.CubeCode;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.FileManager;
+import netscape.javascript.JSObject;
 import org.jetbrains.annotations.Nullable;
 import org.mozilla.javascript.*;
 import com.cubecode.utils.CubeCodeException;
 import org.mozilla.javascript.debug.DebuggableScript;
 
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +34,28 @@ public class ScriptManager extends DirectoryManager {
                 FileManager.writeJsonToFile(file.getPath(), code);
             }
         });
+    }
+
+    public boolean deleteScript(String scriptName) {
+        try {
+            Files.delete(CubeCode.scriptManager.getDirectory().toPath().resolve(scriptName));
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean createScript(String scriptName, String scriptContent) {
+        Path scriptsPath = CubeCode.scriptManager.getDirectory().toPath();
+
+        File scriptFile = scriptsPath.resolve(scriptName).toFile();
+
+        try (FileWriter writer = new FileWriter(scriptFile)) {
+            writer.write(scriptContent);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public void updateScripts() {

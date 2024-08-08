@@ -7,6 +7,7 @@ import com.cubecode.client.imgui.components.InputText;
 import com.cubecode.client.imgui.components.Window;
 import imgui.ImGui;
 import imgui.type.ImString;
+import net.minecraft.text.Text;
 
 public class ScriptView extends View {
     private final int viewWidth = 500;
@@ -14,7 +15,7 @@ public class ScriptView extends View {
 
     @Override
     public String getName() {
-        return String.format("Script Settings##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.settings.script.name").getString() + "##%s", uniqueID);
     }
 
     @Override
@@ -31,16 +32,16 @@ public class ScriptView extends View {
         Window.create()
             .title(getName())
             .callback(() -> {
-                ImGui.text("Name Context");
+                ImGui.text(Text.translatable("imgui.cubecode.settings.script.title.title").getString());
             }).draw(
                 InputText.builder().text(CubeCodeConfig.getScriptConfig().contextName).id("contextName").build(),
-                Button.builder().title("Reset").callback(() -> {
+                Button.builder().title(Text.translatable("imgui.cubecode.settings.script.reset.title").getString()).callback(() -> {
                     CubeCodeConfig.getScriptConfig().contextName = "Context";
                     this.setVariable("contextName", "Context");
 
                     CubeCodeConfig.saveConfig();
                 }).build(),
-                Button.builder().title("Apply").callback(() -> {
+                Button.builder().title(Text.translatable("imgui.cubecode.settings.script.apply.title").getString()).callback(() -> {
                     CubeCodeConfig.getScriptConfig().contextName = ((ImString)this.getVariable("contextName")).get();
 
                     CubeCodeConfig.saveConfig();

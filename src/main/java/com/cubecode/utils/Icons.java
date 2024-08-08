@@ -1,18 +1,15 @@
 package com.cubecode.utils;
 
+import com.cubecode.CubeCode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
 public class Icons {
-    public static Identifier RESET_BUTTON_TEXTURE;
+    public static int RESET;
 
     private static final String iconsPath = "imgui/icons/";
 
     public static void register() {
-        RESET_BUTTON_TEXTURE = TextureManager.loadTexture(iconsPath + "reset.png");
-    }
-
-    public static int getId(Identifier identifier) {
-        return MinecraftClient.getInstance().getTextureManager().getTexture(identifier).getGlId();
+        RESET = MinecraftClient.getInstance().getTextureManager().getTexture(new Identifier(CubeCode.MOD_ID, iconsPath + "reset.png")).getGlId();
     }
 }

@@ -1,6 +1,5 @@
 package com.cubecode.client.views.textEditor;
 
-import com.cubecode.CubeCodeClient;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
@@ -15,6 +14,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class TextEditorView extends View {
 
     @Override
     public String getName() {
-        return String.format("Code Editor##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString() + "##%s", uniqueID);
     }
 
     @Override
@@ -48,6 +48,10 @@ public class TextEditorView extends View {
         CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
 
         ClientPlayNetworking.send(NetworkingPackets.UPDATE_SCRIPTS_C2S_PACKET, PacketByteBufs.empty());
+
+        selectedScript = -1;
+        CODE_EDITOR.setText("");
+        CODE_EDITOR.setReadOnly(true);
     }
 
     @Override
@@ -68,7 +72,7 @@ public class TextEditorView extends View {
                     ImGui.sameLine();
 
                     CubeImGui.beginChild("CubeCode IDEA", 0, 0, true, () -> {
-                        CODE_EDITOR.render("CodeEditor");
+                        CODE_EDITOR.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
                     });
                 })
                 .render(this);
@@ -80,15 +84,25 @@ public class TextEditorView extends View {
     private int selectedScript = 0;
 
     private void renderList() {
-        ImGui.text("Scripts");
+        ImGui.text(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.title").getString());
         ImGui.separator();
 
         for (int i = 0; i < scriptsName.size(); i++) {
             if (ImGui.selectable(scriptsName.get(i), selectedScript == i)) {
                 String textToSave = CODE_EDITOR.getText();
 
+                selectedScript = i;
+                CODE_EDITOR.setReadOnly(false);
                 CODE_EDITOR.setText(scripts.get(selectedScript).code);
             }
+
+            //Mouse Right CLick
+            if (ImGui.isItemClicked(1)) {
+                selectedScript = i;
+                ImGui.openPopup("script_context_menu_" + i);
+            }
+
+            runContextMenu();
         }
     }
 
@@ -101,14 +115,18 @@ public class TextEditorView extends View {
     }
 
     private void renderFileMenu() {
-        if (ImGui.beginMenu("File")) {
-            if (ImGui.menuItem("Run")) {
+        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.file.title").getString())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.run.title").getString())) {
                 String code = CODE_EDITOR.getText();
 
                 ClientPlayNetworking.send(NetworkingPackets.RUN_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(code));
             }
 
-            if (ImGui.menuItem("Save")) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.create.title").getString())) {
+                ImGuiLoader.pushView(new CreateScriptView());
+            }
+
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.save.title").getString())) {
                 String script = CODE_EDITOR.getText();
 
                 PacketByteBuf buf = PacketByteBufs.create();
@@ -123,8 +141,8 @@ public class TextEditorView extends View {
             ImGui.endMenu();
         }
 
-        if (ImGui.beginMenu("Documentation")) {
-            if (ImGui.menuItem("Open")) {
+        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.open.title").getString())) {
                 ImGuiLoader.pushView(new DocumentationView());
             }
 
@@ -133,38 +151,55 @@ public class TextEditorView extends View {
     }
 
     private void renderEditMenu() {
-        if (ImGui.beginMenu("Edit")) {
+        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.edit.title").getString())) {
             final boolean readOnly = CODE_EDITOR.isReadOnly();
-            if (ImGui.menuItem("Read-only mode", "", readOnly)) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title").getString(), "", readOnly)) {
                 CODE_EDITOR.setReadOnly(!readOnly);
             }
 
             ImGui.separator();
 
-            if (ImGui.menuItem("Undo", "ALT-Backspace", !readOnly && CODE_EDITOR.canUndo())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.undo.title").getString(), "ALT-Backspace", !readOnly && CODE_EDITOR.canUndo())) {
                 CODE_EDITOR.undo(1);
             }
 
-            if (ImGui.menuItem("Redo", "Ctrl-Y", !readOnly && CODE_EDITOR.canRedo())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.redo.title").getString(), "Ctrl-Y", !readOnly && CODE_EDITOR.canRedo())) {
                 CODE_EDITOR.redo(1);
             }
 
             ImGui.separator();
 
-            if (ImGui.menuItem("Copy", "Ctrl-C", CODE_EDITOR.hasSelection())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.copy.title").getString(), "Ctrl-C", CODE_EDITOR.hasSelection())) {
                 CODE_EDITOR.copy();
             }
-            if (ImGui.menuItem("Cut", "Ctrl-X", !readOnly && CODE_EDITOR.hasSelection())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.cut.title").getString(), "Ctrl-X", !readOnly && CODE_EDITOR.hasSelection())) {
                 CODE_EDITOR.cut();
             }
-            if (ImGui.menuItem("Delete", "Del", !readOnly && CODE_EDITOR.hasSelection())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.delete.title").getString(), "Del", !readOnly && CODE_EDITOR.hasSelection())) {
                 CODE_EDITOR.delete();
             }
-            if (ImGui.menuItem("Paste", "Ctrl-V", !readOnly && ImGui.getClipboardText() != null)) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.paste.title").getString(), "Ctrl-V", !readOnly && ImGui.getClipboardText() != null)) {
                 CODE_EDITOR.paste();
             }
 
             ImGui.endMenu();
+        }
+    }
+
+    public void runContextMenu() {
+        if (ImGui.beginPopup("script_context_menu_" + selectedScript)) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.delete.title").getString())) {
+                ClientPlayNetworking.send(NetworkingPackets.DELETE_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(scriptsName.get(selectedScript)));
+                selectedScript = -1;
+                CODE_EDITOR.setText("");
+                CODE_EDITOR.setReadOnly(true);
+            }
+
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.rename.title").getString())) {
+                ImGuiLoader.pushView(new RenameScriptView(scriptsName.get(selectedScript)));
+            }
+
+            ImGui.endPopup();
         }
     }
 }

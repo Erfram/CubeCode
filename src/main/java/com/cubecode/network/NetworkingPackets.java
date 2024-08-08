@@ -25,10 +25,12 @@ import net.minecraft.client.texture.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.PickFromInventoryC2SPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,15 +44,46 @@ public class NetworkingPackets {
 
     public static final Identifier CREATE_ELEMENT_FILE_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "create_element_file_c2s_packet");
     public static final Identifier RUN_SCRIPT_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "run_script_c2s_packet");
+    public static final Identifier CREATE_SCRIPT_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "create_script_c2s_packet");
+    public static final Identifier RENAME_SCRIPT_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "rename_script_c2s_packet");
     public static final Identifier UPDATE_SCRIPTS_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "update_scripts_c2s_packet");
     public static final Identifier SAVE_SCRIPT_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "save_script_c2s_packet");
+    public static final Identifier DELETE_SCRIPT_C2S_PACKET = new Identifier(CubeCode.MOD_ID, "delete_script_c2s_packet");
 
     public static void registerC2SPackets() {
+        ServerPlayNetworking.registerGlobalReceiver(RENAME_SCRIPT_C2S_PACKET, ((server, player, handler, buf, responseSender) -> {
+            String oldName = buf.readString();
+            String newName = buf.readString();
+
+            newName = newName.endsWith(".js") ? newName : newName + ".js";
+
+            CubeCode.scriptManager.renameFile(oldName, newName);
+            updateScriptsC2SPacket(player);
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(DELETE_SCRIPT_C2S_PACKET, ((server, player, handler, buf, responseSender) -> {
+            String script = buf.readString();
+
+            CubeCode.scriptManager.deleteScript(script);
+            updateScriptsC2SPacket(player);
+        }));
+
+        ServerPlayNetworking.registerGlobalReceiver(CREATE_SCRIPT_C2S_PACKET, ((server, player, handler, buf, responseSender) -> {
+            String name = buf.readString();
+            String code = CubeCodeConfig.getScriptConfig().contextName + ".server.send(\"Hellow World!\", false)";
+
+            name = name.endsWith(".js") ? name : name + ".js";
+
+            CubeCode.scriptManager.createScript(name, code);
+            updateScriptsC2SPacket(player);
+        }));
+
         ServerPlayNetworking.registerGlobalReceiver(SAVE_SCRIPT_C2S_PACKET, ((server, player, handler, buf, responseSender) -> {
             String script = buf.readString();
             String code = buf.readString();
 
             CubeCode.scriptManager.setScript(script, code);
+            updateScriptsC2SPacket(player);
         }));
 
         ServerPlayNetworking.registerGlobalReceiver(CREATE_ELEMENT_FILE_C2S_PACKET, (server, player, handler, buf, responseSender) -> {
@@ -83,44 +116,49 @@ public class NetworkingPackets {
         });
 
         ServerPlayNetworking.registerGlobalReceiver(UPDATE_SCRIPTS_C2S_PACKET, (server, player, handler, buf, responseSender) -> {
-            CubeCode.scriptManager.updateScripts();
-            Map<String, Script> scripts = CubeCode.scriptManager.getScripts();
-            PacketByteBuf byteBuf = PacketByteBufs.create();
+            updateScriptsC2SPacket(player);
+        });
+    }
 
-            List<String> scriptsCode = new ArrayList<>();
+    public static void updateScriptsC2SPacket(ServerPlayerEntity player) {
+        CubeCode.scriptManager.updateScripts();
+        Map<String, Script> scripts = CubeCode.scriptManager.getScripts();
+        PacketByteBuf byteBuf = PacketByteBufs.create();
 
-            scripts.values().forEach((script) -> {
-                scriptsCode.add(script.code);
-            });
+        List<String> scriptsCode = new ArrayList<>();
 
-            byteBuf.writeCollection(
+        scripts.values().forEach((script) -> {
+            scriptsCode.add(script.code);
+        });
+
+        byteBuf.writeCollection(
                 scripts.keySet().stream().toList(),
                 PacketByteBuf::writeString
-            );
+        );
 
-
-
-            byteBuf.writeCollection(
+        byteBuf.writeCollection(
                 scriptsCode,
                 PacketByteBuf::writeString
-            );
+        );
 
-            ServerPlayNetworking.send(player, UPDATE_SCRIPTS_S2C_PACKET, byteBuf);
-        });
+        ServerPlayNetworking.send(player, UPDATE_SCRIPTS_S2C_PACKET, byteBuf);
     }
 
     public static void registerS2CPackets() {
         ClientPlayNetworking.registerGlobalReceiver(UPDATE_SCRIPTS_S2C_PACKET, ((client, handler, buf, responseSender) -> {
-            List<String> scripts = buf.readList(PacketByteBuf::readString);
+            List<String> scriptList = buf.readList(PacketByteBuf::readString);
             List<String> codes = buf.readList(PacketByteBuf::readString);
-
-            System.out.println(codes);
             client.execute(() -> {
-                for (int i = 0; i < scripts.size(); i++) {
-                    CubeCodeClient.scripts.put(scripts.get(i), new Script(codes.get(i)));
-                    TextEditorView.scriptsName = CubeCodeClient.scripts.keySet().stream().toList();
-                    TextEditorView.scripts = CubeCodeClient.scripts.values().stream().toList();
+                Map<String, Script> scripts = new HashMap<>();
+
+                for (int i = 0; i < scriptList.size(); i++) {
+                    scripts.put(scriptList.get(i), new Script(codes.get(i)));
                 }
+
+                CubeCodeClient.scripts = scripts;
+
+                TextEditorView.scriptsName = CubeCodeClient.scripts.keySet().stream().toList();
+                TextEditorView.scripts = CubeCodeClient.scripts.values().stream().toList();
             });
         }));
 

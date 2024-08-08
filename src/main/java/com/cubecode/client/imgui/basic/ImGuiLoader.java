@@ -1,18 +1,12 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.utils.Icons;
-import com.cubecode.utils.TextureManager;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
 import com.cubecode.CubeCode;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.util.Identifier;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;

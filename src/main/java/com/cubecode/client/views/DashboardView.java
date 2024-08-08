@@ -18,16 +18,12 @@ public class DashboardView extends View {
     public void render() {
         CubeImGui.mainMenuBar(() -> {
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.windows.title").getString(), () -> {
-                CubeImGui.menuItem("Code Editor", () -> ImGuiLoader.pushView(new TextEditorView()));
-            });
-
-            CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.factory.title").getString(), () -> {
-                CubeImGui.menuItem("Block", () -> ImGuiLoader.pushView(new BlockView()));
+                CubeImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.title").getString(), () -> ImGuiLoader.pushView(new TextEditorView()));
             });
 
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {
-                CubeImGui.menuItem("Window", () -> ImGuiLoader.pushView(new WindowView()));
-                CubeImGui.menuItem("Script", () -> ImGuiLoader.pushView(new ScriptView()));
+                CubeImGui.menuItem(Text.translatable("imgui.cubecode.settings.window.title").getString(), () -> ImGuiLoader.pushView(new WindowView()));
+                CubeImGui.menuItem(Text.translatable("imgui.cubecode.settings.script.title").getString(), () -> ImGuiLoader.pushView(new ScriptView()));
             });
         });
 

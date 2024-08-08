@@ -2,6 +2,58 @@
   "imgui.cubecode.dashboard.windows.title": "Windows",
   "imgui.cubecode.dashboard.factory.title": "Factory",
   "imgui.cubecode.dashboard.settings.title": "Settings",
+
+  "imgui.cubecode.windows.codeEditor.title": "Code Editor",
+  "imgui.cubecode.windows.codeEditor.name": "Code Editor",
+
+  "imgui.cubecode.windows.codeEditor.scripts.title": "Scripts",
+  "imgui.cubecode.windows.codeEditor.scripts.context.delete.title": "Delete",
+  "imgui.cubecode.windows.codeEditor.scripts.context.rename.title": "Rename",
+
+  "imgui.cubecode.windows.codeEditor.file.title": "File",
+  "imgui.cubecode.windows.codeEditor.file.run.title": "Run",
+  "imgui.cubecode.windows.codeEditor.file.create.title": "Create",
+  "imgui.cubecode.windows.codeEditor.file.save.title": "Save",
+
+  "imgui.cubecode.windows.codeEditor.documentation.title": "Documentation",
+  "imgui.cubecode.windows.codeEditor.documentation.open.title": "Open",
+
+  "imgui.cubecode.windows.codeEditor.edit.title": "Edit",
+  "imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title": "Read-only mode",
+  "imgui.cubecode.windows.codeEditor.edit.undo.title": "Undo",
+  "imgui.cubecode.windows.codeEditor.edit.redo.title": "Redo",
+  "imgui.cubecode.windows.codeEditor.edit.copy.title": "Copy",
+  "imgui.cubecode.windows.codeEditor.edit.cut.title": "Cut",
+  "imgui.cubecode.windows.codeEditor.edit.delete.title": "Delete",
+  "imgui.cubecode.windows.codeEditor.edit.paste.title": "Paste",
+
+  "imgui.cubecode.settings.window.name": "Window Settings",
+
+  "imgui.cubecode.settings.window.title": "Window",
+  "imgui.cubecode.settings.window.color": "Color",
+  "imgui.cubecode.settings.window.colorNotActive": "Color not active",
+  "imgui.cubecode.settings.window.colorActive": "Color active",
+  "imgui.cubecode.settings.window.colorHovered": "Color hovered",
+  "imgui.cubecode.settings.window.colorCollapsed": "Color collapsed",
+
+  "imgui.cubecode.settings.window.background.title": "Background",
+  "imgui.cubecode.settings.window.title.title": "Title",
+  "imgui.cubecode.settings.window.border.title": "Border",
+  "imgui.cubecode.settings.window.button.title": "Button",
+  "imgui.cubecode.settings.window.frameBackground.title": "Frame Background",
+
+  "imgui.cubecode.settings.window.sliderGrab.title": "Slider",
+
+  "imgui.cubecode.settings.window.reset.button.title": "Reset",
+  "imgui.cubecode.settings.window.apply.button.title": "Apply",
+
+  "imgui.cubecode.settings.script.title": "Script",
+
+  "imgui.cubecode.settings.script.name": "Script Settings",
+  "imgui.cubecode.settings.script.title.title": "Context Name",
+  "imgui.cubecode.settings.script.reset.title": "Reset",
+  "imgui.cubecode.settings.script.apply.title": "Apply",
+
   "imgui.cubecode.factory.block.title": "Сreating block",
   "imgui.cubecode.factory.block.id": "Id",
   "imgui.cubecode.factory.block.name": "Name",

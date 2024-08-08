@@ -67,14 +67,14 @@ public class CubeCodeConfig {
 
             if (Files.notExists(window)) {
                 windowConfig = new WindowConfig();
-                saveConfig();
+                GsonManager.writeJSON(window.toFile(), windowConfig);
             } else {
                 windowConfig = GsonManager.readJSON(window.toFile(), WindowConfig.class);
             }
 
             if (Files.notExists(script)) {
                 scriptConfig = new ScriptConfig();
-                saveConfig();
+                GsonManager.writeJSON(script.toFile(), scriptConfig);
             } else {
                 scriptConfig = GsonManager.readJSON(script.toFile(), ScriptConfig.class);
             }
