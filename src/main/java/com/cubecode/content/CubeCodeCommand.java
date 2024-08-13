@@ -1,7 +1,7 @@
 package com.cubecode.content;
 
-import com.cubecode.api.scripts.code.ScriptEvent;
-import com.cubecode.client.config.CubeCodeConfig;
+import com.cubecode.api.scripts.Properties;
+import com.cubecode.api.scripts.Script;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -10,14 +10,7 @@ import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import com.cubecode.CubeCode;
-import com.cubecode.api.scripts.ScriptManager;
-import com.cubecode.api.scripts.code.ScriptFactory;
-import com.cubecode.api.scripts.code.ScriptServer;
-import com.cubecode.api.scripts.code.ScriptWorld;
-import com.cubecode.api.scripts.code.entities.ScriptEntity;
 import com.cubecode.utils.CubeCodeException;
-
-import java.util.HashMap;
 
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -27,17 +20,20 @@ public final class CubeCodeCommand {
         dispatcher.register(literal("cubecode").then(literal("script")
                 .then(literal("eval").then(argument("script", MessageArgumentType.message()).executes(CubeCodeCommand::evalCode)))
                 .then(literal("exec").then(argument("scriptName", MessageArgumentType.message()).executes(CubeCodeCommand::execScript)))
-        ));
+                .then(literal("exec").then(argument("scriptName", MessageArgumentType.message()).then(argument("function", MessageArgumentType.message()).executes(CubeCodeCommand::execScript)))
+        )));
     }
 
     private static int execScript(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         String scriptName = MessageArgumentType.getMessage(context, "scriptName").getString();
-        HashMap<String, Object> properties = CubeCodeCommand.createProperties(scriptName, context);
+        String function = MessageArgumentType.getMessage(context, "function").getString();
 
-        CubeCode.scriptManager.updateScripts();
+        Properties properties = CubeCodeCommand.createProperties(scriptName, "main", context);
+
+        Script script = CubeCode.scriptManager.getScript(scriptName);
 
         try {
-            CubeCode.scriptManager.executeScript(scriptName, properties);
+            script.run(function.isEmpty() ? "main" : function, scriptName, properties);
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }
@@ -46,11 +42,11 @@ public final class CubeCodeCommand {
     }
 
     private static int evalCode(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        HashMap<String, Object> properties = CubeCodeCommand.createProperties(null, context);
+        Properties properties = CubeCodeCommand.createProperties(null, null, context);
         String code = MessageArgumentType.getMessage(context, "script").getString();
 
         try {
-            ScriptManager.evalCode(code, 0, "eval", properties);
+            CubeCode.scriptManager.evalCode(code, "eval", properties.getMap());
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }
@@ -58,19 +54,14 @@ public final class CubeCodeCommand {
         return Command.SINGLE_SUCCESS;
     }
 
-    private static HashMap<String, Object> createProperties(String scriptName, CommandContext<ServerCommandSource> context) {
-        HashMap<String, Object> properties = new HashMap<>();
-        properties.put(CubeCodeConfig.getScriptConfig().contextName, new ScriptEvent(
-                scriptName,
-                null,
-                ScriptEntity.create(context.getSource().getPlayer()),
-                null,
-                new ScriptWorld(context.getSource().getWorld()),
-                new ScriptServer(context.getSource().getServer())
-        ));
-
-        properties.put("CubeCode", new ScriptFactory());
-
-        return properties;
+    public static Properties createProperties(String scriptName, String function, CommandContext<ServerCommandSource> context) {
+        return Properties.create(
+            scriptName,
+            function,
+            context.getSource().getPlayer(),
+            null,
+            context.getSource().getWorld(),
+            context.getSource().getServer()
+        );
     }
 }

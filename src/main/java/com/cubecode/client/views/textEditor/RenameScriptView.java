@@ -5,12 +5,11 @@ import com.cubecode.client.imgui.components.Button;
 import com.cubecode.client.imgui.components.InputText;
 import com.cubecode.client.imgui.components.Text;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.network.NetworkingPackets;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.server.RenameScriptC2SPacket;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 
 public class RenameScriptView extends View {
@@ -35,7 +34,7 @@ public class RenameScriptView extends View {
     }
 
     @Override
-    protected String getName() {
+    public String getName() {
         return String.format(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.name").getString() + "##%s", uniqueID);
     }
 
@@ -57,7 +56,7 @@ public class RenameScriptView extends View {
                         .rxy(0.32f, 0.75f)
                         .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.button.rename.title").getString())
                         .callback(() -> {
-                            ClientPlayNetworking.send(NetworkingPackets.RENAME_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(this.oldName).writeString(((ImString)this.getVariable("scriptName")).get()));
+                            Dispatcher.sendToServer(new RenameScriptC2SPacket(this.oldName, ((ImString)this.getVariable("scriptName")).get()));
                         })
                         .build()
             )

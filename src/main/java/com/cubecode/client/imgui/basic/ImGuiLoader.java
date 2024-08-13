@@ -1,5 +1,6 @@
 package com.cubecode.client.imgui.basic;
 
+import com.cubecode.utils.Fonts;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
@@ -28,7 +29,7 @@ public class ImGuiLoader {
         loadFont(io);
 
         io.setIniFilename(null);
-        //io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+
         IMGUI_GLFW.init(handle, true);
         IMGUI_GL3.init();
     }
@@ -40,7 +41,7 @@ public class ImGuiLoader {
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
 
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/default.ttf")) {
+        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream(Fonts.MAIN_FONT.getFilePath())) {
             byte[] bytes = inputStream.readAllBytes();
             MAIN_FONT = fontAtlas.addFontFromMemoryTTF(bytes, 16, new ImFontConfig(), io.getFonts().getGlyphRangesCyrillic());
         } catch (Exception exception) {

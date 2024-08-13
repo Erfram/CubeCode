@@ -18,6 +18,10 @@ public class DashboardView extends View {
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.title").getString(), () -> {
                     ImGuiLoader.pushView(new TextEditorView());
                 });
+
+                CubeImGui.menuItem("liray editor", () -> {
+                    ImGuiLoader.pushView(new CodeEditorView());
+                });
             });
 
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {

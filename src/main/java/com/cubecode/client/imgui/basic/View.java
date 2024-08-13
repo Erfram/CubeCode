@@ -49,7 +49,7 @@ public abstract class View {
     /**
      * @return optional parameter for rendering profiling
      */
-    protected String getName() {
+    public String getName() {
         return String.format("%s##%s", this.getClass().getSimpleName(), uniqueID);
     }
 

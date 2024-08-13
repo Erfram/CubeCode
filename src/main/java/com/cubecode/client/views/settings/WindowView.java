@@ -162,13 +162,12 @@ public class WindowView extends View {
         ImGui.sameLine();
         ImGui.pushID("titleActiveReset");
         if (ImGui.imageButton(Icons.RESET, 16, 16)) {
-            System.out.println("lox");
-            titleColor = CubeCodeConfig.DEFAULT_TITLE_COLOR.clone();
+            titleActiveColor = CubeCodeConfig.DEFAULT_TITLE_ACTIVE_COLOR.clone();
         }
         ImGui.popID();
 
         if (titleActiveButton == ImGuiDir.Down) {
-            renderColorPicker("TitleActive", titleColor);
+            renderColorPicker("TitleActive", titleActiveColor);
         }
 
         ImGui.spacing();
@@ -180,12 +179,12 @@ public class WindowView extends View {
         ImGui.sameLine();
         ImGui.pushID("titleNotActiveReset");
         if (ImGui.imageButton(Icons.RESET, 16, 16)) {
-            titleActiveColor = CubeCodeConfig.DEFAULT_TITLE_ACTIVE_COLOR.clone();
+            titleColor = CubeCodeConfig.DEFAULT_TITLE_COLOR.clone();
         }
         ImGui.popID();
 
         if (titleNotActiveButton == ImGuiDir.Down) {
-            renderColorPicker("TitleNotActive", titleActiveColor);
+            renderColorPicker("TitleNotActive", titleColor);
         }
 
         ImGui.spacing();

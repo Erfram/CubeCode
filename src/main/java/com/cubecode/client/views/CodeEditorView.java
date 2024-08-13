@@ -1,6 +1,5 @@
 package com.cubecode.client.views;
 
-import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.treesitter.CodeLabel;
@@ -10,14 +9,16 @@ import imgui.flag.*;
 import imgui.type.ImBoolean;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef.HKL;
+import com.sun.jna.platform.win32.WinUser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
 
 public class CodeEditorView extends View {
 
@@ -40,6 +41,32 @@ public class CodeEditorView extends View {
 
     private int lineNumberOffset;
     private boolean mOverwrite;
+
+    private static final Map<Character, Character> shiftMap = new HashMap<>();
+
+    static {
+        shiftMap.put('`', '~');
+        shiftMap.put('1', '!');
+        shiftMap.put('2', '@');
+        shiftMap.put('3', '#');
+        shiftMap.put('4', '$');
+        shiftMap.put('5', '%');
+        shiftMap.put('6', '^');
+        shiftMap.put('7', '&');
+        shiftMap.put('8', '*');
+        shiftMap.put('9', '(');
+        shiftMap.put('0', ')');
+        shiftMap.put('-', '_');
+        shiftMap.put('=', '+');
+        shiftMap.put('[', '{');
+        shiftMap.put(']', '}');
+        shiftMap.put('\\', '|');
+        shiftMap.put(';', ':');
+        shiftMap.put('\'', '"');
+        shiftMap.put(',', '<');
+        shiftMap.put('.', '>');
+        shiftMap.put('/', '?');
+    }
 
     public CodeEditorView() {
         lines.add("var Player = Player.getPlayer();");
@@ -104,7 +131,7 @@ public class CodeEditorView extends View {
     public void render() {
         Window.create()
                 .title(getName())
-                .flags(ImGuiWindowFlags.NoScrollbar)
+                .flags(ImGuiWindowFlags.HorizontalScrollbar)
                 .callback(() -> {
                     ImVec2 windowSize = ImGui.getWindowSize();
 
@@ -125,12 +152,37 @@ public class CodeEditorView extends View {
         try {
             if (InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().length() == 1) {
                 char enteredChar = InputUtil.fromKeyCode(keyCode, scanCode).getLocalizedText().getString().charAt(0);
+
                 boolean isShiftPressed = (modifiers & GLFW.GLFW_MOD_SHIFT) != 0;
+
+                boolean isBig = isShiftPressed;
+
+                if (isWinCapsLock()) {
+                    isBig = !isBig;
+                }
+
+                if (!isBig) {
+                    enteredChar = Character.toLowerCase(enteredChar);
+                }
+
                 enterCharacter(enteredChar, isShiftPressed);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isWinCapsLock() {
+        byte[] keyboardState = new byte[256];
+        boolean success = User32.INSTANCE.GetKeyboardState(keyboardState);
+
+        boolean capsLockOn = false;
+
+        if (success) {
+            capsLockOn = (keyboardState[0x14] & 1) != 0;
+        }
+
+        return capsLockOn;
     }
 
     @Override
@@ -147,6 +199,7 @@ public class CodeEditorView extends View {
     public void handleKeyboardInputs() {
         ImGuiIO io = ImGui.getIO();
         boolean shift = io.getKeyShift();
+        
         boolean ctrl = io.getConfigMacOSXBehaviors() ? io.getKeySuper() : io.getKeyCtrl();
         boolean alt = io.getConfigMacOSXBehaviors() ? io.getKeyCtrl() : io.getKeyAlt();
 
@@ -185,7 +238,7 @@ public class CodeEditorView extends View {
                 moveEnd(shift);
             } else if (!ctrl && !shift && !alt && ImGui.isKeyPressed(ImGui.getKeyIndex(ImGuiKey.Delete))) {
                 delete();
-            } else if (!ctrl && !shift && !alt && ImGui.isKeyPressed(ImGui.getKeyIndex(ImGuiKey.Backspace))) {
+            } else if (!alt && ImGui.isKeyPressed(ImGui.getKeyIndex(ImGuiKey.Backspace))) {
                 backspace();
             } else if (!ctrl && !shift && !alt && ImGui.isKeyPressed(ImGui.getKeyIndex(ImGuiKey.Insert))) {
                 mOverwrite = !mOverwrite;
@@ -375,6 +428,11 @@ public class CodeEditorView extends View {
                 } else {
                     String line = lines.get(lineIndex);
                     StringBuilder builder = new StringBuilder(line);
+
+                    if (shift) {
+                        character = shiftMap.get(character) != null ? shiftMap.get(character) : character;
+                    }
+
                     builder.insert(columnIndex, character);
                     lines.set(lineIndex, builder.toString());
                     cursorText = new ImVec2(columnIndex + 1, lineIndex);
@@ -468,9 +526,8 @@ public class CodeEditorView extends View {
             int lineIndex = (int) cursorText.y;
             int columnIndex = (int) cursorText.x;
 
-            if (ctrl) {
-                // Перемещение по словам
-                while (amount > 0 && lineIndex < lines.size()) {
+            while (amount > 0 && lineIndex < lines.size()) {
+                if (ctrl) {
                     String line = lines.get(lineIndex);
                     if (columnIndex == line.length()) {
                         // Переход на следующую строку
@@ -491,10 +548,7 @@ public class CodeEditorView extends View {
                         }
                         amount--;
                     }
-                }
-            } else {
-                // Обычное перемещение
-                while (amount > 0 && lineIndex < lines.size()) {
+                } else {
                     String line = lines.get(lineIndex);
                     if (columnIndex == line.length()) {
                         // Переход на следующую строку

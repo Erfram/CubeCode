@@ -3,11 +3,8 @@
   "package": "com.cubecode.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "RegistrySyncManagerMixin",
-    "SimpleRegistryMixin"
   ],
   "client": [
-    "FabricLoaderImplMixin",
     "imgui.ParentElementMixin",
     "imgui.RenderSystemMixin",
     "imgui.ScreenMixin",

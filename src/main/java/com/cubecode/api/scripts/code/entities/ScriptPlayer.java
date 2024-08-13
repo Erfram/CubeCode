@@ -1,5 +1,6 @@
 package com.cubecode.api.scripts.code.entities;
 
+import com.cubecode.api.scripts.code.items.ScriptInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -112,5 +113,9 @@ public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
 
     public void stopStaticSound(String soundId, String soundCategory) {
         ((ServerPlayerEntity)this.entity).networkHandler.sendPacket(new StopSoundS2CPacket(new Identifier(soundId), SoundCategory.valueOf(soundCategory)));
+    }
+
+    public ScriptInventory getInventory() {
+        return new ScriptInventory(this.entity.getInventory());
     }
 }

@@ -5,12 +5,11 @@ import com.cubecode.client.imgui.components.Button;
 import com.cubecode.client.imgui.components.InputText;
 import com.cubecode.client.imgui.components.Text;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.network.NetworkingPackets;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.server.CreateScriptC2SPacket;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 
 public class CreateScriptView extends View {
@@ -29,7 +28,7 @@ public class CreateScriptView extends View {
     }
 
     @Override
-    protected String getName() {
+    public String getName() {
         return String.format(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.create.name").getString() + "##%s", uniqueID);
     }
 
@@ -50,9 +49,10 @@ public class CreateScriptView extends View {
                 Button.builder()
                         .rxy(0.8f, 0.75f)
                         .title(net.minecraft.text.Text.translatable("imgui.cubecode.windows.codeEditor.file.create.button.create.title").getString())
-                        .callback(() -> {
-                            ClientPlayNetworking.send(NetworkingPackets.CREATE_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(((ImString)this.getVariable("scriptName")).get()));
-                        })
+                        .callback(() -> Dispatcher.sendToServer(new CreateScriptC2SPacket(
+                                ((ImString)this.getVariable("scriptName")).get()
+                            )
+                        ))
                         .build()
             )
             .render(this);

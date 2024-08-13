@@ -85,6 +85,6 @@ public class ScriptServer {
                 this
         ));
 
-        CubeCode.scriptManager.executeScript(scriptName, properties);
+        CubeCode.scriptManager.evalCode(CubeCode.scriptManager.getScript(scriptName).code, scriptName, properties);
     }
 }

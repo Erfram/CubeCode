@@ -2,6 +2,7 @@ package com.cubecode.client.imgui;
 
 import com.cubecode.client.imgui.basic.View;
 import imgui.ImGui;
+import imgui.ImVec4;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
@@ -10,12 +11,39 @@ import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
+    public static void textMutable(MutableText mutableText) {
+        for (int i = 0; i < mutableText.withoutStyle().size(); i++) {
+            Text sibling = mutableText.withoutStyle().get(i);
+            Style style = sibling.getStyle();
+            TextColor textColor = style.getColor();
+            String content = sibling.getString();
 
+            if (textColor != null) {
+                int color = textColor.getRgb();
+                float r = ((color >> 16) & 0xFF) / 255.0f;
+                float g = ((color >> 8) & 0xFF) / 255.0f;
+                float b = (color & 0xFF) / 255.0f;
+                float a = 1.0f;
+
+                ImGui.textColored(r, g, b, a, content);
+            } else {
+                ImGui.text(content);
+            }
+
+            if (i < mutableText.withoutStyle().size() - 1) {
+                ImGui.sameLine(0, 0);
+            }
+        }
+    }
 
     public static void begin(View view, String title, Consumer<Boolean> beginAction) {
         String titleKey = title + view.getUniqueID();

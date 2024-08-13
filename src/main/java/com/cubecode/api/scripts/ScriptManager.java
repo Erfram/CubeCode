@@ -3,99 +3,63 @@ package com.cubecode.api.scripts;
 import com.cubecode.CubeCode;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.FileManager;
-import dev.latvian.mods.rhino.Context;
-import dev.latvian.mods.rhino.EcmaError;
-import dev.latvian.mods.rhino.EvaluatorException;
-import dev.latvian.mods.rhino.ScriptableObject;
+import com.cubecode.utils.CubeCodeException;
+import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
 import org.jetbrains.annotations.Nullable;
-import com.cubecode.utils.CubeCodeException;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScriptManager extends DirectoryManager {
-    static final public Context context = Context.enter();
     public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
-    private ConcurrentHashMap<String, Script> scripts;
+    public static final Context globalContext = Context.enter();
+    static final public ScriptScope globalScope = new ScriptScope(globalContext);
+
+    private ConcurrentHashMap<Script, ScriptScope> scripts = new ConcurrentHashMap<>();
 
     public ScriptManager(File scriptsDirectory) {
         super(scriptsDirectory);
-        this.updateScripts();
+
+        globalContext.setRemapper(remapper);
+        globalContext.setApplicationClassLoader(ScriptManager.class.getClassLoader());
+        globalScope.setParentScope(globalContext.initStandardObjects());
+
+        this.updateScriptsFromFiles();
     }
 
-    public void setScript(String scriptName, String code) {
-        this.getFiles().forEach(file -> {
-            if (file.getName().equals(scriptName)) {
-                FileManager.writeJsonToFile(file.getPath(), code);
-            }
-        });
+    public Object evaluate(Context context, String code, String sourceName) {
+        return context.evaluateString(globalScope, code, sourceName, 1, null);
     }
 
-    public boolean deleteScript(String scriptName) {
-        try {
-            Files.delete(CubeCode.scriptManager.getDirectory().toPath().resolve(scriptName));
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
+    public Object invokeFunction(Context context, Scriptable scope, String function, Object... args) {
+        Function functionObject = (Function) ScriptableObject.getProperty(scope, function, context);
+        return functionObject.call(context, globalScope, scope, args);
     }
 
-    public boolean createScript(String scriptName, String scriptContent) {
-        Path scriptsPath = CubeCode.scriptManager.getDirectory().toPath();
+    public void evalCode(String code, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
+        Context context = Context.enter();
+        ScriptableObject scope = context.initSafeStandardObjects();
 
-        File scriptFile = scriptsPath.resolve(scriptName).toFile();
-
-        try (FileWriter writer = new FileWriter(scriptFile)) {
-            writer.write(scriptContent);
-            return true;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    public void updateScripts() {
-        ConcurrentHashMap<String, Script> newScripts = new ConcurrentHashMap<>();
-
-        this.getFiles().forEach(file -> {
-            if (file.getName().endsWith(".js")) {
-                newScripts.put(file.getName(), new Script(this.readFileToString(file.getName())));
-            }
-        });
-
-        this.scripts = newScripts;
-    }
-
-    public void executeScript(String name, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        Script script = scripts.get(name);
-
-        if (script == null) {
-            throw new CubeCodeException("Script not found: " + name, name);
-        }
-
-        script.execute(name, properties);
-    }
-
-    public static void evalCode(String code, int line, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        ScriptableObject scope = context.initStandardObjects();
+        context.setRemapper(remapper);
+        context.setApplicationClassLoader(ScriptManager.class.getClassLoader());
 
         if (properties != null) {
             for (Map.Entry<String, Object> property : properties.entrySet()) {
-                ScriptableObject.putProperty(scope, property.getKey(), Context.javaToJS(context, property.getValue(), scope), context);
+                ScriptableObject.putConstProperty(scope, property.getKey(), Context.javaToJS(context, property.getValue(), scope), context);
             }
         }
 
-        context.setRemapper(remapper);
-
         try {
-            context.evaluateString(scope, code, sourceName, line, null);
+            context.evaluateString(scope, code, sourceName, 1, null);
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
@@ -105,7 +69,63 @@ public class ScriptManager extends DirectoryManager {
         }
     }
 
-    public Map<String, Script> getScripts() {
-        return new HashMap<>(this.scripts);
+    public void saveScript(Script script) {
+        this.getFiles().forEach(file -> {
+            if (file.getName().equals(script.name)) {
+                FileManager.writeJsonToFile(file.getPath(), script.code);
+            }
+        });
+    }
+
+    public void deleteScript(String scriptName) {
+        try {
+            Files.delete(CubeCode.scriptManager.getDirectory().toPath().resolve(scriptName));
+        } catch (IOException ignored) {
+        }
+    }
+
+    public void createScript(String scriptName, String scriptContent) {
+        Path scriptsPath = CubeCode.scriptManager.getDirectory().toPath();
+
+        File scriptFile = scriptsPath.resolve(scriptName).toFile();
+
+        try (FileWriter writer = new FileWriter(scriptFile)) {
+            writer.write(scriptContent);
+        } catch (IOException ignored) {
+        }
+    }
+
+    public void updateScriptFromFile(String scriptName) {
+        this.getFiles().forEach(file -> {
+            if (file.getName().equals(scriptName)) {
+                this.getScript(scriptName).code = this.readFileToString(file.getName());
+            }
+        });
+    }
+
+    public void updateScriptsFromFiles() {
+        ConcurrentHashMap<Script, ScriptScope> newScripts = new ConcurrentHashMap<>();
+
+        for (int i = 0; i < this.getFiles().size(); i++) {
+            File file = this.getFiles().stream().toList().get(i);
+            if (file.getName().endsWith(".js")) {
+                newScripts.put(new Script(file.getName(), this.readFileToString(file.getName())),
+                        scripts.values().isEmpty() ? new ScriptScope(globalContext) : (ScriptScope) scripts.values().toArray()[i]);
+            }
+        }
+
+        this.scripts = newScripts;
+    }
+
+    public Script getScript(String scriptName) {
+        return this.scripts.keySet().stream().filter(script -> script.name.equals(scriptName)).findFirst().get();
+    }
+
+    public List<Script> getScripts() {
+        return this.scripts.keySet().stream().toList();
+    }
+
+    public ScriptScope getScope(String scriptName) {
+        return this.scripts.get(getScript(scriptName));
     }
 }

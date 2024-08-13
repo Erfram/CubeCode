@@ -20,13 +20,4 @@ public abstract class AbstractPacket {
     public abstract void toBytes(PacketByteBuf buf);
 
     public abstract Identifier getIdentifier();
-
-    @Environment(EnvType.CLIENT)
-    public void client(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender) {
-
-    }
-
-    @Environment(EnvType.SERVER)
-    public void server(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender) {
-    }
 }

@@ -925,6 +925,13 @@
             }
           ],
           "returnType": "void"
+        },
+        {
+          "name": "getInventory",
+          "description": "Returns player inventory",
+          "script": "Context.getPlayer().getInventory();",
+          "arguments": [],
+          "returnType": "ScriptInventory"
         }
       ]
     },
@@ -935,28 +942,28 @@
         {
           "name": "getMinecraftInventory",
           "description": "Returns the Minecraft inventory associated with this script inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().getMinecraftInventory();",
           "arguments": [],
           "returnType": "Inventory"
         },
         {
           "name": "isEmpty",
           "description": "Checks if the inventory is empty",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().isEmpty();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "size",
           "description": "Returns the size of the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().size();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "getStack",
           "description": "Returns the item stack at the specified index in the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().getStack(0);",
           "arguments": [
             {
               "name": "index",
@@ -968,7 +975,7 @@
         {
           "name": "removeStack",
           "description": "Removes and returns the item stack at the specified index in the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().removeStack();",
           "arguments": [
             {
               "name": "index",
@@ -980,7 +987,7 @@
         {
           "name": "setStack",
           "description": "Sets the item stack at the specified index in the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().setStack(0, Context.getPlayer().getMainItemStack());",
           "arguments": [
             {
               "name": "index",
@@ -996,14 +1003,14 @@
         {
           "name": "clear",
           "description": "Clears all items from the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().clear();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "getName",
           "description": "Returns the name of the inventory",
-          "script": "",
+          "script": "Context.getPlayer().getInventory().getName();",
           "arguments": [],
           "returnType": "String"
         }
@@ -1016,14 +1023,14 @@
         {
           "name": "getItemStack",
           "description": "Returns the Minecraft ItemStack associated with this script item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getItem().getItemStack();",
           "arguments": [],
           "returnType": "ItemStack"
         },
         {
           "name": "getMinecraftItem",
           "description": "Returns the Minecraft Item associated with this script item",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getItem().getMinecraftItem();",
           "arguments": [],
           "returnType": "Item"
         }
@@ -1036,49 +1043,49 @@
         {
           "name": "getMinecraftItemStack",
           "description": "Returns the Minecraft ItemStack associated with this script item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getMinecraftItemStack();",
           "arguments": [],
           "returnType": "ItemStack"
         },
         {
           "name": "isEmpty",
           "description": "Checks if the item stack is empty",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().isEmpty();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "copy",
           "description": "Creates and returns a copy of this item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().copy();",
           "arguments": [],
           "returnType": "ScriptItemStack"
         },
         {
           "name": "getItem",
           "description": "Returns the ScriptItem associated with this item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getItem();",
           "arguments": [],
           "returnType": "ScriptItem"
         },
         {
           "name": "getMaxCount",
           "description": "Returns the maximum stack size for this item",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getMaxCount();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "getCount",
           "description": "Returns the current count of items in this stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getCount();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "setCount",
           "description": "Sets the count of items in this stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().setCount(0);",
           "arguments": [
             {
               "name": "count",
@@ -1090,7 +1097,7 @@
         {
           "name": "addEnchantment",
           "description": "Adds an enchantment to the item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().addEnchantment(\"mending\", 0);",
           "arguments": [
             {
               "name": "enchantment",
@@ -1106,21 +1113,21 @@
         {
           "name": "getEnchantments",
           "description": "Returns the list of enchantments on the item stack",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getEnchantments();",
           "arguments": [],
           "returnType": "ScriptNbtList"
         },
         {
           "name": "isEnchantable",
           "description": "Checks if the item stack can be enchanted",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().isEnchantable();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "getId",
           "description": "Returns the identifier of the item",
-          "script": "",
+          "script": "Context.getPlayer().getMainItemStack().getId();",
           "arguments": [],
           "returnType": "String"
         }
@@ -1133,56 +1140,56 @@
         {
           "name": "getMinecraftNbtCompound",
           "description": "Returns the Minecraft NbtCompound associated with this script NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getMinecraftNbtCompound();",
           "arguments": [],
           "returnType": "NbtCompound"
         },
         {
           "name": "isCompound",
           "description": "Checks if this NBT is a compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").isCompound();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isList",
           "description": "Checks if this NBT is a list",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").isList();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "stringify",
           "description": "Returns a string representation of this NBT",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").stringify();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "isEmpty",
           "description": "Checks if this NBT compound is empty",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").isEmpty();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "size",
           "description": "Returns the number of elements in this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").size();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "copy",
           "description": "Creates and returns a copy of this NBT",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").copy();",
           "arguments": [],
           "returnType": "Nbt"
         },
         {
           "name": "combine",
           "description": "Combines this NBT with another NBT",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").combine(CubeCode.createCompound(\"{id:\"minecraft:stone\"}\"));",
           "arguments": [
             {
               "name": "nbt",
@@ -1194,7 +1201,7 @@
         {
           "name": "isSame",
           "description": "Checks if this NBT is the same as another NBT",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").isSame(CubeCode.createCompound(\"{}\"));",
           "arguments": [
             {
               "name": "nbt",
@@ -1206,7 +1213,7 @@
         {
           "name": "has",
           "description": "Checks if this NBT compound contains a key",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").has(\"id\");",
           "arguments": [
             {
               "name": "key",
@@ -1218,7 +1225,7 @@
         {
           "name": "remove",
           "description": "Removes a key from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").remove(\"id\");",
           "arguments": [
             {
               "name": "key",
@@ -1230,14 +1237,14 @@
         {
           "name": "keys",
           "description": "Returns a set of all keys in this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").keys();",
           "arguments": [],
           "returnType": "Set<String>"
         },
         {
           "name": "getByte",
           "description": "Gets a byte value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getByte(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1249,7 +1256,7 @@
         {
           "name": "putByte",
           "description": "Puts a byte value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putByte(\"Count\", 5);",
           "arguments": [
             {
               "name": "key",
@@ -1265,7 +1272,7 @@
         {
           "name": "getShort",
           "description": "Gets a short value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getShort(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1277,7 +1284,7 @@
         {
           "name": "putShort",
           "description": "Puts a short value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putShort(\"Count\", 1);",
           "arguments": [
             {
               "name": "key",
@@ -1293,7 +1300,7 @@
         {
           "name": "getInt",
           "description": "Gets an int value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1305,7 +1312,7 @@
         {
           "name": "putInt",
           "description": "Puts an int value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putInt(\"Count\", 1);",
           "arguments": [
             {
               "name": "key",
@@ -1321,7 +1328,7 @@
         {
           "name": "getLong",
           "description": "Gets a long value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getLong(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1333,7 +1340,7 @@
         {
           "name": "putLong",
           "description": "Puts a long value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putLong(\"Count\", 1);",
           "arguments": [
             {
               "name": "key",
@@ -1349,7 +1356,7 @@
         {
           "name": "getFloat",
           "description": "Gets a float value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getFloat(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1361,7 +1368,7 @@
         {
           "name": "putFloat",
           "description": "Puts a float value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putFloat(\"Count\", 1);",
           "arguments": [
             {
               "name": "key",
@@ -1377,7 +1384,7 @@
         {
           "name": "getDouble",
           "description": "Gets a double value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1389,7 +1396,7 @@
         {
           "name": "putDouble",
           "description": "Puts a double value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putDouble(\"Count\", 1);",
           "arguments": [
             {
               "name": "key",
@@ -1405,7 +1412,7 @@
         {
           "name": "getString",
           "description": "Gets a string value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getString(\"Id\");",
           "arguments": [
             {
               "name": "key",
@@ -1417,7 +1424,7 @@
         {
           "name": "putString",
           "description": "Puts a string value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").putString(\"Id\", \"minecraft\");",
           "arguments": [
             {
               "name": "key",
@@ -1433,7 +1440,7 @@
         {
           "name": "getBoolean",
           "description": "Gets a boolean value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"HasFunctional\");",
           "arguments": [
             {
               "name": "key",
@@ -1445,7 +1452,7 @@
         {
           "name": "putBoolean",
           "description": "Puts a boolean value into this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").setCompound(\"HasFunctional\", true);",
           "arguments": [
             {
               "name": "key",
@@ -1461,7 +1468,7 @@
         {
           "name": "getCompound",
           "description": "Gets a compound NBT from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getCompound(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -1473,7 +1480,7 @@
         {
           "name": "setCompound",
           "description": "Sets a compound NBT in this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").setCompound(\"tag\", CubeCode.createCompound(\"tag:[42]\"));",
           "arguments": [
             {
               "name": "key",
@@ -1489,7 +1496,7 @@
         {
           "name": "getList",
           "description": "Gets a list NBT from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").getList(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -1501,7 +1508,7 @@
         {
           "name": "setList",
           "description": "Sets a list NBT in this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").setList(\"tag\", CubeCode.createCompound(\"id:[42]\").getList(\"id\"));",
           "arguments": [
             {
               "name": "key",
@@ -1517,7 +1524,7 @@
         {
           "name": "get",
           "description": "Gets a value from this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").get(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -1529,7 +1536,7 @@
         {
           "name": "equals",
           "description": "Checks if this NBT compound is equal to another NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").equals(CubeCode.createCompound(\"{}\"));",
           "arguments": [
             {
               "name": "compound",
@@ -1541,7 +1548,7 @@
         {
           "name": "addCompound",
           "description": "Adds a new empty compound to this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").addCompound(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -1553,7 +1560,7 @@
         {
           "name": "dumpJSON",
           "description": "Returns a JSON string representation of this NBT compound",
-          "script": "",
+          "script": "CubeCode.createCompound(\"{}\").dumpJSON();",
           "arguments": [],
           "returnType": "String"
         }
@@ -2185,6 +2192,18 @@
             }
           ],
           "returnType": "ScriptVector"
+        },
+        {
+          "name": "createBlockState",
+          "description": "Creates new Block State",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\");",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptBlockState"
         }
       ]
     },
@@ -2218,7 +2237,7 @@
           "description": "Returns the entity hit by the ray trace, if any",
           "script": "Context.getPlayer().rayTraceEntity(5).getEntity();",
           "arguments": [],
-          "returnType": "ScriptEntity<?>"
+          "returnType": "ScriptEntity"
         },
         {
           "name": "getBlock",
@@ -2541,7 +2560,7 @@
               "type": "String"
             }
           ],
-          "returnType": "List<ScriptEntity<? extends Entity>>"
+          "returnType": "List<ScriptEntity>"
         },
         {
           "name": "getEntity",
@@ -2553,7 +2572,7 @@
               "type": "String"
             }
           ],
-          "returnType": "ScriptEntity<?>"
+          "returnType": "ScriptEntity"
         },
         {
           "name": "spawnEntity",
@@ -2654,7 +2673,7 @@
           "arguments": [
             {
               "name": "entity",
-              "type": "ScriptEntity<?>"
+              "type": "ScriptEntity"
             },
             {
               "name": "x1",
@@ -2681,7 +2700,7 @@
               "type": "double"
             }
           ],
-          "returnType": "List<ScriptEntity<?>>"
+          "returnType": "List<ScriptEntity>"
         },
         {
           "name": "getEntities",
@@ -2690,7 +2709,7 @@
           "arguments": [
             {
               "name": "entity",
-              "type": "ScriptEntity<?>"
+              "type": "ScriptEntity"
             },
             {
               "name": "vector1",
@@ -2701,7 +2720,7 @@
               "type": "ScriptVector"
             }
           ],
-          "returnType": "List<ScriptEntity<?>>"
+          "returnType": "List<ScriptEntity>"
         }
       ]
     },
@@ -2719,7 +2738,7 @@
         {
           "name": "putString",
           "description": "Adds a string value for the specified key",
-          "script": "Context.getPlayer().getStates().putString(\"example\", \"Nina\");",
+          "script": "Context.getPlayer().getStates().putString(\"example\", \"Name\");",
           "arguments": [
             {
               "name": "key",
@@ -2913,6 +2932,6 @@
           "returnType": "NbtCompound"
         }
       ]
-    }  
+    }
   }
 }

@@ -5,22 +5,21 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.client.screens.DashboardScreen;
-import com.cubecode.network.NetworkingPackets;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.server.DeleteScriptC2SPacket;
+import com.cubecode.network.packets.server.RunScriptC2SPacket;
+import com.cubecode.network.packets.server.SaveScriptC2SPacket;
+import com.cubecode.network.packets.server.UpdateScriptsC2SPacket;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TextEditorView extends View {
     private final TextEditor CODE_EDITOR = new TextEditor();
@@ -30,6 +29,9 @@ public class TextEditorView extends View {
     private final int viewHeight = 400;
     private final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
     private final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
+
+    public static CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
+    private static int selectedScript = -1;
 
     @Override
     public String getName() {
@@ -50,9 +52,11 @@ public class TextEditorView extends View {
         CODE_EDITOR.setTabSize(4);
         CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
 
-        ClientPlayNetworking.send(NetworkingPackets.UPDATE_SCRIPTS_C2S_PACKET, PacketByteBufs.empty());
+        Dispatcher.sendToServer(new UpdateScriptsC2SPacket(true));
 
-        selectedScript = -1;
+        if (selectedScript != -1) {
+            CODE_EDITOR.setText(scripts.get(selectedScript).code);
+        }
     }
 
     @Override
@@ -75,6 +79,7 @@ public class TextEditorView extends View {
                     CubeImGui.beginChild("CubeCode IDEA", 0, 0, true, () -> {
                         if (selectedScript != -1) {
                             CODE_EDITOR.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
+
                         }
                     });
                 })
@@ -82,19 +87,12 @@ public class TextEditorView extends View {
                 .render(this);
     }
 
-
-    public static List<String> scriptsName = new ArrayList<>();
-    public static List<Script> scripts = new ArrayList<>();
-    private int selectedScript = 0;
-
     private void renderList() {
         ImGui.text(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.title").getString());
         ImGui.separator();
 
-        for (int i = 0; i < scriptsName.size(); i++) {
-            if (ImGui.selectable(scriptsName.get(i), selectedScript == i)) {
-                String textToSave = CODE_EDITOR.getText();
-
+        for (int i = 0; i < scripts.size(); i++) {
+            if (ImGui.selectable(scripts.get(i).name, selectedScript == i)) {
                 saveScript();
                 selectedScript = i;
                 CODE_EDITOR.setText(scripts.get(selectedScript).code);
@@ -105,9 +103,9 @@ public class TextEditorView extends View {
                 selectedScript = i;
                 ImGui.openPopup("script_context_menu_" + i);
             }
-
-            runContextMenu();
         }
+
+        runContextMenu();
     }
 
     private void renderMenuBar() {
@@ -121,11 +119,11 @@ public class TextEditorView extends View {
     private void renderFileMenu() {
         if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.file.title").getString())) {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.run.title").getString())) {
+                String code = CODE_EDITOR.getText().substring(0, CODE_EDITOR.getText().length() - 1);
+                Script script = scripts.get(selectedScript);
+                script.code = code;
+                Dispatcher.sendToServer(new RunScriptC2SPacket(script));
                 saveScript();
-
-                String code = CODE_EDITOR.getText();
-
-                ClientPlayNetworking.send(NetworkingPackets.RUN_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(code));
             }
 
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.create.title").getString())) {
@@ -189,13 +187,13 @@ public class TextEditorView extends View {
     public void runContextMenu() {
         if (ImGui.beginPopup("script_context_menu_" + selectedScript)) {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.delete.title").getString())) {
-                ClientPlayNetworking.send(NetworkingPackets.DELETE_SCRIPT_C2S_PACKET, PacketByteBufs.create().writeString(scriptsName.get(selectedScript)));
+                Dispatcher.sendToServer(new DeleteScriptC2SPacket(scripts.get(selectedScript).name));
                 selectedScript = -1;
                 CODE_EDITOR.setText("");
             }
 
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.rename.title").getString())) {
-                ImGuiLoader.pushView(new RenameScriptView(scriptsName.get(selectedScript)));
+                ImGuiLoader.pushView(new RenameScriptView(scripts.get(selectedScript).name));
             }
 
             ImGui.endPopup();
@@ -204,16 +202,10 @@ public class TextEditorView extends View {
 
     private void saveScript() {
         if (selectedScript != -1) {
+            String scriptName = scripts.get(selectedScript).name;
             String script = CODE_EDITOR.getText().substring(0, CODE_EDITOR.getText().length() - 1);
 
-            PacketByteBuf buf = PacketByteBufs.create();
-
-            String scriptName = scriptsName.get(selectedScript);
-
-            buf.writeString(scriptName);
-            buf.writeString(script);
-
-            ClientPlayNetworking.send(NetworkingPackets.SAVE_SCRIPT_C2S_PACKET, buf);
+            Dispatcher.sendToServer(new SaveScriptC2SPacket(new Script(scriptName, script)));
         }
     }
 

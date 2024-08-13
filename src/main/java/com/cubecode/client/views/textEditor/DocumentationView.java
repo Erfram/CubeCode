@@ -1,73 +1,48 @@
 package com.cubecode.client.views.textEditor;
 
-import com.cubecode.CubeCode;
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.imgui.components.MenuBar;
-import com.cubecode.client.imgui.components.Separator;
-import com.cubecode.client.imgui.components.Text;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.utils.Documentation;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import imgui.ImColor;
+import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DocumentationView extends View {
-    private final TextEditor CODE_EDITOR = new TextEditor();
-    private final int viewWidth = 500;
+    private final int viewWidth = 700;
     private final int viewHeight = 400;
     private final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
     private final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
 
-    private final JsonObject chapters = parseDocs().getAsJsonObject("chapters");
-    private final Map<String, List<Documentation.Method>> sortedMethods = new HashMap<>();
+    private final TextEditor CODE_EDITOR = new TextEditor();
 
-    private ImString text = new ImString("");
+    private final Map<String, Documentation.Chapter> docs = Documentation.parseDocs();
+
+    private static final Map<String, String> apiIcons = new HashMap<>();
+
+    static {
+        apiIcons.put("ScriptPlayer", "player");
+        apiIcons.put("ScriptEntity", "entity");
+        apiIcons.put("ScriptItem", "stick");
+        apiIcons.put("ScriptItemStack", "pickaxe");
+    }
+
+    private int selectedClass = -1;
+
+    private String className = "name";
+    private Documentation.Chapter classChapter = null;
 
     public DocumentationView() {
         super();
-
-        for (String chapterName : chapters.keySet()) {
-            JsonArray methodsArray = chapters.getAsJsonObject(chapterName).getAsJsonArray("methods");
-            List<Documentation.Method> methodList = new ArrayList<>();
-
-            for (JsonElement jsonElement : methodsArray) {
-                JsonObject methodObject = jsonElement.getAsJsonObject();
-
-                List<Documentation.Argemunt> arguments = new ArrayList<>();
-
-                methodObject.getAsJsonArray("arguments").forEach(element -> {
-                    arguments.add(new Documentation.Argemunt(element.getAsJsonObject().get("name").getAsString(), element.getAsJsonObject().get("type").getAsString()));
-                });
-
-                methodList.add(new Documentation.Method(
-                    methodObject.get("name").getAsString(),
-                    methodObject.get("description").getAsString(),
-                    methodObject.get("script").getAsString(),
-                    arguments,
-                    methodObject.get("returnType").getAsString()
-                ));
-            }
-
-            methodList.sort(Comparator.comparing(method -> method.name));
-            sortedMethods.put(chapterName, methodList);
-        }
     }
 
     @Override
@@ -77,10 +52,10 @@ public class DocumentationView extends View {
 
     @Override
     public void init() {
-        float posX = (windowWidth - viewWidth) * 0.5f;
-        float posY = (windowHeight - viewHeight) * 0.5f;
+        float x = (windowWidth - viewWidth) * 0.5f;
+        float y = (windowHeight - viewHeight) * 0.5f;
 
-        ImGui.setNextWindowPos(posX, posY);
+        ImGui.setNextWindowPos(x, y);
         ImGui.setNextWindowSize(viewWidth, viewHeight);
 
         CODE_EDITOR.setLanguageDefinition(JavaScriptDefinition.build());
@@ -89,68 +64,232 @@ public class DocumentationView extends View {
         CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
     }
 
-    private String methodName = "";
-    private String methodDescription = "";
-    private String methodScript = "";
-
     @Override
     public void render() {
         Window.create()
-            .title(getName())
-            .flags(ImGuiWindowFlags.HorizontalScrollbar | ImGuiWindowFlags.MenuBar)
-            .draw(MenuBar.builder()
-                .menu(MenuBar.Menu.builder()
-                    .label("API")
-                    .callback(() -> {
-                        chapters.keySet().forEach((chapterName -> {
-                            CubeImGui.menu(chapterName, () -> {
-                                for (Documentation.Method method : sortedMethods.get(chapterName)) {
-                                    String name = method.name;
-                                    String description = method.description;
-                                    String script = method.script;
-                                    List<Documentation.Argemunt> argemunts = method.arguments;
-
-                                    String arguments = argemunts.stream().map(argemunt -> argemunt.type).collect(Collectors.joining(", "));
-
-                                    CubeImGui.menuItem(name+"("+ arguments +")", () -> {
-                                        this.methodName = name+"("+ arguments +")";
-                                        this.methodDescription = description;
-                                        this.methodScript = script;
-                                    });
-                                }
-                            });
-                        }));
-                    })
-                    .build())
-                .build(),
-                Text.builder()
-                        .title(this.methodName)
-                        .id("name")
-                        .build(),
-                Separator.builder().build(),
-                Text.builder()
-                        .title(this.methodDescription)
-                        .id("description")
-                        .build(),
-                Text.builder()
-                        .callback(() -> {
-                            CODE_EDITOR.render("CodeEditor");
-                            CODE_EDITOR.setText(this.methodScript);
-                        })
-                        .rwh(1, 0.5f)
-                        .build()
-            ).render(this);
+                .title(getName())
+                .flags(ImGuiWindowFlags.HorizontalScrollbar)
+                .callback(() -> {
+                    CubeImGui.beginChild("Left Pane", 200, 0, true, this::renderClasses);
+                    ImGui.sameLine();
+                    CubeImGui.beginChild("CubeCode IDEA", 0, 0, false, this::renderContent);
+                })
+                .render(this);
     }
 
-    private JsonObject parseDocs() {
-        try {
-            InputStream inputStream = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier(CubeCode.MOD_ID, "docs.json")).get().getInputStream();
+    public void renderClasses() {
+        for (int i = 0; i < docs.keySet().size(); i++) {
+            if (ImGui.selectable("##"+docs.keySet().stream().toList().get(i), selectedClass == i, ImGuiSelectableFlags.None)) {
+                selectedClass = i;
+                className = docs.keySet().stream().toList().get(i);
+                classChapter = docs.values().stream().toList().get(i);
 
-            Gson gson = new Gson();
+                this.setVariable("##Search" + this.uniqueID, new ImString("", 30));
+            }
 
-            return gson.fromJson(new InputStreamReader(inputStream), JsonObject.class);
-        } catch (Exception ignored) {
-            return null;
+            ImGui.sameLine(0, 0);
+            Integer icon = Icons.getIcon(apiIcons.get(docs.keySet().stream().toList().get(i)));
+            Integer empty = Icons.getIcon("empty");
+
+            ImGui.image(icon != null ? icon : empty, 16, 16);
+
+            ImGui.sameLine(0, 1);
+            ImGui.text(docs.keySet().stream().toList().get(i));
+        }
+    }
+
+    public void renderContent() {
+        if (selectedClass != -1) {
+            renderTitle();
+        }
+    }
+
+    List<Documentation.Method> methods;
+
+    public void renderTitle() {
+        ImGui.textColored(255, 207, 64, 255, className);
+
+        ImGui.separator();
+
+        ImGui.text(classChapter.description);
+
+        ImGui.spacing();
+
+        if (!classChapter.script.isEmpty()) {
+            CubeImGui.beginChild("Code Editor", 0, 150, true, () -> {
+                CODE_EDITOR.render("CodeEditor");
+                CODE_EDITOR.setText(classChapter.script);
+            });
+        }
+
+        this.methods = this.getVariable("search_methods") == null ? classChapter.methods : this.getVariable("search_methods");
+        ImGui.image(Icons.SEARCH, 16, 16);
+        ImGui.sameLine();
+        CubeImGui.inputText(this, "##Search", (searchMethod) -> {
+            if (!searchMethod.isEmpty()) {
+                this.setVariable("search_methods", classChapter.methods.stream().filter((method -> {
+                    String[] methodNameSeparator = method.name.split("(?=[A-Z])");
+
+                    for (String word : methodNameSeparator) {
+                        if (word.toLowerCase().startsWith(searchMethod.toLowerCase())) {
+                            return true;
+                        }
+                    }
+
+                    return method.name.toLowerCase().contains(searchMethod.toLowerCase());
+                })).toList());
+            } else {
+                this.setVariable("search_methods", classChapter.methods);
+            }
+        });
+
+        ImGui.pushStyleColor(ImGuiCol.ChildBg, 0f, 0f, 0f, 0.2f);
+        CubeImGui.beginChild("Methods", 0, 0, true, this::renderMethods);
+        ImGui.popStyleColor();
+    }
+
+    public void renderMethods() {
+        for (int i = 0; i < this.methods.size(); i++) {
+            if (i % 2 == 0) {
+                ImGui.pushStyleColor(ImGuiCol.ChildBg, 1, 1, 1, 0.01f);
+            }
+
+            Documentation.Method method = this.methods.get(i);
+            CubeImGui.beginChild("Return Types " + i, this.getMaxWidthReturnType(), 50, false, () -> {
+                this.renderReturnType(method.returnType);
+            });
+
+            ImGui.sameLine();
+
+            MutableText parsingMethod = this.parseMethod(method.name, method.arguments);
+
+            CubeImGui.beginChild("Method" + i, 0, 50, false, () -> {
+                this.renderMethod(parsingMethod, method.name, method.description, method.script);
+            });
+
+            if (i % 2 == 0) {
+                ImGui.popStyleColor();
+            }
+        }
+    }
+
+    public void renderReturnType(String returnType) {
+        ImGui.textColored(1, 0.9f, 0, 1, returnType);
+    }
+
+    public void renderMethod(MutableText method, String name, String description, String script) {
+        CubeImGui.textMutable(method);
+
+        ImGui
+
+        if (!script.isEmpty()) {
+            String id = "##"+name + "_" + description + "_" + script;
+
+            ImGui.sameLine();
+
+            if (ImGui.imageButton(Icons.INFO, 16, 16)) {
+                ImGuiLoader.pushView(new MethodEditorView(name, script, id));
+            }
+        }
+
+        ImGui.textColored(0.5f, 0.5f, 0.5f, 1f, description);
+    }
+
+    private float getMaxWidthReturnType() {
+        float maxLength = 0;
+
+        for (Documentation.Method method : this.methods) {
+            if (maxLength < ImGui.calcTextSize(method.returnType).x) {
+                maxLength = ImGui.calcTextSize(method.returnType).x;
+            }
+        }
+        return maxLength;
+    }
+
+    private MutableText parseMethod(String methodName, List<Documentation.Argemunt> arguments) {
+        MutableText method = Text.literal(methodName + "(").formatted(Formatting.WHITE);
+
+        for (int t = 0; t < arguments.size(); t++) {
+            Documentation.Argemunt argument = arguments.get(t);
+            method.append(Text.literal(argument.type + " ").formatted(Formatting.GOLD));
+            method.append(Text.literal(argument.name).formatted(Formatting.WHITE));
+            if (t < arguments.size() - 1) {
+                method.append(Text.literal(", ").formatted(Formatting.WHITE));
+            }
+        }
+
+        method.append(Text.literal(")").formatted(Formatting.WHITE));
+
+        return method;
+    }
+
+    private static class MethodEditorView extends View {
+        private final TextEditor TEXT_EDITOR = new TextEditor();
+
+        private final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
+        private final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
+
+        private final String name;
+        private final String script;
+        private final String id;
+
+        public MethodEditorView(String name, String script, String id) {
+            this.name = name;
+            this.script = script;
+            this.id = id;
+        }
+
+        @Override
+        public void init() {
+            float width = this.getSize()[0] + 50;
+            float height = this.getSize()[1] + 55;
+            ImGui.setNextWindowPos(
+                    (windowWidth - width) * 0.5f,
+                    (windowHeight - height) * 0.5f
+            );
+            ImGui.setNextWindowSize(width, height);
+
+            TEXT_EDITOR.setLanguageDefinition(JavaScriptDefinition.build());
+            TEXT_EDITOR.setShowWhitespaces(false);
+            TEXT_EDITOR.setTabSize(4);
+            TEXT_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
+        }
+
+        @Override
+        public String getName() {
+            return String.format(name + "##%s", uniqueID);
+        }
+
+        @Override
+        public void render() {
+            Window.create()
+                    .title(getName())
+                    .callback(() -> {
+                        TEXT_EDITOR.setText(script);
+                        TEXT_EDITOR.setReadOnly(true);
+                        TEXT_EDITOR.render(id);
+                    })
+                    .render(this);
+        }
+
+        private float[] getSize() {
+            String[] lines = script.split("\n");
+
+            float width = 0;
+            float height = lines.length * ImGui.calcTextSize("C").y;
+
+            for (String line : lines) {
+                if (width < ImGui.calcTextSize(line).x) {
+                    width = ImGui.calcTextSize(line).x;
+                }
+            }
+
+            float[] size = new float[2];
+
+            size[0] = width;
+            size[1] = height;
+
+            return size;
         }
     }
 }
