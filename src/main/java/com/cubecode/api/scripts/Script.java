@@ -6,6 +6,9 @@ import com.cubecode.utils.CubeCodeException;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
+import dev.latvian.mods.rhino.ast.Scope;
+
+import static com.cubecode.CubeCode.scriptManager;
 
 public class Script {
     public String name;
@@ -19,11 +22,13 @@ public class Script {
     }
 
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
-        CubeCode.scriptManager.updateScriptsFromFiles();
+        scriptManager.updateScriptsFromFiles();
 
         try {
-            CubeCode.scriptManager.evaluate(context, code, name);
-            CubeCode.scriptManager.invokeFunction(context, ScriptManager.globalScope, function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
+            ScriptScope scriptScope = new ScriptScope(context);
+            scriptScope.setParentScope(ScriptManager.globalScope);
+            scriptManager.evaluate(context, scriptScope, code, name);
+            scriptManager.invokeFunction(context, scriptScope, function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
@@ -35,10 +40,10 @@ public class Script {
 
     public void stateForRun(String oldCode, String function, String sourceName, Properties properties) {
         if (!code.equals(oldCode)) {
-            CubeCode.scriptManager.evaluate(context, code, name);
+           // scriptManager.evaluate(context, code, name);
         }
 
-        CubeCode.scriptManager.invokeFunction(context, CubeCode.scriptManager.getScope(name), function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
+        scriptManager.invokeFunction(context, scriptManager.getScope(name), function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
     }
 
     public void run(String sourceName, Properties properties) throws CubeCodeException {
