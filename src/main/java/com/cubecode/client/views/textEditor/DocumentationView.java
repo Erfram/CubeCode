@@ -179,8 +179,7 @@ public class DocumentationView extends View {
 
     public void renderMethod(MutableText method, String name, String description, String script) {
         CubeImGui.textMutable(method);
-
-        ImGui
+        
 
         if (!script.isEmpty()) {
             String id = "##"+name + "_" + description + "_" + script;
