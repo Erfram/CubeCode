@@ -6,6 +6,7 @@ import com.cubecode.api.scripts.code.ScriptServer;
 import com.cubecode.api.scripts.code.ScriptWorld;
 import com.cubecode.api.scripts.code.entities.ScriptEntity;
 import com.cubecode.client.config.CubeCodeConfig;
+import dev.latvian.mods.rhino.mod.util.Copyable;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Properties {
-    private final Map<String, Object> map = new HashMap<>();
+    private Map<String, Object> map = new HashMap<>();
 
     public static Properties create() {
         return new Properties();
@@ -47,5 +48,28 @@ public class Properties {
 
     public void put(String key, Object value) {
         this.map.put(key, value);
+    }
+
+    public Properties setValue(String key, Object value) {
+        ScriptEvent scriptEvent = (ScriptEvent) this.map.get(CubeCodeConfig.getScriptConfig().contextName);
+
+        scriptEvent.setValue(key, value);
+
+        this.map.put(CubeCodeConfig.getScriptConfig().contextName, scriptEvent);
+
+        return this;
+    }
+
+    public Properties copy() {
+        ScriptEvent scriptEvent = (ScriptEvent) this.map.get(CubeCodeConfig.getScriptConfig().contextName);
+
+        return Properties.create(
+                scriptEvent.getScript(),
+                scriptEvent.getFunction(),
+                scriptEvent.getSubject() == null ? null : scriptEvent.getSubject().getMinecraftEntity(),
+                scriptEvent.getObject() == null ? null : scriptEvent.getObject().getMinecraftEntity(),
+                scriptEvent.getWorld() == null ? null : scriptEvent.getWorld().getMinecraftWorld(),
+                scriptEvent.getServer() == null ? null : scriptEvent.getServer().getMinecraftServer()
+        );
     }
 }

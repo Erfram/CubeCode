@@ -1,5 +1,6 @@
 package com.cubecode.client.imgui.basic;
 
+import com.cubecode.client.views.EventsView;
 import com.cubecode.utils.Fonts;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
@@ -7,6 +8,7 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
 import com.cubecode.CubeCode;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Arrays;
@@ -109,6 +111,21 @@ public class ImGuiLoader {
 
     public static void clearViews() {
         RENDER_STACK.clear();
+    }
+
+    @Nullable
+    public static <T extends View> T getView(Class<T> viewClass) {
+        for (View view : RENDER_STACK) {
+            if (viewClass.isInstance(view)) {
+                return viewClass.cast(view);
+            }
+        }
+        return null;
+    }
+
+    public static boolean isOpenView(Class<? extends View> viewClass) {
+        return ImGuiLoader.getRenderStack().stream()
+                .anyMatch(viewClass::isInstance);
     }
 
     public static void handleKeyReleased(int keyCode, int scanCode, int modifiers) {

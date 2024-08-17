@@ -4,6 +4,7 @@ import com.cubecode.api.scripts.code.entities.ScriptEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
 import net.minecraft.entity.Entity;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ScriptEvent<S extends Entity, O extends Entity> {
@@ -15,7 +16,7 @@ public class ScriptEvent<S extends Entity, O extends Entity> {
     private final ScriptWorld world;
     private final ScriptServer server;
 
-    private Map<String, Object> values;
+    private Map<String, Object> values = new HashMap<>();
     private boolean canceled = false;
 
     public ScriptEvent(String script, String function, ScriptEntity<S> subject, ScriptEntity<O> object, ScriptWorld world, ScriptServer server) {
@@ -75,6 +76,10 @@ public class ScriptEvent<S extends Entity, O extends Entity> {
 
     public void setValue(String key, Object value) {
         this.values.put(key, value);
+    }
+
+    public void setValues(Map<String, Object> values) {
+        this.values = values;
     }
 
     public void cancel() {

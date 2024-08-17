@@ -8,6 +8,7 @@ import com.cubecode.client.views.settings.WindowView;
 import com.cubecode.client.views.textEditor.TextEditorView;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 
 public class DashboardView extends View {
@@ -21,6 +22,10 @@ public class DashboardView extends View {
 
                 CubeImGui.menuItem("liray editor", () -> {
                     ImGuiLoader.pushView(new CodeEditorView());
+                });
+
+                CubeImGui.menuItem("events", () -> {
+                    ImGuiLoader.pushView(new EventsView(new NbtList()));
                 });
             });
 

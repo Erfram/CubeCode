@@ -13,5 +13,4 @@ public class PlayerState {
     public void setValues(NbtCompound values) {
         this.values = values;
     }
-
 }

@@ -37,6 +37,10 @@ public class ScriptServer {
         return new ScriptWorld(this.server.getWorld(worldName.equals("overworld") ? World.OVERWORLD : worldName.equals("nether") ? World.NETHER : World.END));
     }
 
+    public MinecraftServer getMinecraftServer() {
+        return this.server;
+    }
+
     public int getMaxPlayerCount() {
         return this.server.getMaxPlayerCount();
     }

@@ -2,7 +2,6 @@
   "key.cubecode.dashboard": "Панель управления",
 
   "imgui.cubecode.dashboard.windows.title": "Окна",
-  "imgui.cubecode.dashboard.factory.title": "Создание",
   "imgui.cubecode.dashboard.settings.title": "Настройки",
 
   "imgui.cubecode.windows.codeEditor.title": "Редактор кода",
@@ -36,6 +35,89 @@
   "imgui.cubecode.windows.codeEditor.edit.cut.title": "Вырезать",
   "imgui.cubecode.windows.codeEditor.edit.delete.title": "Удалить",
   "imgui.cubecode.windows.codeEditor.edit.paste.title": "Вставить",
+  "imgui.cubecode.windows.codeEditor.edit.save.title": "Сохранить",
+
+  "imgui.cubecode.windows.events.title": "События",
+
+  "imgui.cubecode.windows.events.server_starting.title": "Сервер: при загрузке",
+  "imgui.cubecode.windows.events.server_starting.description": "Это событие срабатывает при загрузке сервера. (не миров)",
+  "imgui.cubecode.windows.events.server_starting.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_started.title": "Сервер: загружен",
+  "imgui.cubecode.windows.events.server_started.description": "Это событие срабатывает когда сервер загружен.",
+  "imgui.cubecode.windows.events.server_started.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_tick_start.title": "Сервер: при начале тика",
+  "imgui.cubecode.windows.events.server_tick_start.description": "Это событие срабатывает, когда сервер начинает тикать (т.е. &720&r раз в секунду).",
+  "imgui.cubecode.windows.events.server_tick_start.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_tick_end.title": "Сервер: при конце тика",
+  "imgui.cubecode.windows.events.server_tick_end.description": "Это событие срабатывает, когда сервер заканчивает тикать (т.е. &720&r раз в секунду).",
+  "imgui.cubecode.windows.events.server_tick_end.variables": "N/A",
+
+  "imgui.cubecode.windows.events.block_player_break_before.title": "Блок: перед разрушением игроком",
+  "imgui.cubecode.windows.events.block_player_break_before.description": "Это отменяемое событие запускается перед тем, как игрок разрушаит блок в мире.",
+  "imgui.cubecode.windows.events.block_player_break_before.variables": "&6blockPos&r - Позиция блока. \n&6blockState&r - Блок. \n&6blockEntity&r - Блок-сущность.",
+
+  "imgui.cubecode.windows.events.block_player_break_after.title": "Блок: после разрушения игроком",
+  "imgui.cubecode.windows.events.block_player_break_after.description": "Это событие срабатывает после того, как игрок разрушает блок в мире.",
+  "imgui.cubecode.windows.events.block_player_break_after.variables": "&6blockPos&r - Позиция блока. \n&6blockState&r - Блок. \n&6blockEntity&r - Блок-сущность.",
+
+  "imgui.cubecode.windows.events.block_player_break_canceled.title": "Блок: при отмене",
+  "imgui.cubecode.windows.events.block_player_break_canceled.description": "Это событие срабатывает после отмены любого события разрушения блока игроком в мире.",
+  "imgui.cubecode.windows.events.block_player_break_canceled.variables": "&6blockPos&r - Позиция блока. \n&6blockState&r - Блок. \n&6blockEntity&r - Блок-сущность.",
+
+  "imgui.cubecode.windows.events.player_death.title": "Игрок: при смерти",
+  "imgui.cubecode.windows.events.player_death.description": "Это отменяемое событие срабатывает, когда игрок умирает.\n\nСовет: если вы хотите отменить смерть, обязательно дайте игроку немного здоровья, иначе он попадет в вечный цикл умирания.",
+  "imgui.cubecode.windows.events.player_death.variables": "&6damageType&r - Тип урона. \n&6damage&r - Количество урона.",
+
+  "imgui.cubecode.windows.events.player_respawn.title": "Игрок: при возрождении",
+  "imgui.cubecode.windows.events.player_respawn.description": "Это событие срабатывает, когда игрок возрождается.",
+  "imgui.cubecode.windows.events.player_respawn.variables": "&6oldPlayer&r - Игрок перед возрождением. \n&6alive&r - жив ли игрок.",
+
+  "imgui.cubecode.windows.events.player_attack_block.title": "Игрок: при атаке блока",
+  "imgui.cubecode.windows.events.player_attack_block.description": "Это отменяемое событие срабатывает, когда игрок атакует блок.",
+  "imgui.cubecode.windows.events.player_attack_block.variables": "&6hand&r - Название руки.",
+
+  "imgui.cubecode.windows.events.player_attack_entity.title": "Игрок: при атаке сущности",
+  "imgui.cubecode.windows.events.player_attack_entity.description": "Это отменяемое событие срабатывает, когда игрок атакует сущность.",
+  "imgui.cubecode.windows.events.player_attack_entity.variables": "&6blockPos&r - Позиция блок. \n&6direction&r - Направление. \n&6hand&r - Название руки.",
+
+  "imgui.cubecode.windows.events.player_interact_block.title": "Игрок: при взаимодействии с блоком",
+  "imgui.cubecode.windows.events.player_interact_block.description": "Это отменяемое событие срабатывает, когда игрок взаимодействует с блоком.",
+  "imgui.cubecode.windows.events.player_interact_block.variables": "&6blockPos&r - Позиция блока. \n&6hand&r - Название руки. \n&6direction&r - Направление. \n&6isInsideBlock&r - Находится ли игрок внутри блока.",
+
+  "imgui.cubecode.windows.events.player_interact_entity.title": "Игрок: при взаимодействии с сущностью",
+  "imgui.cubecode.windows.events.player_interact_entity.description": "Это отменяемое событие срабатывает, когда игрок взаимодействует с сущностью.",
+  "imgui.cubecode.windows.events.player_interact_entity.variables": "&6hand&r - Название руки.",
+
+  "imgui.cubecode.windows.events.player_interact_item.title": "Игрок: при взаимодействии с предметом",
+  "imgui.cubecode.windows.events.player_interact_item.description": "Это отменяемое событие срабатывает, когда игрок взаимодействует с предметом.",
+  "imgui.cubecode.windows.events.player_interact_item.variables": "&6hand&r - Название руки. \n&6itemStack&r - Предмет.",
+
+  "imgui.cubecode.windows.events.entity_hurt.title": "Сущность: при получении урона",
+  "imgui.cubecode.windows.events.entity_hurt.description": "Это отменяемое событие срабатывает, когда моб/игрок получает урон.",
+  "imgui.cubecode.windows.events.entity_hurt.variables": "N/A",
+
+  "imgui.cubecode.windows.events.entity_before_death.title": "Сущность: перед смертью",
+  "imgui.cubecode.windows.events.entity_before_death.description": "Это отменяемое событие срабатывает перед смертью моба/игрока.",
+  "imgui.cubecode.windows.events.entity_before_death.variables": "&6damageType&r - Тип урона. \n&6damage&r - Количество урона",
+
+  "imgui.cubecode.windows.events.entity_after_death.title": "Сущность: после смерти",
+  "imgui.cubecode.windows.events.entity_after_death.description": "Это событие срабатывает после смерти моба/игрока.",
+  "imgui.cubecode.windows.events.entity_after_death.variables": "&6damageType&r - Тип урона.",
+
+  "imgui.cubecode.windows.events.entity_killed_by_entity.title": "Сущность: убитая сущностью",
+  "imgui.cubecode.windows.events.entity_killed_by_entity.description": "Это событие срабатывает, когда сущность убита другой сущностью.",
+  "imgui.cubecode.windows.events.entity_killed_by_entity.variables": "N/A",
+
+  "imgui.cubecode.windows.events.world_tick_start.title": "Мир: при начале тика",
+  "imgui.cubecode.windows.events.world_tick_start.description": "Это событие срабатывает, когда мир начинает тикать.",
+  "imgui.cubecode.windows.events.world_tick_start.variables": "N/A",
+
+  "imgui.cubecode.windows.events.world_tick_end.title": "Мир: при конце тика",
+  "imgui.cubecode.windows.events.world_tick_end.description": "Это событие срабатывает, когда мир заканчивает тикать.",
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
 
   "imgui.cubecode.settings.window.name": "Настройки окна",
 

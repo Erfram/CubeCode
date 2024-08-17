@@ -1,5 +1,72 @@
 {
   "chapters": {
+    "ScriptBlockEntity": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftTileEntity",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "BlockEntity"
+        },
+        {
+          "name": "getWorld",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptWorld"
+        },
+        {
+          "name": "getType",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getPosition",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "markDirty",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "getBlock",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptBlockState"
+        },
+        {
+          "name": "getNbtCompound",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptNbtCompound"
+        },
+        {
+          "name": "setNbtCompound",
+          "description": "",
+          "script": "",
+          "arguments": [
+            {
+              "name": "nbtCompound",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "void"
+        }
+      ]
+    },
     "ScriptBlockState": {
       "description": "",
       "script": "",

@@ -21,7 +21,6 @@ import java.util.*;
 
 
 public class CodeEditorView extends View {
-
     private final Timer timer = new Timer();
     private final ImBoolean CLOSE = new ImBoolean(true);
     private ArrayList<String> lines = new ArrayList<>();
@@ -334,6 +333,14 @@ public class CodeEditorView extends View {
         int row = 0;
 
         ImDrawList drawList = ImGui.getWindowDrawList();
+
+        for (String line : lines) {
+            drawList.addText(x + offsetX, y + offsetY, this.getTheme().getColor("defaultCode"), line);
+
+            offsetY += fontSize;
+        }
+
+        offsetY = 0;
 
         for (String line : lines) {
             if (String.valueOf(row).length() != numberOfDigits) {

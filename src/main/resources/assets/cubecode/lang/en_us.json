@@ -2,7 +2,6 @@
   "key.cubecode.dashboard": "Dashboard",
 
   "imgui.cubecode.dashboard.windows.title": "Windows",
-  "imgui.cubecode.dashboard.factory.title": "Factory",
   "imgui.cubecode.dashboard.settings.title": "Settings",
 
   "imgui.cubecode.windows.codeEditor.title": "Code Editor",
@@ -37,6 +36,88 @@
   "imgui.cubecode.windows.codeEditor.edit.delete.title": "Delete",
   "imgui.cubecode.windows.codeEditor.edit.paste.title": "Paste",
   "imgui.cubecode.windows.codeEditor.edit.save.title": "Save",
+
+  "imgui.cubecode.windows.events.title": "Events",
+
+  "imgui.cubecode.windows.events.server_starting.title": "Server: starting",
+  "imgui.cubecode.windows.events.server_starting.description": "This event is triggered when the server loads. (not worlds)",
+  "imgui.cubecode.windows.events.server_starting.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_started.title": "Server: started",
+  "imgui.cubecode.windows.events.server_started.description": "This event is triggered when the server is loaded.",
+  "imgui.cubecode.windows.events.server_started.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_tick_start.title": "Server: start ticking",
+  "imgui.cubecode.windows.events.server_tick_start.description": "This event is triggered when the server starts ticking (i.e. §720§r times per second)",
+  "imgui.cubecode.windows.events.server_tick_start.variables": "N/A",
+
+  "imgui.cubecode.windows.events.server_tick_end.title": "Server: end ticking",
+  "imgui.cubecode.windows.events.server_tick_end.description": "This event is triggered when the server finishes ticking (i.e. §720§r times per second)",
+  "imgui.cubecode.windows.events.server_tick_end.variables": "N/A",
+
+  "imgui.cubecode.windows.events.block_player_break_before.title": "Block: before break by a player",
+  "imgui.cubecode.windows.events.block_player_break_before.description": "This cancelable event is triggered before the player destroys a block in the world.",
+  "imgui.cubecode.windows.events.block_player_break_before.variables": "&6blockPos&r - Block position. \n&6blockState&r - ScriptBlockState of block. \n&6blockEntity&r - ScriptBlockEntity of block",
+
+  "imgui.cubecode.windows.events.block_player_break_after.title": "Block: after break by a player",
+  "imgui.cubecode.windows.events.block_player_break_after.description": "This event is triggered after the player destroys a block in the world.",
+  "imgui.cubecode.windows.events.block_player_break_after.variables": "&6blockPos&r - Block position. \n&6blockState&r - ScriptBlockState of block. \n&6blockEntity&r - ScriptBlockEntity of block",
+
+  "imgui.cubecode.windows.events.block_player_break_canceled.title": "Block: canceled break by a player",
+  "imgui.cubecode.windows.events.block_player_break_canceled.description": "This event is triggered after canceling any block destruction event by a player in the world.",
+  "imgui.cubecode.windows.events.block_player_break_canceled.variables": "&6blockPos&r - Block position. \n&6blockState&r - ScriptBlockState of block. \n&6blockEntity&r - ScriptBlockEntity of block",
+
+  "imgui.cubecode.windows.events.player_death.title": "Player: death",
+  "imgui.cubecode.windows.events.player_death.description": "This cancelable event is triggered when the player dies.\n\nThe simple tip: if you want to cancel death, make sure to give the player some health, otherwise he will fall into a perpetual dying cycle.",
+  "imgui.cubecode.windows.events.player_death.variables": "&6damageType&r - Damage type. \n&6damage&r - Amount of damage",
+
+  "imgui.cubecode.windows.events.player_respawn.title": "Player: respawn",
+  "imgui.cubecode.windows.events.player_respawn.description": "This event is triggered when the player is respawns.",
+  "imgui.cubecode.windows.events.player_respawn.variables": "&6oldPlayer&r - Player before respawn. \n&6alive&r - If the player is alive",
+
+  "imgui.cubecode.windows.events.player_attack_block.title": "Player: attacking block",
+  "imgui.cubecode.windows.events.player_attack_block.description": "This cancelable event is triggered when a player attacks a block.",
+  "imgui.cubecode.windows.events.player_attack_block.variables": "\n&6hand&r - Name hand",
+
+  "imgui.cubecode.windows.events.player_attack_entity.title": "Player: attacking entity",
+  "imgui.cubecode.windows.events.player_attack_entity.description": "This cancelable event is triggered when the player attacks an entity.",
+  "imgui.cubecode.windows.events.player_attack_entity.variables": "&6blockPos&r - Block position. \n&6direction&r - Direction. \n&6hand&r - Name hand.",
+
+  "imgui.cubecode.windows.events.player_interact_block.title": "Player: interact with an block",
+  "imgui.cubecode.windows.events.player_interact_block.description": "This cancelable event is triggered when the player interacts with a block.",
+  "imgui.cubecode.windows.events.player_interact_block.variables": "&6blockPos&r - Block position. \n&6hand&r - Name hand. \n&6direction&r - Direction. \n&6isInsideBlock&r, Is inside block.",
+
+  "imgui.cubecode.windows.events.player_interact_entity.title": "Player: interact with an entity",
+  "imgui.cubecode.windows.events.player_interact_entity.description": "This cancelable event is triggered when the player interacts with an entity.",
+  "imgui.cubecode.windows.events.player_interact_entity.variables": "&6hand&r - Name hand.",
+
+  "imgui.cubecode.windows.events.player_interact_item.title": "Player: interact with an item",
+  "imgui.cubecode.windows.events.player_interact_item.description": "This cancelable event is triggered when the player interacts with an item.",
+  "imgui.cubecode.windows.events.player_interact_item.variables": "&6hand&r - Name hand. \n&6itemStack&r - Item.",
+
+  "imgui.cubecode.windows.events.entity_hurt.title": "Entity: hurt",
+  "imgui.cubecode.windows.events.entity_hurt.description": "This cancelable event gets triggered when a mob/a player gets hurt (damaged).",
+  "imgui.cubecode.windows.events.entity_hurt.variables": "N/A",
+
+  "imgui.cubecode.windows.events.entity_before_death.title": "Entity: before death",
+  "imgui.cubecode.windows.events.entity_before_death.description": "This cancelable event is triggered before the death of the mob/player.",
+  "imgui.cubecode.windows.events.entity_before_death.variables": "&6damageType&r - Damage type. \n&6damage&r - Amount of damage",
+
+  "imgui.cubecode.windows.events.entity_after_death.title": "Entity: after death",
+  "imgui.cubecode.windows.events.entity_after_death.description": "This event is triggered after the death of the mob/player.",
+  "imgui.cubecode.windows.events.entity_after_death.variables": "&6damageType&r - Damage type.",
+
+  "imgui.cubecode.windows.events.entity_killed_by_entity.title": "Entity: dead of entity",
+  "imgui.cubecode.windows.events.entity_killed_by_entity.description": "This event is triggered when an entity is killed by another entity.",
+  "imgui.cubecode.windows.events.entity_killed_by_entity.variables": "N/A",
+
+  "imgui.cubecode.windows.events.world_tick_start.title": "World: start ticking",
+  "imgui.cubecode.windows.events.world_tick_start.description": "This event is triggered when the world starts ticking.",
+  "imgui.cubecode.windows.events.world_tick_start.variables": "N/A",
+
+  "imgui.cubecode.windows.events.world_tick_end.title": "World: end ticking",
+  "imgui.cubecode.windows.events.world_tick_end.description": "This event comes when the world finishes ticking.",
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
 
   "imgui.cubecode.settings.window.name": "Window Settings",
 

@@ -13,7 +13,7 @@ import static com.cubecode.CubeCode.scriptManager;
 public class Script {
     public String name;
     public String code;
-    public Context context;
+    public transient Context context;
 
     public Script(String name, String code) {
         this.name = name;

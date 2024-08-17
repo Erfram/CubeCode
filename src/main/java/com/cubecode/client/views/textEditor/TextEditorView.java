@@ -12,6 +12,7 @@ import com.cubecode.network.packets.server.SaveScriptC2SPacket;
 import com.cubecode.network.packets.server.UpdateScriptsC2SPacket;
 import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
+import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import net.minecraft.client.MinecraftClient;
@@ -98,8 +99,9 @@ public class TextEditorView extends View {
                 CODE_EDITOR.setText(scripts.get(selectedScript).code);
             }
 
+
             //Mouse Right CLick
-            if (ImGui.isItemClicked(1)) {
+            if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
                 selectedScript = i;
                 ImGui.openPopup("script_context_menu_" + i);
             }

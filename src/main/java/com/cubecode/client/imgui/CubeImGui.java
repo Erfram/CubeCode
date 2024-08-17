@@ -1,9 +1,11 @@
 package com.cubecode.client.imgui;
 
 import com.cubecode.client.imgui.basic.View;
+import imgui.ImDrawData;
 import imgui.ImGui;
 import imgui.ImVec4;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
+import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
@@ -16,10 +18,17 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
+    public static void gifAnimation() {
+        ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
+
+        imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+    }
+
     public static void textMutable(MutableText mutableText) {
         for (int i = 0; i < mutableText.withoutStyle().size(); i++) {
             Text sibling = mutableText.withoutStyle().get(i);
@@ -45,58 +54,38 @@ public class CubeImGui {
         }
     }
 
-    public static void begin(View view, String title, Consumer<Boolean> beginAction) {
-        String titleKey = title + view.getUniqueID();
+    public static void mutableText(MutableText mutableText) {
+        boolean isFirstElement = true;
+        for (int i = 0; i < mutableText.withoutStyle().size(); i++) {
+            Text sibling = mutableText.withoutStyle().get(i);
+            Style style = sibling.getStyle();
+            TextColor textColor = style.getColor();
+            String content = sibling.getString();
 
-        view.putVariable(titleKey, new ImBoolean(true));
-        ImBoolean close = view.getVariable(titleKey);
+            String[] lines = content.split("\n", -1);
+            for (int j = 0; j < lines.length; j++) {
+                if (!isFirstElement && j == 0) {
+                    ImGui.sameLine(0, 0);
+                }
 
-        if (ImGui.begin(title, close)) {
-            beginAction.accept(close.get());
-        }
+                if (textColor != null) {
+                    int color = textColor.getRgb();
+                    float r = ((color >> 16) & 0xFF) / 255.0f;
+                    float g = ((color >> 8) & 0xFF) / 255.0f;
+                    float b = (color & 0xFF) / 255.0f;
+                    float a = 1.0f;
 
-        ImGui.end();
-    }
+                    ImGui.textColored(r, g, b, a, lines[j]);
+                } else {
+                    ImGui.text(lines[j]);
+                }
 
-    public static void begin(View view, String title, int windowFlags, Consumer<Boolean> beginAction) {
-        view.putVariable(title + view.getUniqueID(), new ImBoolean(true));
-        ImBoolean close = view.getVariable(title + view.getUniqueID());
-
-        if (ImGui.begin(title, close, windowFlags)) {
-            beginAction.accept(close.get());
-        }
-
-        ImGui.end();
-    }
-
-    public static void frame(Runnable frameAction) {
-        ImGui.newFrame();
-        frameAction.run();
-        ImGui.endFrame();
-    }
-
-    public static int frameCount() {
-        return ImGui.getFrameCount();
-    }
-
-    public static void dragDropSource(Runnable dragDropSourceAction) {
-        if (ImGui.beginDragDropSource()) {
-            dragDropSourceAction.run();
-            ImGui.endDragDropSource();
-        }
-    }
-
-    public static void dragDropSource(int dragDropFlags, Runnable dragDropSourceAction) {
-        if (ImGui.beginDragDropSource(dragDropFlags)) {
-            dragDropSourceAction.run();
-            ImGui.endDragDropSource();
-        }
-    }
-
-    public static void dragDropTarget(Runnable dragDropTargetAction) {
-        if (ImGui.beginDragDropTarget()) {
-            dragDropTargetAction.run();
-            ImGui.endDragDropSource();
+                if (j < lines.length - 1 || content.endsWith("\n")) {
+                    isFirstElement = true;
+                } else {
+                    isFirstElement = false;
+                }
+            }
         }
     }
 
@@ -126,13 +115,6 @@ public class CubeImGui {
     public static void mouseClicked(int button, BiConsumer<Float, Float> mouseClickedAction) {
         if (ImGui.isMouseClicked(button)) {
             mouseClickedAction.accept(ImGui.getMousePos().x, ImGui.getMousePos().y);
-        }
-    }
-
-    public static void popup(String id, Runnable popupAction) {
-        if (ImGui.beginPopup(id)) {
-            popupAction.run();
-            ImGui.endPopup();
         }
     }
 

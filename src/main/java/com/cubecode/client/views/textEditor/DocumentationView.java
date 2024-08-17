@@ -32,8 +32,20 @@ public class DocumentationView extends View {
     static {
         apiIcons.put("ScriptPlayer", "player");
         apiIcons.put("ScriptEntity", "entity");
-        apiIcons.put("ScriptItem", "stick");
+        apiIcons.put("ScriptItem", "arrow");
         apiIcons.put("ScriptItemStack", "pickaxe");
+        apiIcons.put("ScriptWorld", "world");
+        apiIcons.put("ScriptInventory", "container");
+        apiIcons.put("ScriptNbtCompound", "nbt_compound");
+        apiIcons.put("ScriptNbtList", "nbt_list");
+        apiIcons.put("ScriptRayTrace", "ray_trace");
+        apiIcons.put("ScriptVector", "vector");
+        apiIcons.put("ScriptServer", "server");
+        apiIcons.put("ScriptBlockState", "block");
+        apiIcons.put("ScriptBlockEntity", "smile_block");
+        apiIcons.put("ScriptEvent", "flag");
+        apiIcons.put("ScriptFactory", "wrench");
+        apiIcons.put("CubeCodeStates", "states");
     }
 
     private int selectedClass = -1;
@@ -47,7 +59,7 @@ public class DocumentationView extends View {
 
     @Override
     public String getName() {
-        return String.format("Documentation##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title")+"##%s", uniqueID);
     }
 
     @Override
@@ -70,7 +82,9 @@ public class DocumentationView extends View {
                 .title(getName())
                 .flags(ImGuiWindowFlags.HorizontalScrollbar)
                 .callback(() -> {
-                    CubeImGui.beginChild("Left Pane", 200, 0, true, this::renderClasses);
+                    CubeImGui.beginChild("Left Pane", ImGui.calcTextSize(docs.keySet().stream()
+                            .max(Comparator.comparingInt(String::length))
+                            .orElse("")).x + 35, 0, true, this::renderClasses);
                     ImGui.sameLine();
                     CubeImGui.beginChild("CubeCode IDEA", 0, 0, false, this::renderContent);
                 })
@@ -78,23 +92,26 @@ public class DocumentationView extends View {
     }
 
     public void renderClasses() {
-        for (int i = 0; i < docs.keySet().size(); i++) {
-            if (ImGui.selectable("##"+docs.keySet().stream().toList().get(i), selectedClass == i, ImGuiSelectableFlags.None)) {
+        TreeMap<String, Documentation.Chapter> sortedMap = new TreeMap<>(docs);
+        for (int i = 0; i < sortedMap.size(); i++) {
+            if (ImGui.selectable("##"+sortedMap.keySet().stream().toList().get(i), selectedClass == i, ImGuiSelectableFlags.None)) {
                 selectedClass = i;
-                className = docs.keySet().stream().toList().get(i);
-                classChapter = docs.values().stream().toList().get(i);
+                className = sortedMap.keySet().stream().toList().get(i);
+                classChapter = sortedMap.values().stream().toList().get(i);
+
+                this.setVariable("search_methods", null);
 
                 this.setVariable("##Search" + this.uniqueID, new ImString("", 30));
             }
 
             ImGui.sameLine(0, 0);
-            Integer icon = Icons.getIcon(apiIcons.get(docs.keySet().stream().toList().get(i)));
+            Integer icon = Icons.getIcon(apiIcons.get(sortedMap.keySet().stream().toList().get(i)));
             Integer empty = Icons.getIcon("empty");
 
             ImGui.image(icon != null ? icon : empty, 16, 16);
 
-            ImGui.sameLine(0, 1);
-            ImGui.text(docs.keySet().stream().toList().get(i));
+            ImGui.sameLine(0, 4);
+            ImGui.text(sortedMap.keySet().stream().toList().get(i));
         }
     }
 

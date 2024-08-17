@@ -1,5 +1,6 @@
 package com.cubecode;
 
+import com.cubecode.api.events.EventManager;
 import com.cubecode.network.Dispatcher;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
@@ -18,6 +19,7 @@ public class CubeCode implements ModInitializer {
     public static File contentDirectory;
 
     public static ScriptManager scriptManager;
+    public static EventManager eventManager;
 
     static {
         LOGGER = LogUtils.getLogger();

@@ -44,9 +44,18 @@ public class ScriptVector {
 
     public ScriptVector multiply(double scalar) {
         return new ScriptVector(
-                this.x * scalar,
-                this.y * scalar,
-                this.z * scalar
+            this.x * scalar,
+            this.y * scalar,
+            this.z * scalar
+        );
+    }
+
+    public ScriptVector cross(ScriptVector vector)
+    {
+        return new ScriptVector(
+                y * vector.z - z * vector.y,
+                z * vector.x - x * vector.z,
+                x * vector.y - y * vector.x
         );
     }
 
