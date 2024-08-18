@@ -2,41 +2,26 @@ package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.events.CubeEvent;
+import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.client.views.textEditor.RenameScriptView;
-import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.server.DeleteScriptC2SPacket;
-import com.cubecode.state.PlayerState;
-import com.cubecode.state.ServerState;
-import com.cubecode.utils.GifManager;
+import com.cubecode.client.gifs.GifManager;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
 import imgui.ImDrawList;
 import imgui.ImGui;
-import imgui.ImGuiStyle;
 import imgui.ImVec2;
-import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.flag.*;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static net.minecraft.nbt.NbtElement.STRING_TYPE;
 
 public class EventsView extends View {
     private final int viewWidth = 300;
@@ -306,27 +291,28 @@ public class EventsView extends View {
             renderTooltipText("imgui.cubecode.windows.events." + eventName + ".variables");
             ImGui.separator();
 
-            Identifier eventGif = new Identifier(CubeCode.MOD_ID, "imgui/gifs/"+eventName+".gif");
 
-            GifManager.loadGif(eventGif.getPath(), 1);
+            Optional<Gif> optionalGif = GifManager.getGif(String.format("imgui/gifs/%s.gif", eventName));
 
-            GifManager.update();
+            if (optionalGif.isPresent()) {
+                Gif gif = optionalGif.get();
 
-            Integer image = GifManager.getImage();
+                if (gif.isAvailable()) {
+                    ImDrawList windowDrawList = ImGui.getWindowDrawList();
 
-            ImDrawList windowDrawList = ImGui.getWindowDrawList();
+                    ImVec2 windowPos = ImGui.getWindowPos();
+                    ImVec2 cursorPos = ImGui.getCursorPos();
+                    float x = windowPos.x + cursorPos.x;
+                    float y = windowPos.y + cursorPos.y;
 
-            ImVec2 windowPos = ImGui.getWindowPos();
-            ImVec2 cursorPos = ImGui.getCursorPos();
-            float x = windowPos.x + cursorPos.x;
-            float y = windowPos.y + cursorPos.y;
+                    int imageWidth = 512;
+                    int imageHeight = 256;
 
-            int imageWidth = 512;
-            int imageHeight = 256;
+                    windowDrawList.addImage(gif.getGlId(), x, y, x + imageWidth, y + imageHeight, 0f, gif.getCursor(), 1, gif.getCursor() + gif.getDifference());
 
-            windowDrawList.addImage(image != null ? image : Icons.WAIT, x, y, x + imageWidth, y + imageHeight, 0f, 0f, 1, 1);
-
-            ImGui.setCursorPosY(ImGui.getCursorPosY() + imageHeight);
+                    ImGui.setCursorPosY(ImGui.getCursorPosY() + imageHeight);
+                }
+            }
         }
 
         private static void renderTooltipText(String key) {
