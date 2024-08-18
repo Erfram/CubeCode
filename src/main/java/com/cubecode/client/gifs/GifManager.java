@@ -19,8 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GifManager {
 
+    public static final String DEFAULT_GIF = "imgui/gifs/default.gif";
     public static ConcurrentHashMap<String, Gif> gifs = new ConcurrentHashMap<>();
     public static ArrayList<String> requested = new ArrayList<>();
+
+    public static void init() {
+        requestLoadGif(DEFAULT_GIF);
+    }
 
     public static void update() {
         gifs.forEach((s, v) -> v.handle());

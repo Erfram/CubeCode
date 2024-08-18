@@ -1,5 +1,7 @@
 package com.cubecode.client.gifs;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL32;
 
@@ -15,6 +17,10 @@ public class Gif {
 
     protected float difference;
 
+    protected long velocityTick;
+
+    protected long lastVelocityTick;
+
     protected boolean available;
 
     protected boolean collected;
@@ -25,11 +31,20 @@ public class Gif {
         if (!collected) {
             load();
         }
-        if (available) {
-            if (cursor + difference >= 1.0f) {
-                cursor = 0;
-            } else {
-                cursor += difference;
+
+        ClientWorld world = MinecraftClient.getInstance().world;
+
+        if (available && world != null) {
+            long currentTime = world.getTime();
+
+            if ((currentTime - lastVelocityTick) >= velocityTick) {
+                if (cursor + difference >= 1.0f) {
+                    cursor = 0;
+                } else {
+                    cursor += difference;
+                }
+
+                lastVelocityTick = currentTime;
             }
         }
     }
@@ -112,6 +127,13 @@ public class Gif {
 
     public Gif payload(List<BufferedImage> payload) {
         this.cachedImages = payload;
+        this.velocityTick = 0L;
         return this;
     }
+
+    public void velocity(long velocityTick) {
+        if (this.velocityTick == velocityTick) return;
+        this.velocityTick = velocityTick;
+    }
+
 }

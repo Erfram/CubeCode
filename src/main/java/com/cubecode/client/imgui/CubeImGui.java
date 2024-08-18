@@ -1,32 +1,62 @@
 package com.cubecode.client.imgui;
 
+import com.cubecode.client.gifs.Gif;
+import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.basic.View;
-import imgui.ImDrawData;
+import imgui.ImDrawList;
 import imgui.ImGui;
-import imgui.ImVec4;
+import imgui.ImVec2;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
-import imgui.gl3.ImGuiImplGl3;
-import imgui.type.ImBoolean;
+import imgui.flag.ImGuiMouseButton;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
-    public static void gifAnimation() {
-        ImGuiImplGl3 imGuiImplGl3 = new ImGuiImplGl3();
 
-        imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+    public static void gif(String gifPath, float width, float height) {
+        gif(gifPath, width, height, 0, () -> {});
+    }
+
+    public static void gif(String gifPath, float width, float height, long velocityTick) {
+        gif(gifPath, width, height, velocityTick, () -> {});
+    }
+
+    public static void gif(String gifPath, float width, float height, long velocityTick, Runnable callback) {
+        Gif targetGif = null;
+        Optional<Gif> optionalGif = GifManager.getGif(gifPath);
+
+        if (optionalGif.isPresent()) {
+            targetGif = optionalGif.get();
+            targetGif.velocity(velocityTick);
+        } else {
+            Optional<Gif> defaultOptionalGif = GifManager.getGif(GifManager.DEFAULT_GIF);
+            if (defaultOptionalGif.isPresent()) {
+                targetGif = defaultOptionalGif.get();
+            }
+        }
+
+        if (targetGif != null && targetGif.isAvailable()) {
+            ImGui.invisibleButton("##invisibleButton", width, height);
+
+            if (ImGui.isItemHovered() && ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
+                callback.run();
+            }
+
+            ImVec2 pos = ImGui.getItemRectMin();
+
+            ImDrawList windowDrawList = ImGui.getWindowDrawList();
+            windowDrawList.addImage(targetGif.getGlId(), pos.x, pos.y, pos.x + width, pos.y + height, 0f, targetGif.getCursor(), 1, targetGif.getCursor() + targetGif.getDifference());
+        }
+
     }
 
     public static void textMutable(MutableText mutableText) {

@@ -2,26 +2,27 @@ package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.events.CubeEvent;
-import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.client.gifs.GifManager;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
-import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.*;
+import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiSelectableFlags;
+import imgui.flag.ImGuiWindowFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class EventsView extends View {
     private final int viewWidth = 300;
@@ -291,28 +292,7 @@ public class EventsView extends View {
             renderTooltipText("imgui.cubecode.windows.events." + eventName + ".variables");
             ImGui.separator();
 
-
-            Optional<Gif> optionalGif = GifManager.getGif(String.format("imgui/gifs/%s.gif", eventName));
-
-            if (optionalGif.isPresent()) {
-                Gif gif = optionalGif.get();
-
-                if (gif.isAvailable()) {
-                    ImDrawList windowDrawList = ImGui.getWindowDrawList();
-
-                    ImVec2 windowPos = ImGui.getWindowPos();
-                    ImVec2 cursorPos = ImGui.getCursorPos();
-                    float x = windowPos.x + cursorPos.x;
-                    float y = windowPos.y + cursorPos.y;
-
-                    int imageWidth = 512;
-                    int imageHeight = 256;
-
-                    windowDrawList.addImage(gif.getGlId(), x, y, x + imageWidth, y + imageHeight, 0f, gif.getCursor(), 1, gif.getCursor() + gif.getDifference());
-
-                    ImGui.setCursorPosY(ImGui.getCursorPosY() + imageHeight);
-                }
-            }
+            CubeImGui.gif(String.format("imgui/gifs/%s.gif", eventName), 512, 256);
         }
 
         private static void renderTooltipText(String key) {
