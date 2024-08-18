@@ -59,7 +59,7 @@ public class GifManager {
                     connection.connect();
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        List<BufferedImage> images = collectGif(connection.getInputStream());
+                        List<BufferedImage> images = collectGif(connection.getInputStream(), false);
                         gifs.put(path, new Gif().payload(images));
                     } else {
                         CubeCode.LOGGER.error("Failed to connect to URL: {}", connection.getResponseCode());
@@ -68,7 +68,7 @@ public class GifManager {
                     Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier(CubeCode.MOD_ID, path));
 
                     if (resource.isPresent()) {
-                        List<BufferedImage> images = collectGif(resource.get().getInputStream());
+                        List<BufferedImage> images = collectGif(resource.get().getInputStream(), true);
                         gifs.put(path, new Gif().payload(images));
                     }
                 }
@@ -78,7 +78,8 @@ public class GifManager {
         });
     }
 
-    private static List<BufferedImage> collectGif(InputStream inputStream) throws IOException {
+    // TODO определять когда нужно делать прозрачный фон, а когда нет.
+    private static List<BufferedImage> collectGif(InputStream inputStream, boolean clearBackground) throws IOException {
         List<BufferedImage> frames = new ArrayList<>();
 
         try (ImageInputStream stream = ImageIO.createImageInputStream(inputStream)) {
@@ -91,17 +92,33 @@ public class GifManager {
             for (int i = 0; i < numFrames; i++) {
                 BufferedImage image = reader.read(i);
 
-                if (i == 0) {
+                if (master == null) {
                     master = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 }
 
-                frames.add(new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB));
-                master.getGraphics().drawImage(image, 0, 0, null);
-                frames.get(i).setData(master.getData());
+                if (clearBackground) {
+                    Graphics2D g2d = master.createGraphics();
+                    g2d.setComposite(AlphaComposite.Clear);
+                    g2d.fillRect(0, 0, master.getWidth(), master.getHeight());
+                    g2d.setComposite(AlphaComposite.SrcOver);
+                    g2d.drawImage(image, 0, 0, null);
+                    g2d.dispose();
+                } else {
+                    master.getGraphics().drawImage(image, 0, 0, null);
+                }
+
+                BufferedImage frame = new BufferedImage(master.getWidth(), master.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D frameGraphics = frame.createGraphics();
+                frameGraphics.drawImage(master, 0, 0, null);
+                frameGraphics.dispose();
+
+                frames.add(frame);
             }
         }
         return frames;
     }
+
+
 
 
 }
