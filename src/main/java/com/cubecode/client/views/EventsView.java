@@ -291,8 +291,7 @@ public class EventsView extends View {
             ImGui.separator();
             renderTooltipText("imgui.cubecode.windows.events." + eventName + ".variables");
             ImGui.separator();
-
-            CubeImGui.gif(String.format("imgui/gifs/%s.gif", eventName), 512, 256);
+            CubeImGui.gif(String.format("https://github.com/Erfram/CubeCode/blob/main/gifs/%s.gif?raw=true", eventName), 512, 256);
         }
 
         private static void renderTooltipText(String key) {

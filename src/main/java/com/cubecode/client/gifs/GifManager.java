@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,10 +24,6 @@ public class GifManager {
     public static final String DEFAULT_GIF = "imgui/gifs/default.gif";
     public static ConcurrentHashMap<String, Gif> gifs = new ConcurrentHashMap<>();
     public static ArrayList<String> requested = new ArrayList<>();
-
-    public static void init() {
-        requestLoadGif(DEFAULT_GIF);
-    }
 
     public static void update() {
         gifs.forEach((s, v) -> v.handle());
@@ -46,18 +44,33 @@ public class GifManager {
         return Optional.empty();
     }
 
-    private static void requestLoadGif(String filePath) {
-        if (requested.contains(filePath)) return;
+    private static void requestLoadGif(String path) {
+        if (requested.contains(path)) return;
 
-        requested.add(filePath);
+        requested.add(path);
 
         CompletableFuture.runAsync(() -> {
             try {
-                Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier(CubeCode.MOD_ID, filePath));
+                if (path.startsWith("http")) {
+                    URL url = new URL(path);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setDoInput(true);
+                    connection.connect();
 
-                if (resource.isPresent()) {
-                    List<BufferedImage> images = collectGif(resource.get().getInputStream());
-                    gifs.put(filePath, new Gif().payload(images));
+                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        List<BufferedImage> images = collectGif(connection.getInputStream());
+                        gifs.put(path, new Gif().payload(images));
+                    } else {
+                        CubeCode.LOGGER.error("Failed to connect to URL: {}", connection.getResponseCode());
+                    }
+                } else {
+                    Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier(CubeCode.MOD_ID, path));
+
+                    if (resource.isPresent()) {
+                        List<BufferedImage> images = collectGif(resource.get().getInputStream());
+                        gifs.put(path, new Gif().payload(images));
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
