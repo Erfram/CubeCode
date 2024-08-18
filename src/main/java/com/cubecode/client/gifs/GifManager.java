@@ -79,35 +79,29 @@ public class GifManager {
     }
 
     private static List<BufferedImage> collectGif(InputStream inputStream) throws IOException {
-        List<BufferedImage> bufferedImages = new ArrayList<>();
+        List<BufferedImage> frames = new ArrayList<>();
 
         try (ImageInputStream stream = ImageIO.createImageInputStream(inputStream)) {
             ImageReader reader = ImageIO.getImageReadersByFormatName("gif").next();
             reader.setInput(stream);
 
             int numFrames = reader.getNumImages(true);
-            BufferedImage masterImage = null;
+            BufferedImage master = null;
 
             for (int i = 0; i < numFrames; i++) {
                 BufferedImage image = reader.read(i);
 
                 if (i == 0) {
-                    masterImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    master = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
                 }
 
-                Graphics2D g2d = masterImage.createGraphics();
-                g2d.drawImage(image, 0, 0, null);
-                g2d.dispose();
-
-                BufferedImage copy = new BufferedImage(masterImage.getColorModel(),
-                        masterImage.copyData(null),
-                        masterImage.isAlphaPremultiplied(),
-                        null);
-
-                bufferedImages.add(copy);
+                frames.add(new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB));
+                master.getGraphics().drawImage(image, 0, 0, null);
+                frames.get(i).setData(master.getData());
             }
         }
-        return bufferedImages;
+        return frames;
     }
+
 
 }
