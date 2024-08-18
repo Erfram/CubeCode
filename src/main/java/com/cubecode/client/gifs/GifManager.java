@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GifManager {
 
-    public static final String DEFAULT_GIF = "imgui/gifs/default.gif";
+    public static final String DEFAULT_GIF = "imgui/gifs/default_s.gif";
     public static ConcurrentHashMap<String, Gif> gifs = new ConcurrentHashMap<>();
     public static ArrayList<String> requested = new ArrayList<>();
 
@@ -49,6 +49,10 @@ public class GifManager {
 
         requested.add(path);
 
+        String gifName = path.split("/gifs/")[1].split(".gif")[0];
+
+        boolean isClearBackground = gifName.endsWith("_s");
+
         CompletableFuture.runAsync(() -> {
             try {
                 if (path.startsWith("http")) {
@@ -59,7 +63,7 @@ public class GifManager {
                     connection.connect();
 
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        List<BufferedImage> images = collectGif(connection.getInputStream(), false);
+                        List<BufferedImage> images = collectGif(connection.getInputStream(), isClearBackground);
                         gifs.put(path, new Gif().payload(images));
                     } else {
                         CubeCode.LOGGER.error("Failed to connect to URL: {}", connection.getResponseCode());
@@ -68,7 +72,7 @@ public class GifManager {
                     Optional<Resource> resource = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier(CubeCode.MOD_ID, path));
 
                     if (resource.isPresent()) {
-                        List<BufferedImage> images = collectGif(resource.get().getInputStream(), true);
+                        List<BufferedImage> images = collectGif(resource.get().getInputStream(), isClearBackground);
                         gifs.put(path, new Gif().payload(images));
                     }
                 }

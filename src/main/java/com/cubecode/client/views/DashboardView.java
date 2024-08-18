@@ -4,6 +4,7 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.views.settings.ScriptView;
+import com.cubecode.client.views.settings.SettingsView;
 import com.cubecode.client.views.settings.WindowView;
 import com.cubecode.client.views.textEditor.TextEditorView;
 import imgui.ImGui;
@@ -25,13 +26,14 @@ public class DashboardView extends View {
                 });
 
                 CubeImGui.menuItem("events", () -> {
-                    ImGuiLoader.pushView(new EventsView(new NbtList()));
+                    ImGuiLoader.pushView(new EventView(new NbtList()));
                 });
             });
 
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.settings.window.title").getString(), () -> ImGuiLoader.pushView(new WindowView()));
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.settings.script.title").getString(), () -> ImGuiLoader.pushView(new ScriptView()));
+                CubeImGui.menuItem("Настройки", () -> ImGuiLoader.pushView(new SettingsView()));
             });
         });
 

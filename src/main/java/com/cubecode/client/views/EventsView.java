@@ -2,6 +2,7 @@ package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.events.CubeEvent;
+import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -59,6 +60,7 @@ public class EventsView extends View {
                 .title(getName())
                 .onExit(() -> {
                     ImGuiLoader.removeViews(ImGuiLoader.getView(EventSourceView.class), ImGuiLoader.getView(EventListView.class));
+                    GifManager.clear();
                 })
                 .callback(() -> {
                     ImGui.text("Используемые события");
@@ -75,37 +77,48 @@ public class EventsView extends View {
                         ImGui.endTooltip();
                     }
 
-                    CubeImGui.beginChild("Events", 0, 0, true, this::renderEvents);
+                    ImVec2 maxTextSize  = ImGui.calcTextSize(nbtEvents.stream()
+                            .max(Comparator.comparingInt((nbtElement) -> nbtElement.asString().length()))
+                            .orElse(NbtString.of("")).asString());
+
+                    if (ImGui.beginChild("Events", maxTextSize.x + 35 + 46, 0, true)) {
+                        this.renderEvents();
+                    }
+                    ImGui.endChild();
+
+                    if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+                        ImGuiLoader.pushView(new EventsView.EventListView("CubeCode", ImGui.getMousePos()));
+                    }
                 })
                 .render(this);
     }
 
     public void renderEvents() {
+        ImVec2 maxTextSize  = ImGui.calcTextSize(nbtEvents.stream()
+                .max(Comparator.comparingInt((nbtElement) -> nbtElement.asString().length()))
+                .orElse(NbtString.of("")).asString());
         for (int i = 0; i < nbtEvents.size(); i++) {
-            if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events."+nbtEvents.getString(i)+".title").getString(), selectedEvent == i, ImGuiSelectableFlags.None)) {
+            float y = ImGui.getCursorPosY();
+            ImGui.setCursorPosY(y + 3);
+            if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events."+nbtEvents.getString(i)+".title").getString(), selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x + 50, maxTextSize.y)) {
                 selectedEvent = i;
             }
 
-            if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
-                selectedEvent = i;
-                ImGui.openPopup("event_context_menu_" + i);
-            }
-        }
+            ImGui.sameLine();
 
-        runContextMenu();
-    }
+            ImGui.setCursorPosY(y);
 
-    public void runContextMenu() {
-        if (ImGui.beginPopup("event_context_menu_" + selectedEvent)) {
-            if (ImGui.menuItem("Редактировать")) {
+            if (ImGui.imageButton(Icons.INFO, 16, 16)) {
                 ImGuiLoader.pushView(new EventContentView(nbtEvents, selectedEvent));
             }
 
-            if (ImGui.menuItem("Удалить")) {
-                nbtEvents.remove(selectedEvent);
-            }
+            ImGui.sameLine(0, 10);
 
-            ImGui.endPopup();
+            if (ImGui.imageButton(Icons.ARROW, 16, 16)) {
+                if (selectedEvent != -1) {
+                    nbtEvents.remove(selectedEvent);
+                }
+            }
         }
     }
 
@@ -172,6 +185,7 @@ public class EventsView extends View {
             Window.create()
                     .flags(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoDocking)
                     .title(getName())
+                    .onExit(GifManager::clear)
                     .callback(() -> {
                         CubeImGui.beginChild("eventSource", 0, 0, true, this::renderEventsSource);
                     })
@@ -185,7 +199,7 @@ public class EventsView extends View {
                     sourceEvent = CubeCode.eventManager.eventSource.get(i);
 
                     if (!ImGuiLoader.isOpenView(EventListView.class)) {
-                        ImGuiLoader.pushView(new EventListView(sourceEvent));
+                        //ImGuiLoader.pushView(new EventListView(sourceEvent));
                     }
                 }
             }
@@ -199,18 +213,17 @@ public class EventsView extends View {
         private final String sourceEvent;
 
         private int selectedEvent = -1;
+        private ImVec2 vec;
         private CubeEvent event = null;
 
-        public EventListView(String sourceEvent) {
+        public EventListView(String sourceEvent, ImVec2 vec) {
             this.sourceEvent = sourceEvent;
+            this.vec = vec;
         }
 
         @Override
         public void init() {
-            float posX = (windowWidth - viewWidth) * 0.5f;
-            float posY = (windowHeight - viewHeight) * 0.5f;
-
-            ImGui.setNextWindowPos(posX, posY);
+            ImGui.setNextWindowPos(vec.x, vec.y);
             ImGui.setNextWindowSize(viewWidth, viewHeight);
         }
 
@@ -223,6 +236,7 @@ public class EventsView extends View {
         public void render() {
             Window.create()
                 .title(getName())
+                .onExit(GifManager::clear)
                 .callback(() -> {
                     if (sourceEvent.equals("CubeCode")) {
                         List<String> eventsName = CubeCode.eventManager.events.stream()
@@ -235,6 +249,8 @@ public class EventsView extends View {
 
                         EventsView eventsView = ImGuiLoader.getView(EventsView.class);
 
+                        boolean isPop = true;
+
                         for (int i = 0; i < CubeCode.eventManager.events.size(); i++) {
                             CubeEvent currentEvent = CubeCode.eventManager.events.get(i);
                             String eventTitle = Text.translatable("imgui.cubecode.windows.events." + currentEvent.name + ".title").getString();
@@ -242,15 +258,21 @@ public class EventsView extends View {
                             if (eventsView != null && NbtUtils.containsString(eventsView.nbtEvents, CubeCode.eventManager.events.get(i).name)) {
                                 ImGui.pushStyleColor(ImGuiCol.Text, 0.4f, 0.4f, 0.4f, 1f);
                             }
+
                             if (ImGui.selectable(eventTitle, selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
                                 selectedEvent = i;
                                 event = currentEvent;
-                            }
-                            if (eventsView != null && NbtUtils.containsString(eventsView.nbtEvents, CubeCode.eventManager.events.get(i).name)) {
-                                ImGui.popStyleColor();
+
+                                if (eventsView != null && !NbtUtils.containsString(eventsView.nbtEvents, CubeCode.eventManager.events.get(i).name)) {
+                                    eventsView.nbtEvents.add(NbtString.of(CubeCode.eventManager.events.get(i).name));
+                                    isPop = false;
+                                }
                             }
 
-                            handleRightClickMenu(i);
+                            if (eventsView != null && NbtUtils.containsString(eventsView.nbtEvents, CubeCode.eventManager.events.get(i).name) && isPop) {
+                                ImGui.popStyleColor();
+                            }
+                            isPop = true;
                             renderQuestionButton(i);
                         }
 
