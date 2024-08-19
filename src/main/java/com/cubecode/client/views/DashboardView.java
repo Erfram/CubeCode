@@ -7,6 +7,8 @@ import com.cubecode.client.views.settings.ScriptView;
 import com.cubecode.client.views.settings.SettingsView;
 import com.cubecode.client.views.settings.WindowView;
 import com.cubecode.client.views.textEditor.TextEditorView;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.state.ServerState;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
@@ -28,7 +30,7 @@ public class DashboardView extends View {
                 });
 
                 CubeImGui.menuItem("events", () -> {
-                    ImGuiLoader.pushView(new EventView());
+                    Dispatcher.sendToServer(new EventsRequestedPacket());
                 });
             });
 

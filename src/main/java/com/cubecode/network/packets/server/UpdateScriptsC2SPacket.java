@@ -3,6 +3,7 @@ package com.cubecode.network.packets.server;
 import com.cubecode.CubeCode;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
+import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
@@ -35,7 +36,7 @@ public class UpdateScriptsC2SPacket extends AbstractPacket {
         return new Identifier(CubeCode.MOD_ID, "update_scripts_c2s");
     }
 
-    public static class ServerPacketHandler implements com.cubecode.network.basic.ServerPacketHandler<UpdateScriptsC2SPacket> {
+    public static class ServerHandler implements ServerPacketHandler<UpdateScriptsC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, UpdateScriptsC2SPacket packet) {
             if (packet.isUpdate) {

@@ -12,14 +12,14 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class RequestEventsC2SPacket extends AbstractPacket {
+public class EventsSyncC2SPacket extends AbstractPacket {
     NbtList events;
 
-    public RequestEventsC2SPacket(NbtList events) {
+    public EventsSyncC2SPacket(NbtList events) {
         this.events = events;
     }
 
-    public RequestEventsC2SPacket() {}
+    public EventsSyncC2SPacket() {}
 
     @Override
     public void fromBytes(PacketByteBuf buf) {
@@ -33,12 +33,12 @@ public class RequestEventsC2SPacket extends AbstractPacket {
 
     @Override
     public Identifier getIdentifier() {
-        return new Identifier("request_player_state_c2s");
+        return new Identifier("events_sync_c2s");
     }
 
-    public static class ServerHandler implements ServerPacketHandler<RequestEventsC2SPacket> {
+    public static class ServerHandler implements ServerPacketHandler<EventsSyncC2SPacket> {
         @Override
-        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestEventsC2SPacket packet) {
+        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, EventsSyncC2SPacket packet) {
             ServerState serverState = ServerState.getServerState(server);
 
             serverState.events = packet.events;

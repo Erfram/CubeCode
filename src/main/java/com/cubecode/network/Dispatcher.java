@@ -2,6 +2,7 @@ package com.cubecode.network;
 
 import com.cubecode.network.basic.AbstractDispatcher;
 import com.cubecode.network.basic.AbstractPacket;
+import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
 import com.cubecode.network.packets.server.*;
 import net.fabricmc.api.EnvType;
@@ -15,14 +16,16 @@ public class Dispatcher {
         @Override
         public void register() {
             this.registerPacket(UpdateScriptsS2CPacket.class, UpdateScriptsS2CPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
 
-            this.registerPacket(UpdateScriptsC2SPacket.class, UpdateScriptsC2SPacket.ServerPacketHandler.class, EnvType.SERVER);
+            this.registerPacket(UpdateScriptsC2SPacket.class, UpdateScriptsC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(CreateScriptC2SPacket.class, CreateScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RenameScriptC2SPacket.class, RenameScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(DeleteScriptC2SPacket.class, DeleteScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RunScriptC2SPacket.class, RunScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(SaveScriptC2SPacket.class, SaveScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
-            this.registerPacket(RequestEventsC2SPacket.class, RequestEventsC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(EventsSyncC2SPacket.class, EventsSyncC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 

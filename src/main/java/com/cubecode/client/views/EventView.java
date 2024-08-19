@@ -1,12 +1,12 @@
 package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.events.CubeEvent;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.state.ServerState;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.server.EventsSyncC2SPacket;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
@@ -60,7 +60,7 @@ public class EventView extends View {
         Window.create()
                 .title(getName())
                 .onExit(() -> {
-
+                    Dispatcher.sendToServer(new EventsSyncC2SPacket(nbtEvents));
                     ImGuiLoader.removeView(ImGuiLoader.getView(EventListView.class));
                 })
                 .callback(() -> {
@@ -144,7 +144,10 @@ public class EventView extends View {
         ImGui.separator();
         renderTooltipText("imgui.cubecode.windows.events." + eventName + ".variables");
         ImGui.separator();
-        CubeImGui.gif(String.format("https://github.com/Erfram/CubeCode/blob/main/gifs/%s.gif?raw=true", eventName), 256, 256);
+        CubeImGui.gif(
+                String.format("https://github.com/Erfram/CubeCode/blob/main/gifs/%s.gif?raw=true", eventName),
+                256, 256
+        );
     }
 
     private static void renderTooltipText(String key) {
