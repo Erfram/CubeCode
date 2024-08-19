@@ -80,9 +80,8 @@ public class SettingsView extends View {
             ImGui.spacing();
             ImGui.spacing();
 
-            if (ImGui.beginChild("setting"+category.getKey(), 0, (32 * category.getValue().size()) > 32 ? 32 * category.getValue().size() * 0.82f : 32 * category.getValue().size(), true)) {
+            //if (ImGui.beginChild("setting"+category.getKey(), 0, (32 * category.getValue().size()) > 32 ? 32 * category.getValue().size() * 0.82f : 32 * category.getValue().size(), true)) {
                 for (Map.Entry<String, Runnable> setting : category.getValue().entrySet()) {
-
                         if (ImGui.selectable(" " + setting.getKey(), selectedSettingIndex == globalIndex, ImGuiSelectableFlags.None)) {
                             selectedSettingIndex = globalIndex;
                             selectedSetting = setting.getValue();
@@ -90,8 +89,8 @@ public class SettingsView extends View {
                         globalIndex++;
 
                 }
-            }
-            ImGui.endChild();
+            //}
+            //ImGui.endChild();
         }
     }
 

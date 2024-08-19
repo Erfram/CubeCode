@@ -1,6 +1,5 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.client.views.EventsView;
 import com.cubecode.utils.Fonts;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;

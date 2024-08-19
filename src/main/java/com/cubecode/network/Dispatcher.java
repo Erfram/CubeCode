@@ -22,6 +22,7 @@ public class Dispatcher {
             this.registerPacket(DeleteScriptC2SPacket.class, DeleteScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RunScriptC2SPacket.class, RunScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(SaveScriptC2SPacket.class, SaveScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(RequestEventsC2SPacket.class, RequestEventsC2SPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 

@@ -7,8 +7,10 @@ import com.cubecode.client.views.settings.ScriptView;
 import com.cubecode.client.views.settings.SettingsView;
 import com.cubecode.client.views.settings.WindowView;
 import com.cubecode.client.views.textEditor.TextEditorView;
+import com.cubecode.state.ServerState;
 import imgui.ImGui;
 import imgui.flag.ImGuiDockNodeFlags;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 
@@ -26,7 +28,7 @@ public class DashboardView extends View {
                 });
 
                 CubeImGui.menuItem("events", () -> {
-                    ImGuiLoader.pushView(new EventView(new NbtList()));
+                    ImGuiLoader.pushView(new EventView());
                 });
             });
 

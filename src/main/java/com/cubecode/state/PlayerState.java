@@ -1,6 +1,7 @@
 package com.cubecode.state;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 
 public class PlayerState {
 

@@ -2,6 +2,7 @@ package com.cubecode.state;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PersistentState;
@@ -15,11 +16,13 @@ import java.util.UUID;
 public class ServerState extends PersistentState {
 
     public NbtCompound values = new NbtCompound();
+    public NbtList events = new NbtList();
     public HashMap<UUID, PlayerState> players = new HashMap<>();
 
     public static ServerState createFromNbt(NbtCompound tag) {
         ServerState serverState = new ServerState();
 
+        NbtList eventsList = tag.getList("events", NbtList.STRING_TYPE);
         NbtCompound statesTag = tag.getCompound("states");
         NbtCompound playersTag = tag.getCompound("players");
 
@@ -32,6 +35,7 @@ public class ServerState extends PersistentState {
         });
 
         serverState.values.copyFrom(statesTag);
+        serverState.events = eventsList;
 
         return serverState;
     }
@@ -70,8 +74,8 @@ public class ServerState extends PersistentState {
 
         nbt.put("players", playersNbtCompound);
         nbt.put("states", this.values);
+        nbt.put("events", this.events);
 
         return nbt;
     }
-
 }

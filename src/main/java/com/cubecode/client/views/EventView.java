@@ -6,6 +6,7 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import com.cubecode.state.ServerState;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
@@ -20,8 +21,10 @@ import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventView extends View {
     final int viewWidth = 300;
@@ -57,6 +60,7 @@ public class EventView extends View {
         Window.create()
                 .title(getName())
                 .onExit(() -> {
+
                     ImGuiLoader.removeView(ImGuiLoader.getView(EventListView.class));
                 })
                 .callback(() -> {
@@ -82,8 +86,14 @@ public class EventView extends View {
                 .max(Comparator.comparingInt(String::length))
                 .orElse(""));
 
-        for (int i = 0; i < eventsName.size(); i++) {
-            if (ImGui.selectable(eventsName.get(i), selectedEvent == i, ImGuiSelectableFlags.AllowDoubleClick, maxTextSize.x, 20)) {
+        for (int i = 0; i < nbtEvents.size(); i++) {
+            List<String> list = CubeCode.eventManager.events.stream()
+                    .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
+                    .toList();
+
+            String eventId = CubeCode.eventManager.events.get(list.indexOf(nbtEvents.getString(i))).name;
+
+            if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events." + eventId + ".title").getString(), selectedEvent == i, ImGuiSelectableFlags.AllowDoubleClick, maxTextSize.x, 20)) {
                 selectedEvent = i;
 
                 if (ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
@@ -91,7 +101,7 @@ public class EventView extends View {
                 }
             }
 
-            renderQuestionButton(i);
+            renderQuestionButton(eventId);
         }
     }
 
@@ -149,6 +159,12 @@ public class EventView extends View {
 
         int selectedEvent = -1;
 
+        private String searchText = "";
+
+        List<String> eventsName = CubeCode.eventManager.events.stream()
+                .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
+                .collect(Collectors.toList());
+
         public EventListView(ImVec2 mousePos) {
             this.mousePos = mousePos;
         }
@@ -164,68 +180,81 @@ public class EventView extends View {
             return String.format("Доступные события ##%s", uniqueID);
         }
 
-        List<String> eventsName = CubeCode.eventManager.events.stream()
-                .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
-                .toList();
+        private void updateEventsList() {
+            eventsName = CubeCode.eventManager.events.stream()
+                    .map(event -> Text.translatable("imgui.cubecode.windows.events."+event.name+".title").getString())
+                    .toList();
+        }
+
+        private void filterEvents(String searchEvent) {
+            if (!searchEvent.isEmpty()) {
+                eventsName = eventsName.stream()
+                        .filter(event -> {
+                            String[] eventNameSeparator = event.split(":");
+                            return Arrays.stream(eventNameSeparator)
+                                    .anyMatch(word -> word.toLowerCase().startsWith(searchEvent.toLowerCase()))
+                                    || event.toLowerCase().contains(searchEvent.toLowerCase());
+                        })
+                        .toList();
+            } else {
+                updateEventsList();
+            }
+        }
 
         @Override
         public void render() {
             Window.create()
                 .flags(ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove)
                 .title(getName())
-                .callback(() -> {
-                    if (!ImGui.isWindowFocused()) {
-                        ImGuiLoader.removeView(this);
-                    }
-
-                    ImVec2 maxTextSize  = ImGui.calcTextSize(eventsName.stream()
-                            .max(Comparator.comparingInt(String::length))
-                            .orElse(""));
-
-
-                    EventView eventView = ImGuiLoader.getView(EventView.class);
-
-                    if (eventView == null)
-                        return;
-
-                    ImGui.image(Icons.SEARCH, 16, 16);
-                    ImGui.sameLine();
-
-                    CubeImGui.inputText(this, "##Search", (searchEvent) -> {
-                        if (!searchEvent.isEmpty()) {
-                            eventsName = CubeCode.eventManager.events.stream()
-                                    .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
-                                    .filter(event -> {
-                                String[] eventNameSeparator = event.split(":");
-
-                                for (String word : eventNameSeparator) {
-                                    if (word.toLowerCase().startsWith(searchEvent.toLowerCase())) {
-                                        return true;
-                                    }
-                                }
-
-                                return event.toLowerCase().contains(searchEvent.toLowerCase());
-                            }).toList();
-                        } else {
-                            eventsName = CubeCode.eventManager.events.stream()
-                                    .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
-                                    .toList();
-                        }
-                    });
-
-                    for (int i = 0; i < eventsName.size(); i++) {
-                        if (ImGui.selectable(eventsName.get(i), selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
-                            selectedEvent = i;
-
-                            if (!NbtUtils.containsString(eventView.nbtEvents, eventsName.get(i))) {
-                                eventView.nbtEvents.add(NbtString.of(eventsName.get(i)));
-                            }
-                        }
-
-                        renderQuestionButton(eventsName.get(i).substring(eventsName.get(i).indexOf("events.") + 7, eventsName.get(i).indexOf(".title")));
-                    }
-                })
+                .callback(this::renderContent)
                 .render(this);
+        }
+
+        private void renderContent() {
+            if (!ImGui.isWindowFocused()) {
+                ImGuiLoader.removeView(this);
+                return;
+            }
+
+            renderSearchBar();
+            renderEventList();
+        }
+
+        private void renderSearchBar() {
+            ImGui.image(Icons.SEARCH, 16, 16);
+            ImGui.sameLine();
+
+            CubeImGui.inputText(this, "##Search", (newSearchText) -> {
+                if (!newSearchText.equals(searchText)) {
+                    searchText = newSearchText;
+                    filterEvents(searchText);
+                }
+            });
+        }
+
+        private void renderEventList() {
+            ImVec2 maxTextSize = ImGui.calcTextSize(eventsName.stream()
+                    .max(Comparator.comparingInt(String::length))
+                    .orElse(""));
+
+            EventView eventView = ImGuiLoader.getView(EventView.class);
+            if (eventView == null) return;
+
+            for (int i = 0; i < eventsName.size(); i++) {
+                String eventName = eventsName.get(i);
+                if (ImGui.selectable(eventName, selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
+                    selectedEvent = i;
+                    if (!NbtUtils.containsString(eventView.nbtEvents, eventName)) {
+                        eventView.nbtEvents.add(NbtString.of(eventName));
+                    }
+                }
+
+                List<String> list = CubeCode.eventManager.events.stream()
+                        .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
+                        .toList();
+
+                renderQuestionButton(list.indexOf(eventName));
+            }
         }
     }
 }
