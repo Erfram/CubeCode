@@ -1,6 +1,7 @@
 package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
+import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -11,9 +12,11 @@ import com.cubecode.utils.Icons;
 import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
+import imgui.ImGuiViewport;
 import imgui.ImVec2;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiSelectableFlags;
+import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtList;
@@ -60,6 +63,7 @@ public class EventView extends View {
         Window.create()
                 .title(getName())
                 .onExit(() -> {
+                    GifManager.clear();
                     Dispatcher.sendToServer(new EventsSyncC2SPacket(nbtEvents));
                     ImGuiLoader.removeView(ImGuiLoader.getView(EventListView.class));
                 })
@@ -86,6 +90,8 @@ public class EventView extends View {
                 .max(Comparator.comparingInt(String::length))
                 .orElse(""));
 
+        ImGui.dockSpace(ImGui.getWindowDockID(), 100, 100);
+
         for (int i = 0; i < nbtEvents.size(); i++) {
             List<String> list = CubeCode.eventManager.events.stream()
                     .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
@@ -109,8 +115,8 @@ public class EventView extends View {
         ImGui.sameLine();
         ImGui.pushID("question_" + index);
 
-        ImGui.getStyle().setWindowRounding(0);
-        if (!ImGui.imageButton(Icons.QUESTION, 16, 16) && ImGui.isItemHovered()) {
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 42);
+        if (ImGui.imageButton(Icons.QUESTION, 16, 16)) {
             ImGui.beginTooltip();
             renderTooltipEvent(index);
             ImGui.endTooltip();
@@ -123,8 +129,9 @@ public class EventView extends View {
         ImGui.sameLine();
         ImGui.pushID("question_" + eventName);
 
-        ImGui.getStyle().setWindowRounding(0);
-        if (!ImGui.imageButton(Icons.QUESTION, 16, 16) && ImGui.isItemHovered()) {
+        ImGui.setCursorPosX(ImGui.getWindowWidth() - 32);
+        ImGui.imageButton(Icons.QUESTION, 16, 16);
+        if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
             renderTooltipEvent(eventName);
             ImGui.endTooltip();
@@ -245,6 +252,7 @@ public class EventView extends View {
 
             for (int i = 0; i < eventsName.size(); i++) {
                 String eventName = eventsName.get(i);
+
                 if (ImGui.selectable(eventName, selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
                     selectedEvent = i;
                     if (!NbtUtils.containsString(eventView.nbtEvents, eventName)) {
