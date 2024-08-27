@@ -22,7 +22,7 @@ public class ServerState extends PersistentState {
     public static ServerState createFromNbt(NbtCompound tag) {
         ServerState serverState = new ServerState();
 
-        NbtList eventsList = tag.getList("events", NbtList.STRING_TYPE);
+        NbtList events = tag.getList("events", NbtList.COMPOUND_TYPE);
         NbtCompound statesTag = tag.getCompound("states");
         NbtCompound playersTag = tag.getCompound("players");
 
@@ -35,7 +35,7 @@ public class ServerState extends PersistentState {
         });
 
         serverState.values.copyFrom(statesTag);
-        serverState.events = eventsList;
+        serverState.events = events;
 
         return serverState;
     }

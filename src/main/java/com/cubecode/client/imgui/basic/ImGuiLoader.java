@@ -1,23 +1,22 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.utils.Fonts;
+import com.cubecode.CubeCodeClient;
 import imgui.*;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
-import com.cubecode.CubeCode;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 
 public class ImGuiLoader {
-
     public static final ImGuiImplGlfw IMGUI_GLFW = new ImGuiImplGlfw();
     private static final ImGuiImplGl3 IMGUI_GL3 = new ImGuiImplGl3();
     private static final ConcurrentLinkedQueue<View> RENDER_STACK = new ConcurrentLinkedQueue<>();
@@ -27,31 +26,14 @@ public class ImGuiLoader {
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
-        loadFont(io);
+        CubeCodeClient.fontManager.loadFonts();
+
+        MAIN_FONT = CubeCodeClient.fontManager.fonts.get("default");
 
         io.setIniFilename(null);
 
         IMGUI_GLFW.init(handle, true);
         IMGUI_GL3.init();
-    }
-
-    private static void loadFont(ImGuiIO io) {
-        final ImFontAtlas fontAtlas = io.getFonts();
-        fontAtlas.clear();
-
-        ImFontConfig fontConfig = new ImFontConfig();
-        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
-
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream(Fonts.MAIN_FONT.getFilePath())) {
-            byte[] bytes = inputStream.readAllBytes();
-            MAIN_FONT = fontAtlas.addFontFromMemoryTTF(bytes, 16, new ImFontConfig(), io.getFonts().getGlyphRangesCyrillic());
-        } catch (Exception exception) {
-            CubeCode.LOGGER.error(exception.getMessage());
-        }
-
-        fontConfig.destroy();
-
-        fontAtlas.build();
     }
 
     public static void onFrameRender() {
@@ -120,6 +102,10 @@ public class ImGuiLoader {
             }
         }
         return null;
+    }
+
+    public static List<View> getViews() {
+        return RENDER_STACK.stream().toList();
     }
 
     public static boolean isOpenView(Class<? extends View> viewClass) {

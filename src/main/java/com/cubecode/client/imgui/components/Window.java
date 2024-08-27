@@ -1,12 +1,12 @@
 package com.cubecode.client.imgui.components;
 
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.basic.Component;
-import imgui.ImColor;
-import imgui.ImGui;
+import imgui.*;
 import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
 
@@ -78,6 +78,8 @@ public class Window {
 		ImGui.pushStyleColor(ImGuiCol.SliderGrab, ImColor.rgba(windowConfig.sliderGrabColor[0], windowConfig.sliderGrabColor[1], windowConfig.sliderGrabColor[2], windowConfig.sliderGrabColor[3]));
 		ImGui.pushStyleColor(ImGuiCol.SliderGrabActive, ImColor.rgba(windowConfig.sliderGrabActiveColor[0], windowConfig.sliderGrabActiveColor[1], windowConfig.sliderGrabActiveColor[2], windowConfig.sliderGrabActiveColor[3]));
 
+		ImGui.pushFont(CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName));
+
 		if (ImGui.begin(this.title, close, this.flags)) {
 			if (!close.get()) {
 				this.onExit.run();
@@ -91,9 +93,12 @@ public class Window {
 			for (Component component : this.components) {
 				component.render(view);
 			}
+
+			ImGui.end();
 		}
 
-		ImGui.end();
+		ImGui.popFont();
+
 		ImGui.popStyleColor(13);
 	}
 }

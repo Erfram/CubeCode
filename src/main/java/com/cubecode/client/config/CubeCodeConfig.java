@@ -8,11 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class CubeCodeConfig {
-    private static final Path configDir = FabricLoader.getInstance().getConfigDir().resolve("cubecode");
-    private static final Path settingsDir = configDir.resolve("settings");
+    public static final Path configDir = FabricLoader.getInstance().getConfigDir().resolve("cubecode");
+    public static final Path settingsDir = configDir.resolve("settings");
+    public static final Path fontsDir = configDir.resolve("fonts");
+
+    private static final Path settings = configDir.resolve("settings.json");
     private static final Path window = settingsDir.resolve("window.json");
     private static final Path script = settingsDir.resolve("script.json");
 
+    private static SettingsConfig settingsConfig;
     private static WindowConfig windowConfig;
     private static ScriptConfig scriptConfig;
 
@@ -32,10 +36,24 @@ public class CubeCodeConfig {
     public static final float[] DEFAULT_FRAME_BG_ACTIVE_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.67f };
     public static final float[] DEFAULT_FRAME_BG_HOVERED_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.40f };
 
-    public static final float[] DEFAULT_SLIDER_GRAB_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.40f }; //TODO DEFAULT!!!!
-    public static final float[] DEFAULT_SLIDER_GRAB_ACTIVE_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.40f }; //TODO DEFAULT!!!!
+    public static final float[] DEFAULT_SLIDER_GRAB_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.40f };
+    public static final float[] DEFAULT_SLIDER_GRAB_ACTIVE_COLOR = new float[] { 0.26f, 0.59f, 0.98f, 0.40f };
+
+    public static final String DEFAULT_FONT = "default";
 
     public static String DEFAULT_CONTEXT_NAME = "Context";
+
+    public static class SettingsConfig {
+        public General general = new General();
+
+        public static class General {
+            public Appearance appearance = new Appearance();
+
+            public static class Appearance {
+                public String font = DEFAULT_FONT;
+            }
+        }
+    }
 
     public static class WindowConfig {
         public float[] titleColor = DEFAULT_TITLE_COLOR;
@@ -64,27 +82,26 @@ public class CubeCodeConfig {
     public static void loadConfig() {
         try {
             Files.createDirectories(settingsDir);
-
-            if (Files.notExists(window)) {
-                windowConfig = new WindowConfig();
-                GsonManager.writeJSON(window.toFile(), windowConfig);
-            } else {
-                windowConfig = GsonManager.readJSON(window.toFile(), WindowConfig.class);
-            }
-
-            if (Files.notExists(script)) {
-                scriptConfig = new ScriptConfig();
-                GsonManager.writeJSON(script.toFile(), scriptConfig);
-            } else {
-                scriptConfig = GsonManager.readJSON(script.toFile(), ScriptConfig.class);
-            }
-
-        } catch (IOException e) {
+            Files.createDirectories(fontsDir);
+            settingsConfig = loadOrCreate(settings, SettingsConfig.class);
+            windowConfig = loadOrCreate(window, WindowConfig.class);
+            scriptConfig = loadOrCreate(script, ScriptConfig.class);
+        } catch (IOException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Failed to load config", e);
         }
     }
 
+    private static <T> T loadOrCreate(Path path, Class<T> clazz) throws InstantiationException, IllegalAccessException {
+        if (Files.notExists(path)) {
+            T config = clazz.newInstance();
+            GsonManager.writeJSON(path.toFile(), config);
+            return config;
+        }
+        return GsonManager.readJSON(path.toFile(), clazz);
+    }
+
     public static void saveConfig() {
+        GsonManager.writeJSON(settings.toFile(), settingsConfig);
         GsonManager.writeJSON(window.toFile(), windowConfig);
         GsonManager.writeJSON(script.toFile(), scriptConfig);
     }
@@ -95,5 +112,9 @@ public class CubeCodeConfig {
 
     public static WindowConfig getWindowConfig() {
         return windowConfig;
+    }
+
+    public static SettingsConfig getSettingsConfig() {
+        return settingsConfig;
     }
 }

@@ -1,12 +1,15 @@
 package com.cubecode.client.views.settings;
 
+import com.cubecode.CubeCodeClient;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import com.cubecode.client.imgui.fonts.Fonts;
+import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImInt;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -16,32 +19,33 @@ public class SettingsView extends View {
     private final int viewWidth = 960;
     private final int viewHeight = 540;
 
-    private Map<String, Map<String, Runnable>> settings = new LinkedHashMap<>();
+    private final Map<String, Map<String, Runnable>> settings = new LinkedHashMap<>();
 
-    private Map<String, Runnable> general = new LinkedHashMap<>();
-
-    private List<String> themes = Arrays.asList("ImGui", "CubeCode");
+    private final List<String> themes = Arrays.asList("ImGui", "CubeCode");
 
     private int selectedSettingIndex = -1;
 
     private Runnable selectedSetting = () -> {};
 
+    private static String[] fonts = Fonts.getFontNames().toArray(new String[0]);
+
     @Override
     public void init() {
-        HashMap<String, Runnable> objectObjectHashMap = new LinkedHashMap<>();
-        objectObjectHashMap.put("ff", () -> {});
-
-        HashMap<String, Runnable> objectHashMap = new LinkedHashMap<>();
-        objectHashMap.put("ff", () -> {});
-        objectHashMap.put("fffew", () -> {});
-        objectHashMap.put("ffewrf", () -> {});
+        Map<String, Runnable> general = new LinkedHashMap<>();
 
         general.put("Appearance", this::renderAppearanceContent);
-        general.put("Lox", () -> {});
 
         settings.put("General", general);
-        settings.put("General 2", objectObjectHashMap);
-        settings.put("General 3", objectHashMap);
+
+        HashMap<String, Runnable> general2 = new LinkedHashMap<>();
+        general2.put("ff", () -> {});
+
+        settings.put("General 2", general2);
+
+        HashMap<String, Runnable> general3 = new LinkedHashMap<>();
+        general3.put("ff", () -> {});
+
+        settings.put("General 3", general3);
 
         float posX = (windowWidth - viewWidth) * 0.5f;
         float posY = (windowHeight - viewHeight) * 0.5f;
@@ -80,17 +84,14 @@ public class SettingsView extends View {
             ImGui.spacing();
             ImGui.spacing();
 
-            //if (ImGui.beginChild("setting"+category.getKey(), 0, (32 * category.getValue().size()) > 32 ? 32 * category.getValue().size() * 0.82f : 32 * category.getValue().size(), true)) {
-                for (Map.Entry<String, Runnable> setting : category.getValue().entrySet()) {
-                        if (ImGui.selectable(" " + setting.getKey(), selectedSettingIndex == globalIndex, ImGuiSelectableFlags.None)) {
-                            selectedSettingIndex = globalIndex;
-                            selectedSetting = setting.getValue();
-                        }
-                        globalIndex++;
+            for (Map.Entry<String, Runnable> setting : category.getValue().entrySet()) {
+                    if (ImGui.selectable(" " + setting.getKey(), selectedSettingIndex == globalIndex, ImGuiSelectableFlags.None)) {
+                        selectedSettingIndex = globalIndex;
+                        selectedSetting = setting.getValue();
+                    }
+                    globalIndex++;
 
-                }
-            //}
-            //ImGui.endChild();
+            }
         }
     }
 
@@ -101,5 +102,26 @@ public class SettingsView extends View {
         CubeImGui.combo(this, "##Themes", 0, themes.toArray(new String[0]), (theme) -> {
 
         });
+
+        ImGui.text("Font: ");
+        ImGui.sameLine();
+
+        CubeImGui.combo(this, "##Fonts", Fonts.getFontNames().indexOf(CubeCodeConfig.getSettingsConfig().general.appearance.font), fonts, (font) -> {
+            CubeCodeConfig.getSettingsConfig().general.appearance.font = Fonts.getFontNames().get(((ImInt) this.getVariable("##Fonts" + this.getUniqueID())).get());
+            CubeCodeClient.fontManager.currentFontName = Fonts.getFontNames().get(((ImInt) this.getVariable("##Fonts" + this.getUniqueID())).get());
+        });
+
+        ImGui.sameLine(0, 0);
+        ImGui.image(Icons.INFO, 21, 21);
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.text("Не добавляйте шрифты в конфиг во время игры, это может вызвать ошибки.");
+            ImGui.endTooltip();
+        }
+    }
+
+    @Override
+    public void onClose() {
+        CubeCodeConfig.saveConfig();
     }
 }

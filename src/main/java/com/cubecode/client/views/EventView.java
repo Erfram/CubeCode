@@ -1,6 +1,7 @@
 package com.cubecode.client.views;
 
 import com.cubecode.CubeCode;
+import com.cubecode.api.events.CubeEvent;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
@@ -9,18 +10,12 @@ import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.EventsSyncC2SPacket;
 import com.cubecode.utils.Icons;
-import com.cubecode.utils.NbtUtils;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
 import imgui.ImGuiViewport;
 import imgui.ImVec2;
-import imgui.flag.ImGuiMouseButton;
-import imgui.flag.ImGuiSelectableFlags;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 
 import java.util.ArrayList;
@@ -36,12 +31,12 @@ public class EventView extends View {
     final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
     final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
 
-    NbtList nbtEvents;
+    List<CubeEvent> events;
 
     int selectedEvent = -1;
 
-    public EventView(NbtList events) {
-        this.nbtEvents = events;
+    public EventView(List<CubeEvent> events) {
+        this.events = events;
     }
 
     @Override
@@ -62,11 +57,7 @@ public class EventView extends View {
     public void render() {
         Window.create()
                 .title(getName())
-                .onExit(() -> {
-                    GifManager.clear();
-                    Dispatcher.sendToServer(new EventsSyncC2SPacket(nbtEvents));
-                    ImGuiLoader.removeView(ImGuiLoader.getView(EventListView.class));
-                })
+                .onExit(this::onClose)
                 .callback(() -> {
                     ImGui.text("Используемые события");
 
@@ -79,35 +70,40 @@ public class EventView extends View {
                 .render(this);
     }
 
+    @Override
+    public void onClose() {
+        GifManager.clear();
+        Dispatcher.sendToServer(new EventsSyncC2SPacket(CubeEvent.cubeEventsToNbtList(events)));
+        ImGuiLoader.removeView(ImGuiLoader.getView(EventListView.class));
+    }
+
     public void renderUsedEvents() {
         List<String> eventsName = new ArrayList<>();
 
-        nbtEvents.forEach((element) -> {
-            eventsName.add(Text.translatable(element.asString()).getString());
+        events.forEach((element) -> {
+            eventsName.add(Text.translatable("imgui.cubecode.windows.events."+ element.name +".title").getString());
         });
 
         ImVec2 maxTextSize  = ImGui.calcTextSize(eventsName.stream()
                 .max(Comparator.comparingInt(String::length))
                 .orElse(""));
 
-        ImGui.dockSpace(ImGui.getWindowDockID(), 100, 100);
-
-        for (int i = 0; i < nbtEvents.size(); i++) {
-            List<String> list = CubeCode.eventManager.events.stream()
-                    .map(event -> Text.translatable("imgui.cubecode.windows.events." + event.name + ".title").getString())
-                    .toList();
-
-            String eventId = CubeCode.eventManager.events.get(list.indexOf(nbtEvents.getString(i))).name;
-
-            if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events." + eventId + ".title").getString(), selectedEvent == i, ImGuiSelectableFlags.AllowDoubleClick, maxTextSize.x, 20)) {
+        for (int i = 0; i < events.size(); i++) {
+            if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events." + events.get(i).name + ".title").getString(), selectedEvent == i, ImGuiSelectableFlags.AllowDoubleClick, maxTextSize.x, 20)) {
                 selectedEvent = i;
 
                 if (ImGui.isMouseDoubleClicked(ImGuiMouseButton.Left)) {
-                    nbtEvents.remove(i);
+                    events.remove(i);
                 }
             }
 
-            renderQuestionButton(eventId);
+            String name = "";
+
+            if (events.size() > i) {
+                name = events.get(i).name;
+            }
+
+            renderQuestionButton(name);
         }
     }
 
@@ -250,13 +246,13 @@ public class EventView extends View {
             EventView eventView = ImGuiLoader.getView(EventView.class);
             if (eventView == null) return;
 
-            for (int i = 0; i < eventsName.size(); i++) {
-                String eventName = eventsName.get(i);
+            for (int i = 0; i < CubeCode.eventManager.events.size(); i++) {
+                String eventName = CubeCode.eventManager.events.get(i).name;
 
-                if (ImGui.selectable(eventName, selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
+                if (ImGui.selectable(Text.translatable("imgui.cubecode.windows.events."+ eventName +".title").getString(), selectedEvent == i, ImGuiSelectableFlags.None, maxTextSize.x, 20)) {
                     selectedEvent = i;
-                    if (!NbtUtils.containsString(eventView.nbtEvents, eventName)) {
-                        eventView.nbtEvents.add(NbtString.of(eventName));
+                    if (eventView.events.stream().noneMatch(event -> event.name.equals(eventName))) {
+                        eventView.events.add(new CubeEvent(eventName, new ArrayList<>()));
                     }
                 }
 

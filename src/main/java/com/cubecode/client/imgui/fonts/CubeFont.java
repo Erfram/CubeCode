@@ -1,4 +1,4 @@
-package com.cubecode.utils;
+package com.cubecode.client.imgui.fonts;
 
 import com.cubecode.CubeCode;
 

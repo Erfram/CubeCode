@@ -1,5 +1,6 @@
 package com.cubecode.network.packets.all;
 
+import com.cubecode.api.events.CubeEvent;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.views.EventView;
 import com.cubecode.network.Dispatcher;
@@ -60,7 +61,7 @@ public class EventsRequestedPacket extends AbstractPacket {
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, EventsRequestedPacket packet) {
             NbtList events = packet.events;
 
-            ImGuiLoader.pushView(new EventView(events));
+            ImGuiLoader.pushView(new EventView(CubeEvent.nbtListToCubeEvents(events)));
         }
     }
 }
