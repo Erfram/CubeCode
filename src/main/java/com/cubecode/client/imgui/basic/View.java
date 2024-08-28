@@ -2,6 +2,7 @@ package com.cubecode.client.imgui.basic;
 
 
 import com.cubecode.client.imgui.themes.CodeTheme;
+import imgui.ImGui;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.HashMap;
@@ -76,7 +77,12 @@ public abstract class View {
      * Initialization, such as window positions and other states
      */
     public void init() {
-
+        int viewWidth = 640;
+        float posX = (windowWidth - viewWidth) * 0.5f;
+        int viewHeight = 480;
+        float posY = (windowHeight - viewHeight) * 0.5f;
+        ImGui.setNextWindowPos(posX, posY);
+        ImGui.setNextWindowSize(viewWidth, viewHeight);
     }
 
     /**
