@@ -22,12 +22,12 @@ public class EventsSyncC2SPacket extends AbstractPacket {
     public EventsSyncC2SPacket() {}
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeNbt(events);
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         events = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
     }
 

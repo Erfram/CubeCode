@@ -26,18 +26,19 @@ public class Dispatcher {
             this.registerPacket(SaveScriptC2SPacket.class, SaveScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(EventsSyncC2SPacket.class, EventsSyncC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(RequestScriptScopeC2SPacket.class, RequestScriptScopeC2SPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 
     public static void sendTo(AbstractPacket packet, ServerPlayerEntity player) {
         PacketByteBuf buf = packet.buf;
-        packet.fromBytes(buf);
+        packet.toBytes(buf);
         ServerPlayNetworking.send(player, packet.getIdentifier(), buf);
     }
 
     public static void sendToServer(AbstractPacket packet) {
         PacketByteBuf buf = packet.buf;
-        packet.fromBytes(buf);
+        packet.toBytes(buf);
         ClientPlayNetworking.send(packet.getIdentifier(), buf);
     }
 

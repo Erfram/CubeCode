@@ -25,12 +25,12 @@ public class CreateScriptC2SPacket extends AbstractPacket {
     }
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeString(this.scriptName);
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         this.scriptName = buf.readString();
     }
 

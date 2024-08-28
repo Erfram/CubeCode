@@ -25,13 +25,13 @@ public class RenameScriptC2SPacket extends AbstractPacket {
     }
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeString(this.oldName);
         buf.writeString(this.newName);
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         this.oldName = buf.readString();
         this.newName = buf.readString();
     }
