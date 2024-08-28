@@ -1,12 +1,9 @@
 package com.cubecode.api.scripts;
 
-import com.cubecode.CubeCode;
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.utils.CubeCodeException;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
-import dev.latvian.mods.rhino.ast.Scope;
 
 import static com.cubecode.CubeCode.scriptManager;
 
@@ -14,21 +11,19 @@ public class Script {
     public String name;
     public String code;
     public transient Context context;
+    public ScriptScope scope;
 
     public Script(String name, String code) {
         this.name = name;
         this.code = code;
-        this.context = Context.enter();
     }
 
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
         scriptManager.updateScriptsFromFiles();
 
         try {
-            ScriptScope scriptScope = new ScriptScope(context);
-            scriptScope.setParentScope(ScriptManager.globalScope);
-            scriptManager.evaluate(context, scriptScope, code, name);
-            scriptManager.invokeFunction(context, scriptScope, function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
+            this.evaluate();
+            scriptManager.invokeFunction(context, scope, function, properties.getMap().values().toArray());
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
@@ -38,12 +33,11 @@ public class Script {
         }
     }
 
-    public void stateForRun(String oldCode, String function, String sourceName, Properties properties) {
-        if (!code.equals(oldCode)) {
-           // scriptManager.evaluate(context, code, name);
-        }
-
-        scriptManager.invokeFunction(context, scriptManager.getScope(name), function, properties.get(CubeCodeConfig.getScriptConfig().contextName));
+    public void evaluate() {
+        this.context = Context.enter();
+        this.scope = new ScriptScope(this.context);
+        this.scope.setParentScope(ScriptManager.globalScope);
+        scriptManager.evaluate(this.context, this.scope, code, name);
     }
 
     public void run(String sourceName, Properties properties) throws CubeCodeException {
