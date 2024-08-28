@@ -1,6 +1,8 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
+import com.cubecode.api.scripts.code.JavaUtils;
+import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.FileManager;
 import com.cubecode.utils.CubeCodeException;
@@ -32,6 +34,9 @@ public class ScriptManager extends DirectoryManager {
         globalContext.setRemapper(remapper);
         globalContext.setApplicationClassLoader(ScriptManager.class.getClassLoader());
         globalScope.setParentScope(globalContext.initStandardObjects());
+
+        globalScope.set("CubeCode", new ScriptFactory());
+        globalScope.set("Java", new JavaUtils(globalContext, globalScope));
 
         this.updateScriptsFromFiles();
     }
