@@ -2,14 +2,19 @@ package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ScriptManager;
 import com.cubecode.api.scripts.ScriptScope;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
+import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
 import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
 import dev.latvian.mods.rhino.Scriptable;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -17,6 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RequestScriptScopeC2SPacket extends AbstractPacket {
     public String scriptName;
@@ -57,7 +63,18 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
                 scopes.add(parentScope);
                 parentScope = parentScope.getParentScope();
             }
-            System.out.println(packet.scriptName);
+            NbtCompound structure = new NbtCompound();
+            NbtCompound prev = structure;
+            for (int i = scopes.size() - 1; i >= 0; i--) {
+                NbtCompound scope = new NbtCompound();
+                NbtList keys = new NbtList();
+                Arrays.stream(scopes.get(i).getAllIds(ScriptManager.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
+                scope.put("keys", keys);
+                prev.put(scopes.get(i).toString(), scope);
+                prev = scope;
+            }
+
+            Dispatcher.sendTo(new FillScriptScopeS2CPacket(structure), player);
         }
     }
 }

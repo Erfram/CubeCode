@@ -3,6 +3,7 @@ package com.cubecode.network;
 import com.cubecode.network.basic.AbstractDispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
+import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
 import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
 import com.cubecode.network.packets.server.*;
 import net.fabricmc.api.EnvType;
@@ -17,6 +18,7 @@ public class Dispatcher {
         public void register() {
             this.registerPacket(UpdateScriptsS2CPacket.class, UpdateScriptsS2CPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(FillScriptScopeS2CPacket.class, FillScriptScopeS2CPacket.ClientHandler.class, EnvType.CLIENT);
 
             this.registerPacket(UpdateScriptsC2SPacket.class, UpdateScriptsC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(CreateScriptC2SPacket.class, CreateScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
