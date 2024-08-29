@@ -1,4 +1,4 @@
-package com.cubecode.client.imgui.themes;
+package com.cubecode.client.imgui.codeThemes;
 
 import com.cubecode.client.imgui.basic.Theme;
 import com.cubecode.client.treesitter.HighLight;

@@ -1,7 +1,7 @@
 package com.cubecode.client.imgui.basic;
 
 
-import com.cubecode.client.imgui.themes.CodeTheme;
+import com.cubecode.client.imgui.codeThemes.CodeTheme;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.HashMap;

@@ -3,6 +3,7 @@ package com.cubecode;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.fonts.FontManager;
+import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.Dispatcher;
 import net.fabricmc.api.ClientModInitializer;
@@ -16,6 +17,7 @@ public class CubeCodeClient implements ClientModInitializer {
     public static CopyOnWriteArrayList<Script> scripts = new CopyOnWriteArrayList<>();
 
     public static FontManager fontManager;
+    public static ThemeManager themeManager;
 
     @Override
     public void onInitializeClient() {
@@ -25,5 +27,7 @@ public class CubeCodeClient implements ClientModInitializer {
         CubeCodeConfig.loadConfig();
 
         fontManager = new FontManager();
+        themeManager = new ThemeManager();
+        themeManager.loadThemes();
     }
 }

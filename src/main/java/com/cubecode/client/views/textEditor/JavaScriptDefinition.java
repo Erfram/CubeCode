@@ -18,7 +18,7 @@ public class JavaScriptDefinition {
         String PUNCTUATION_PATTERN = "[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]";
 
         String[] cubecodeKeywords = new String[]{
-                CubeCodeConfig.getScriptConfig().contextName
+                "Context"
         };
 
         String[] syntaxKeywords = new String[]{

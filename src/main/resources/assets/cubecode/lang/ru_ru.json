@@ -117,46 +117,5 @@
 
   "imgui.cubecode.windows.events.world_tick_end.title": "Мир: при конце тика",
   "imgui.cubecode.windows.events.world_tick_end.description": "Это событие срабатывает, когда мир заканчивает тикать.",
-  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
-
-  "imgui.cubecode.settings.window.name": "Настройки окна",
-
-  "imgui.cubecode.settings.window.title": "Окно",
-  "imgui.cubecode.settings.window.color": "Цвет",
-  "imgui.cubecode.settings.window.colorNotActive": "Цвет при неактивности",
-  "imgui.cubecode.settings.window.colorActive": "Цвет при активности",
-  "imgui.cubecode.settings.window.colorHovered": "Цвет при наведении",
-  "imgui.cubecode.settings.window.colorCollapsed": "Цвет при сворачивании",
-
-  "imgui.cubecode.settings.window.background.title": "Задний фон",
-  "imgui.cubecode.settings.window.title.title": "Заголовок",
-  "imgui.cubecode.settings.window.border.title": "Граница",
-  "imgui.cubecode.settings.window.button.title": "Кнопка",
-  "imgui.cubecode.settings.window.frameBackground.title": "Фон фрейма",
-
-  "imgui.cubecode.settings.window.sliderGrab.title": "Ползунок",
-
-  "imgui.cubecode.settings.window.reset.button.title": "Сброс",
-  "imgui.cubecode.settings.window.apply.button.title": "Применить",
-
-  "imgui.cubecode.settings.script.title": "Скрипт",
-
-  "imgui.cubecode.settings.script.name": "Настройки скрипта",
-  "imgui.cubecode.settings.script.title.title": "Название контекста",
-  "imgui.cubecode.settings.script.reset.title": "Сброс",
-  "imgui.cubecode.settings.script.apply.title": "Применить",
-
-  "imgui.cubecode.factory.block.title": "Создание блока",
-  "imgui.cubecode.factory.block.id": "Айди",
-  "imgui.cubecode.factory.block.name": "Имя",
-  "imgui.cubecode.factory.block.texture": "Текстура",
-  "imgui.cubecode.factory.block.dropsLike": "Дроп",
-  "imgui.cubecode.factory.block.hardness": "Твёрдость",
-  "imgui.cubecode.factory.block.resistance": "Сопротивление",
-  "imgui.cubecode.factory.block.slipperiness": "Скольжение",
-  "imgui.cubecode.factory.block.jumpVelocityMultiplier": "Множитель скорости прыжка",
-  "imgui.cubecode.factory.block.velocityMultiplier": "Множитель скорости",
-  "imgui.cubecode.factory.block.luminance": "Яркость",
-  "imgui.cubecode.factory.block.reset": "Сброс параметров",
-  "imgui.cubecode.factory.block.add": "Добавить"
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A"
 }

@@ -5,11 +5,14 @@ import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import imgui.*;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FontManager {
@@ -52,5 +55,28 @@ public class FontManager {
         fontAtlas.build();
 
         currentFontName = CubeCodeConfig.getSettingsConfig().general.appearance.font;
+    }
+
+    public static List<CubeFont> getFonts() {
+        List<CubeFont> fonts = new ArrayList<>();
+        for (File fontFile : CubeCodeConfig.fontsDir.toFile().listFiles()) {
+            if (fontFile.getName().endsWith(".ttf")) {
+                fonts.add(new CubeFont(fontFile.getPath(), 20));
+            }
+        }
+
+        return fonts;
+    }
+
+    public static List<String> getFontNames() {
+        List<CubeFont> fonts = getFonts();
+
+        List<String> fontNames = new ArrayList<>();
+
+        fonts.forEach(font -> {
+            fontNames.add(new File(font.getFilePath()).getName().replace(".ttf", ""));
+        });
+
+        return fontNames;
     }
 }

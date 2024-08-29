@@ -12,7 +12,6 @@ import com.cubecode.network.packets.server.EventsSyncC2SPacket;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
-import imgui.ImGuiViewport;
 import imgui.ImVec2;
 import imgui.flag.*;
 import net.minecraft.client.MinecraftClient;

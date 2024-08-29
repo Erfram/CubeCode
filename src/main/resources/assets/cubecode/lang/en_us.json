@@ -117,46 +117,5 @@
 
   "imgui.cubecode.windows.events.world_tick_end.title": "World: end ticking",
   "imgui.cubecode.windows.events.world_tick_end.description": "This event comes when the world finishes ticking.",
-  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
-
-  "imgui.cubecode.settings.window.name": "Window Settings",
-
-  "imgui.cubecode.settings.window.title": "Window",
-  "imgui.cubecode.settings.window.color": "Color",
-  "imgui.cubecode.settings.window.colorNotActive": "Color not active",
-  "imgui.cubecode.settings.window.colorActive": "Color active",
-  "imgui.cubecode.settings.window.colorHovered": "Color hovered",
-  "imgui.cubecode.settings.window.colorCollapsed": "Color collapsed",
-
-  "imgui.cubecode.settings.window.background.title": "Background",
-  "imgui.cubecode.settings.window.title.title": "Title",
-  "imgui.cubecode.settings.window.border.title": "Border",
-  "imgui.cubecode.settings.window.button.title": "Button",
-  "imgui.cubecode.settings.window.frameBackground.title": "Frame Background",
-
-  "imgui.cubecode.settings.window.sliderGrab.title": "Slider",
-
-  "imgui.cubecode.settings.window.reset.button.title": "Reset",
-  "imgui.cubecode.settings.window.apply.button.title": "Apply",
-
-  "imgui.cubecode.settings.script.title": "Script",
-
-  "imgui.cubecode.settings.script.name": "Script Settings",
-  "imgui.cubecode.settings.script.title.title": "Context Name",
-  "imgui.cubecode.settings.script.reset.title": "Reset",
-  "imgui.cubecode.settings.script.apply.title": "Apply",
-
-  "imgui.cubecode.factory.block.title": "Сreating block",
-  "imgui.cubecode.factory.block.id": "Id",
-  "imgui.cubecode.factory.block.name": "Name",
-  "imgui.cubecode.factory.block.texture": "Texture",
-  "imgui.cubecode.factory.block.dropsLike": "Drops like",
-  "imgui.cubecode.factory.block.hardness": "Hardness",
-  "imgui.cubecode.factory.block.resistance": "Resistance",
-  "imgui.cubecode.factory.block.slipperiness": "Slipperiness",
-  "imgui.cubecode.factory.block.jumpVelocityMultiplier": "Jump velocity multiplier",
-  "imgui.cubecode.factory.block.velocityMultiplier": "Velocity multiplier",
-  "imgui.cubecode.factory.block.luminance": "Luminance",
-  "imgui.cubecode.factory.block.reset": "Reset settings",
-  "imgui.cubecode.factory.block.add": "Add"
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A"
 }
