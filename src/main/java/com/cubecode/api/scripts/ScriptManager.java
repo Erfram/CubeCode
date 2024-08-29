@@ -16,15 +16,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScriptManager extends DirectoryManager {
     public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
     public static final Context globalContext = Context.enter();
-    static final public ScriptScope globalScope = new ScriptScope(globalContext);
+    static final public ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
 
     private Set<Script> scripts = new HashSet<>();
 
@@ -45,7 +43,7 @@ public class ScriptManager extends DirectoryManager {
         return context.evaluateString(scope, code, sourceName, 1, null);
     }
 
-    public Object invokeFunction(Context context, Scriptable scope, String function, Object... args) {
+    public Object invokeFunction(Context context, Scriptable scope, String function, Object[] args) {
         Function functionObject = (Function) ScriptableObject.getProperty(scope, function, context);
         return functionObject.call(context, scope, scope, args);
     }

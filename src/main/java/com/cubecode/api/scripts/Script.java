@@ -35,7 +35,7 @@ public class Script {
 
     public void evaluate() {
         this.context = Context.enter();
-        this.scope = new ScriptScope(this.context);
+        this.scope = new ScriptScope(name, this.context);
         this.scope.setParentScope(ScriptManager.globalScope);
         scriptManager.evaluate(this.context, this.scope, code, name);
     }
