@@ -1,6 +1,8 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
+import com.cubecode.api.scripts.code.JavaUtils;
+import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.FileManager;
 import com.cubecode.utils.CubeCodeException;
@@ -14,17 +16,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ScriptManager extends DirectoryManager {
     public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
     public static final Context globalContext = Context.enter();
-    static final public ScriptScope globalScope = new ScriptScope(globalContext);
+    static final public ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
 
-    private ConcurrentHashMap<Script, ScriptScope> scripts = new ConcurrentHashMap<>();
+    private Set<Script> scripts = new HashSet<>();
 
     public ScriptManager(File scriptsDirectory) {
         super(scriptsDirectory);
@@ -33,6 +33,9 @@ public class ScriptManager extends DirectoryManager {
         globalContext.setApplicationClassLoader(ScriptManager.class.getClassLoader());
         globalScope.setParentScope(globalContext.initStandardObjects());
 
+        globalScope.set("CubeCode", new ScriptFactory());
+        globalScope.set("Java", new JavaUtils(globalContext, globalScope));
+
         this.updateScriptsFromFiles();
     }
 
@@ -40,7 +43,7 @@ public class ScriptManager extends DirectoryManager {
         return context.evaluateString(scope, code, sourceName, 1, null);
     }
 
-    public Object invokeFunction(Context context, Scriptable scope, String function, Object... args) {
+    public Object invokeFunction(Context context, Scriptable scope, String function, Object[] args) {
         Function functionObject = (Function) ScriptableObject.getProperty(scope, function, context);
         return functionObject.call(context, scope, scope, args);
     }
@@ -104,13 +107,12 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public void updateScriptsFromFiles() {
-        ConcurrentHashMap<Script, ScriptScope> newScripts = new ConcurrentHashMap<>();
+        Set<Script> newScripts = new HashSet<>();
 
         for (int i = 0; i < this.getFiles().size(); i++) {
             File file = this.getFiles().stream().toList().get(i);
             if (file.getName().endsWith(".js")) {
-                newScripts.put(new Script(file.getName(), this.readFileToString(file.getName())),
-                        scripts.values().isEmpty() ? new ScriptScope(globalContext) : (ScriptScope) scripts.values().toArray()[i]);
+                newScripts.add(new Script(file.getName(), this.readFileToString(file.getName())));
             }
         }
 
@@ -118,14 +120,10 @@ public class ScriptManager extends DirectoryManager {
     }
 
     public Script getScript(String scriptName) {
-        return this.scripts.keySet().stream().filter(script -> script.name.equals(scriptName)).findFirst().get();
+        return this.scripts.stream().filter(script -> script.name.equals(scriptName)).findFirst().get();
     }
 
     public List<Script> getScripts() {
-        return this.scripts.keySet().stream().toList();
-    }
-
-    public ScriptScope getScope(String scriptName) {
-        return this.scripts.get(getScript(scriptName));
+        return this.scripts.stream().toList();
     }
 }

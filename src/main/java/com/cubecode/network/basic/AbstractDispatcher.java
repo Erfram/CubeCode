@@ -14,14 +14,14 @@ public abstract class AbstractDispatcher {
             if (envType == EnvType.CLIENT) {
                 ClientPacketHandler<T> clientHandler = (ClientPacketHandler<T>)packetHandler.newInstance();
                 ClientPlayNetworking.registerGlobalReceiver(packet.getIdentifier(), ((client, handler, buf, responseSender) -> {
-                    packet.toBytes(buf);
+                    packet.fromBytes(buf);
 
                     client.execute(() -> clientHandler.run(client, handler, responseSender, packet));
                 }));
             } else {
                 ServerPacketHandler<T> serverHandler = (ServerPacketHandler<T>)packetHandler.newInstance();
                 ServerPlayNetworking.registerGlobalReceiver(packet.getIdentifier(), ((server, player, handler, buf, responseSender) -> {
-                    packet.toBytes(buf);
+                    packet.fromBytes(buf);
 
                     serverHandler.run(server, player, handler, responseSender, packet);
                 }));

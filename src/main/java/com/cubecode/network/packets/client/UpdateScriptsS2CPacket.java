@@ -29,7 +29,7 @@ public class UpdateScriptsS2CPacket extends AbstractPacket {
     }
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeCollection(
                 this.scripts,
                 PacketByteBufUtils::writeScript
@@ -37,7 +37,7 @@ public class UpdateScriptsS2CPacket extends AbstractPacket {
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         this.scripts = buf.readList(PacketByteBufUtils::readScript);
     }
 

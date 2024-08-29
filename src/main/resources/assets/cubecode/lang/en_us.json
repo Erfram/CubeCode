@@ -24,8 +24,10 @@
   "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Name",
   "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Rename",
 
+  "imgui.cubecode.windows.codeEditor.tools.title": "Tools",
+
   "imgui.cubecode.windows.codeEditor.documentation.title": "Documentation",
-  "imgui.cubecode.windows.codeEditor.documentation.open.title": "Open",
+  "imgui.cubecode.windows.codeEditor.scope.title": "Scope viewer",
 
   "imgui.cubecode.windows.codeEditor.edit.title": "Edit",
   "imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title": "Read-only mode",

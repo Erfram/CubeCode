@@ -30,7 +30,7 @@ public class EventsRequestedPacket extends AbstractPacket {
     }
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeBoolean(events != null);
         if (events != null) {
             buf.writeNbt(events);
@@ -38,7 +38,7 @@ public class EventsRequestedPacket extends AbstractPacket {
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         if (buf.readBoolean()) {
             events = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
         }

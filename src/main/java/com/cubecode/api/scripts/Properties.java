@@ -24,7 +24,7 @@ public class Properties {
     public static Properties create(String script, String function, Entity subject, Entity object, World world, MinecraftServer server) {
         Properties properties = new Properties();
 
-        properties.map.put(CubeCodeConfig.getScriptConfig().contextName, new ScriptEvent(
+        properties.map.put("c", new ScriptEvent(
             script,
             function,
             ScriptEntity.create(subject),
@@ -32,8 +32,6 @@ public class Properties {
             world == null ? null : new ScriptWorld(world),
             server == null ? null : new ScriptServer(server)
         ));
-
-        properties.put("CubeCode", new ScriptFactory());
 
         return properties;
     }

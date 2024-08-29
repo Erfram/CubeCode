@@ -22,12 +22,12 @@ public class DeleteScriptC2SPacket extends AbstractPacket {
     public DeleteScriptC2SPacket() {}
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeString(scriptName);
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         scriptName = buf.readString();
     }
 

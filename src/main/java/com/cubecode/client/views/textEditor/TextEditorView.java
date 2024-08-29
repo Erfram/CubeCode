@@ -23,7 +23,7 @@ import org.lwjgl.glfw.GLFW;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TextEditorView extends View {
-    private final TextEditor CODE_EDITOR = new TextEditor();
+    private final TextEditor codeEditor = new TextEditor();
     private final ImBoolean CLOSE = new ImBoolean(true);
 
     private final int viewWidth = 700;
@@ -48,15 +48,15 @@ public class TextEditorView extends View {
         ImGui.setNextWindowSize(viewWidth, viewHeight);
         //CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
         //CODE_EDITOR.setLanguageDefinition(JavaScriptDefinition.build());
-        CODE_EDITOR.setLanguageDefinition(JavaScriptDefinition.build());
-        CODE_EDITOR.setShowWhitespaces(false);
-        CODE_EDITOR.setTabSize(4);
-        CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
+        codeEditor.setLanguageDefinition(JavaScriptDefinition.build());
+        codeEditor.setShowWhitespaces(false);
+        codeEditor.setTabSize(4);
+        codeEditor.setPalette(JavaScriptDefinition.buildPallet());
 
         Dispatcher.sendToServer(new UpdateScriptsC2SPacket(true));
 
         if (selectedScript != -1) {
-            CODE_EDITOR.setText(scripts.get(selectedScript).code);
+            codeEditor.setText(scripts.get(selectedScript).code);
         }
     }
 
@@ -79,7 +79,7 @@ public class TextEditorView extends View {
 
                     CubeImGui.beginChild("CubeCode IDEA", 0, 0, true, () -> {
                         if (selectedScript != -1) {
-                            CODE_EDITOR.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
+                            codeEditor.render(Text.translatable("imgui.cubecode.windows.codeEditor.name").getString());
 
                         }
                     });
@@ -96,7 +96,11 @@ public class TextEditorView extends View {
             if (ImGui.selectable(scripts.get(i).name, selectedScript == i)) {
                 saveScript();
                 selectedScript = i;
-                CODE_EDITOR.setText(scripts.get(selectedScript).code);
+                codeEditor.setText(scripts.get(selectedScript).code);
+                ScopeView view = ImGuiLoader.getView(ScopeView.class);
+                if (view != null) {
+                    view.updateScope();
+                }
             }
 
 
@@ -121,7 +125,7 @@ public class TextEditorView extends View {
     private void renderFileMenu() {
         if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.file.title").getString())) {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.file.run.title").getString())) {
-                String code = CODE_EDITOR.getText().substring(0, CODE_EDITOR.getText().length() - 1);
+                String code = codeEditor.getText().substring(0, codeEditor.getText().length() - 1);
                 Script script = scripts.get(selectedScript);
                 script.code = code;
                 Dispatcher.sendToServer(new RunScriptC2SPacket(script));
@@ -138,9 +142,12 @@ public class TextEditorView extends View {
             ImGui.endMenu();
         }
 
-        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString())) {
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.open.title").getString())) {
+        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.tools.title").getString())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString())) {
                 ImGuiLoader.pushView(new DocumentationView());
+            }
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scope.title").getString())) {
+                ImGuiLoader.pushView(new ScopeView());
             }
 
             ImGui.endMenu();
@@ -149,34 +156,34 @@ public class TextEditorView extends View {
 
     private void renderEditMenu() {
         if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.edit.title").getString())) {
-            final boolean readOnly = CODE_EDITOR.isReadOnly();
+            final boolean readOnly = codeEditor.isReadOnly();
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title").getString(), "", readOnly)) {
-                CODE_EDITOR.setReadOnly(!readOnly);
+                codeEditor.setReadOnly(!readOnly);
             }
 
             ImGui.separator();
 
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.undo.title").getString(), "ALT-Backspace", !readOnly && CODE_EDITOR.canUndo())) {
-                CODE_EDITOR.undo(1);
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.undo.title").getString(), "ALT-Backspace", !readOnly && codeEditor.canUndo())) {
+                codeEditor.undo(1);
             }
 
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.redo.title").getString(), "Ctrl-Y", !readOnly && CODE_EDITOR.canRedo())) {
-                CODE_EDITOR.redo(1);
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.redo.title").getString(), "Ctrl-Y", !readOnly && codeEditor.canRedo())) {
+                codeEditor.redo(1);
             }
 
             ImGui.separator();
 
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.copy.title").getString(), "Ctrl-C", CODE_EDITOR.hasSelection())) {
-                CODE_EDITOR.copy();
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.copy.title").getString(), "Ctrl-C", codeEditor.hasSelection())) {
+                codeEditor.copy();
             }
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.cut.title").getString(), "Ctrl-X", !readOnly && CODE_EDITOR.hasSelection())) {
-                CODE_EDITOR.cut();
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.cut.title").getString(), "Ctrl-X", !readOnly && codeEditor.hasSelection())) {
+                codeEditor.cut();
             }
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.delete.title").getString(), "Del", !readOnly && CODE_EDITOR.hasSelection())) {
-                CODE_EDITOR.delete();
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.delete.title").getString(), "Del", !readOnly && codeEditor.hasSelection())) {
+                codeEditor.delete();
             }
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.paste.title").getString(), "Ctrl-V", !readOnly && ImGui.getClipboardText() != null)) {
-                CODE_EDITOR.paste();
+                codeEditor.paste();
             }
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.edit.save.title").getString(), "Ctrl-S", !readOnly)) {
                 saveScript();
@@ -191,7 +198,7 @@ public class TextEditorView extends View {
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.delete.title").getString())) {
                 Dispatcher.sendToServer(new DeleteScriptC2SPacket(scripts.get(selectedScript).name));
                 selectedScript = -1;
-                CODE_EDITOR.setText("");
+                codeEditor.setText("");
             }
 
             if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scripts.context.rename.title").getString())) {
@@ -205,7 +212,7 @@ public class TextEditorView extends View {
     private void saveScript() {
         if (selectedScript != -1) {
             String scriptName = scripts.get(selectedScript).name;
-            String script = CODE_EDITOR.getText().substring(0, CODE_EDITOR.getText().length() - 1);
+            String script = codeEditor.getText().substring(0, codeEditor.getText().length() - 1);
 
             Dispatcher.sendToServer(new SaveScriptC2SPacket(new Script(scriptName, script)));
         }
@@ -230,5 +237,13 @@ public class TextEditorView extends View {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public TextEditor getCodeEditor() {
+        return this.codeEditor;
+    }
+
+    public static int getSelectedScript() {
+        return selectedScript;
     }
 }

@@ -6,9 +6,11 @@ import dev.latvian.mods.rhino.ScriptableObject;
 
 public class ScriptScope extends ScriptableObject implements Scriptable {
     Context cx;
-    public ScriptScope(Context cx) {
+    String name;
+    public ScriptScope(String name, Context cx) {
         super();
         this.cx = cx;
+        this.name = name;
     }
 
     public Object get(String key) {
@@ -22,5 +24,9 @@ public class ScriptScope extends ScriptableObject implements Scriptable {
     @Override
     public String getClassName() {
         return "ScriptScope";
+    }
+
+    public String toString() {
+        return this.name;
     }
 }

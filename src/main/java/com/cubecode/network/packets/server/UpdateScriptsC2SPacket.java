@@ -22,12 +22,12 @@ public class UpdateScriptsC2SPacket extends AbstractPacket {
     public UpdateScriptsC2SPacket() {}
 
     @Override
-    public void fromBytes(PacketByteBuf buf) {
+    public void toBytes(PacketByteBuf buf) {
         buf.writeBoolean(this.isUpdate);
     }
 
     @Override
-    public void toBytes(PacketByteBuf buf) {
+    public void fromBytes(PacketByteBuf buf) {
         this.isUpdate = buf.readBoolean();
     }
 
