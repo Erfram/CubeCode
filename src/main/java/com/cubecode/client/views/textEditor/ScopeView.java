@@ -8,6 +8,7 @@ import imgui.ImGui;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.text.Text;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,18 @@ public class ScopeView extends View {
     @Override
     public void init() {
         super.init();
-        Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(TextEditorView.scripts.get(TextEditorView.getSelectedScript()).name));
+        updateScope();
+    }
+
+    public void updateScope() {
+        int selectedScript = TextEditorView.getSelectedScript();
+        if (selectedScript == -1) return;
+        Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(TextEditorView.scripts.get(selectedScript).name));
+    }
+
+    @Override
+    public String getName() {
+        return String.format(Text.translatable("imgui.cubecode.windows.codeEditor.scope.title").getString() + "##%s", uniqueID);
     }
 
     public void render() {

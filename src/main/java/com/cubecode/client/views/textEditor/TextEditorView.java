@@ -97,6 +97,10 @@ public class TextEditorView extends View {
                 saveScript();
                 selectedScript = i;
                 codeEditor.setText(scripts.get(selectedScript).code);
+                ScopeView view = ImGuiLoader.getView(ScopeView.class);
+                if (view != null) {
+                    view.updateScope();
+                }
             }
 
 
@@ -138,23 +142,16 @@ public class TextEditorView extends View {
             ImGui.endMenu();
         }
 
-        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString())) {
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.open.title").getString())) {
+        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.tools.title").getString())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString())) {
                 ImGuiLoader.pushView(new DocumentationView());
             }
-
-            ImGui.endMenu();
-        }
-
-        if (ImGui.beginMenu(Text.translatable("imgui.cubecode.windows.codeEditor.scope.title").getString())) {
-            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scope.open.title").getString())) {
+            if (ImGui.menuItem(Text.translatable("imgui.cubecode.windows.codeEditor.scope.title").getString())) {
                 ImGuiLoader.pushView(new ScopeView());
             }
 
             ImGui.endMenu();
         }
-
-
     }
 
     private void renderEditMenu() {

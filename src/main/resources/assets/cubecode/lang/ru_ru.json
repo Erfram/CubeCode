@@ -24,8 +24,9 @@
   "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Название",
   "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Переименовать",
 
+  "imgui.cubecode.windows.codeEditor.tools.title": "Инструменты",
   "imgui.cubecode.windows.codeEditor.documentation.title": "Документация",
-  "imgui.cubecode.windows.codeEditor.documentation.open.title": "Открыть",
+  "imgui.cubecode.windows.codeEditor.scope.title": "Область видимости",
 
   "imgui.cubecode.windows.codeEditor.edit.title": "Редактирование",
   "imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title": "Режим только для чтения",
