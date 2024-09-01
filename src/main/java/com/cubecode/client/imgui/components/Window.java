@@ -1,13 +1,10 @@
 package com.cubecode.client.imgui.components;
 
-import com.cubecode.CubeCodeClient;
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.basic.Component;
 import imgui.*;
-import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
 
 import java.util.ArrayList;

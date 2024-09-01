@@ -3,7 +3,6 @@ package com.cubecode.client.views;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.views.settings.SettingsView;
 import com.cubecode.client.views.textEditor.TextEditorView;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;

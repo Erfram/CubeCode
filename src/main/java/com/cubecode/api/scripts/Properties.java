@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Properties {
-    private Map<String, Object> map = new HashMap<>();
+    private final Map<String, Object> map = new HashMap<>();
 
     public static Properties create() {
         return new Properties();
@@ -24,7 +24,7 @@ public class Properties {
     public static Properties create(String script, String function, Entity subject, Entity object, World world, MinecraftServer server) {
         Properties properties = new Properties();
 
-        properties.map.put("c", new ScriptEvent(
+        properties.map.put("Context", new ScriptEvent(
             script,
             function,
             ScriptEntity.create(subject),
@@ -49,17 +49,17 @@ public class Properties {
     }
 
     public Properties setValue(String key, Object value) {
-        ScriptEvent scriptEvent = (ScriptEvent) this.map.get(CubeCodeConfig.getScriptConfig().contextName);
+        ScriptEvent scriptEvent = (ScriptEvent) this.map.get("Context");
 
         scriptEvent.setValue(key, value);
 
-        this.map.put(CubeCodeConfig.getScriptConfig().contextName, scriptEvent);
+        this.map.put("Context", scriptEvent);
 
         return this;
     }
 
     public Properties copy() {
-        ScriptEvent scriptEvent = (ScriptEvent) this.map.get(CubeCodeConfig.getScriptConfig().contextName);
+        ScriptEvent scriptEvent = (ScriptEvent) this.map.get("Context");
 
         return Properties.create(
                 scriptEvent.getScript(),

@@ -40,50 +40,6 @@ public class CubeEvent {
         return script;
     }
 
-    public static List<CubeEvent> nbtListToCubeEvents(NbtList nbtList) {
-        List<CubeEvent> cubeEvents = new ArrayList<>();
-
-        for (int i = 0; i < nbtList.size(); i++) {
-            NbtCompound eventNbt = nbtList.getCompound(i);
-            String eventName = eventNbt.getString("name");
-            NbtList scriptsList = eventNbt.getList("scripts", NbtList.COMPOUND_TYPE);
-
-            List<EventScript> eventScripts = new ArrayList<>();
-            for (int j = 0; j < scriptsList.size(); j++) {
-                NbtCompound scriptNbt = scriptsList.getCompound(j);
-                String script = scriptNbt.getString("script");
-                String function = scriptNbt.getString("function");
-                eventScripts.add(new EventScript(script, function));
-            }
-
-            cubeEvents.add(new CubeEvent(eventName, eventScripts));
-        }
-
-        return cubeEvents;
-    }
-
-    public static NbtList cubeEventsToNbtList(List<CubeEvent> cubeEvents) {
-        NbtList eventsList = new NbtList();
-
-        for (CubeEvent cubeEvent : cubeEvents) {
-            NbtCompound eventNbt = new NbtCompound();
-            NbtList scriptsList = new NbtList();
-
-            for (EventScript script : cubeEvent.getScripts()) {
-                NbtCompound scriptNbt = new NbtCompound();
-                scriptNbt.putString("script", script.name);
-                scriptNbt.putString("function", script.function);
-                scriptsList.add(scriptNbt);
-            }
-
-            eventNbt.putString("name", cubeEvent.name);
-            eventNbt.put("scripts", scriptsList);
-            eventsList.add(eventNbt);
-        }
-
-        return eventsList;
-    }
-
     public static class EventScript {
         public String name;
         public String function = "main";

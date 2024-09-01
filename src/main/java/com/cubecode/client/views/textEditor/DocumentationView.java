@@ -1,9 +1,11 @@
 package com.cubecode.client.views.textEditor;
 
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.utils.Documentation;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
@@ -12,7 +14,9 @@ import imgui.flag.*;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 
 import java.util.*;
@@ -32,20 +36,20 @@ public class DocumentationView extends View {
     static {
         apiIcons.put("ScriptPlayer", "player");
         apiIcons.put("ScriptEntity", "entity");
-        apiIcons.put("ScriptItem", "arrow");
-        apiIcons.put("ScriptItemStack", "pickaxe");
+        apiIcons.put("ScriptItem", "item");
+        apiIcons.put("ScriptItemStack", "item_stack");
         apiIcons.put("ScriptWorld", "world");
-        apiIcons.put("ScriptInventory", "container");
+        apiIcons.put("ScriptInventory", "inventory");
         apiIcons.put("ScriptNbtCompound", "nbt_compound");
         apiIcons.put("ScriptNbtList", "nbt_list");
         apiIcons.put("ScriptRayTrace", "ray_trace");
         apiIcons.put("ScriptVector", "vector");
         apiIcons.put("ScriptServer", "server");
         apiIcons.put("ScriptBlockState", "block");
-        apiIcons.put("ScriptBlockEntity", "smile_block");
+        apiIcons.put("ScriptBlockEntity", "block_entity");
         apiIcons.put("ScriptEvent", "flag");
-        apiIcons.put("ScriptFactory", "wrench");
-        apiIcons.put("CubeCodeStates", "states");
+        apiIcons.put("ScriptFactory", "factory");
+        apiIcons.put("CubeCodeStates", "state");
     }
 
     private int selectedClass = -1;
@@ -100,7 +104,6 @@ public class DocumentationView extends View {
                 classChapter = sortedMap.values().stream().toList().get(i);
 
                 this.setVariable("search_methods", null);
-
                 this.setVariable("##Search" + this.uniqueID, new ImString("", 30));
             }
 
@@ -222,19 +225,27 @@ public class DocumentationView extends View {
         return maxLength;
     }
 
+    private int rgbaToInt(int r, int g, int b, int a) {
+        return ((a & 0xFF) << 24) |
+                ((r & 0xFF) << 16) |
+                ((g & 0xFF) << 8)  |
+                (b & 0xFF);
+    }
+
     private MutableText parseMethod(String methodName, List<Documentation.Argemunt> arguments) {
-        MutableText method = Text.literal(methodName + "(").formatted(Formatting.WHITE);
+        short[] textRgba = CubeCodeClient.themeManager.getTheme(CubeCodeClient.themeManager.currentTheme).text;
+        MutableText method = Text.literal(methodName + "(").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgbaToInt(textRgba[0], textRgba[1], textRgba[2], textRgba[3]))));
 
         for (int t = 0; t < arguments.size(); t++) {
             Documentation.Argemunt argument = arguments.get(t);
             method.append(Text.literal(argument.type + " ").formatted(Formatting.GOLD));
-            method.append(Text.literal(argument.name).formatted(Formatting.WHITE));
+            method.append(Text.literal(argument.name).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgbaToInt(textRgba[0], textRgba[1], textRgba[2], textRgba[3])))));
             if (t < arguments.size() - 1) {
-                method.append(Text.literal(", ").formatted(Formatting.WHITE));
+                method.append(Text.literal(", ").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgbaToInt(textRgba[0], textRgba[1], textRgba[2], textRgba[3])))));
             }
         }
 
-        method.append(Text.literal(")").formatted(Formatting.WHITE));
+        method.append(Text.literal(")").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgbaToInt(textRgba[0], textRgba[1], textRgba[2], textRgba[3])))));
 
         return method;
     }

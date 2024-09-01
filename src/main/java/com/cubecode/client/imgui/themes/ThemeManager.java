@@ -13,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeManager {
-    public List<CubeTheme> themes = new ArrayList<>();
+    private final List<CubeTheme> themes = new ArrayList<>();
     public String currentTheme = "Catppuccin Mocha";
 
     public ThemeManager() {
+        themes.add(new CubeTheme("Default"));
+        themes.add(new CubeTheme("Default dark"));
+        themes.add(new CubeTheme("Default light"));
         themes.add(new CubeTheme("Catppuccin Mocha"));
-        themes.add(new CubeTheme("default"));
     }
 
     public void loadThemes() {

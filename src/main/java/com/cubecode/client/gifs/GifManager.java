@@ -82,7 +82,6 @@ public class GifManager {
         });
     }
 
-    // TODO определять когда нужно делать прозрачный фон, а когда нет.
     private static List<BufferedImage> collectGif(InputStream inputStream, boolean clearBackground) throws IOException {
         List<BufferedImage> frames = new ArrayList<>();
 

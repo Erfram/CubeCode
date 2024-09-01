@@ -80,7 +80,7 @@ public class ScriptServer {
     public void executeScript(String scriptName) throws CubeCodeException {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put(CubeCodeConfig.getScriptConfig().contextName, new ScriptEvent(
+        properties.put("Context", new ScriptEvent(
                 scriptName,
                 null,
                 null,

@@ -10,6 +10,8 @@ import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.utils.CubeCodeException;
 import com.google.common.reflect.TypeToken;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -69,9 +71,9 @@ public class EventManager extends DirectoryManager {
 
     private void executeScriptEvent(CubeEvent.EventScript eventScript, Properties properties) {
         try {
-            ScriptEvent<?, ?> scriptEvent = (ScriptEvent<?, ?>) properties.get(CubeCodeConfig.getScriptConfig().contextName);
+            ScriptEvent scriptEvent = (ScriptEvent) properties.get("Context");
 
-            ScriptEvent<?, ?> newScriptEvent = new ScriptEvent<>(
+            ScriptEvent newScriptEvent = new ScriptEvent(
                     eventScript.name,
                     eventScript.function,
                     scriptEvent.getSubject(),
@@ -83,7 +85,7 @@ public class EventManager extends DirectoryManager {
             newScriptEvent.setValues(scriptEvent.getValues());
 
             Properties newProperties = properties.copy();
-            newProperties.put(CubeCodeConfig.getScriptConfig().contextName, newScriptEvent);
+            newProperties.put("Context", newScriptEvent);
             newProperties.put("CubeCode", new ScriptFactory());
 
             CubeCode.scriptManager.getScript(eventScript.name).run(eventScript.function, eventScript.name, newProperties);
@@ -177,5 +179,49 @@ public class EventManager extends DirectoryManager {
         }
 
         GsonManager.writeJSON(eventsFile, existingEvents);
+    }
+
+    public static List<CubeEvent> nbtListToCubeEvents(NbtList nbtList) {
+        List<CubeEvent> cubeEvents = new ArrayList<>();
+
+        for (int i = 0; i < nbtList.size(); i++) {
+            NbtCompound eventNbt = nbtList.getCompound(i);
+            String eventName = eventNbt.getString("name");
+            NbtList scriptsList = eventNbt.getList("scripts", NbtList.COMPOUND_TYPE);
+
+            List<CubeEvent.EventScript> eventScripts = new ArrayList<>();
+            for (int j = 0; j < scriptsList.size(); j++) {
+                NbtCompound scriptNbt = scriptsList.getCompound(j);
+                String script = scriptNbt.getString("script");
+                String function = scriptNbt.getString("function");
+                eventScripts.add(new CubeEvent.EventScript(script, function));
+            }
+
+            cubeEvents.add(new CubeEvent(eventName, eventScripts));
+        }
+
+        return cubeEvents;
+    }
+
+    public static NbtList cubeEventsToNbtList(List<CubeEvent> cubeEvents) {
+        NbtList eventsList = new NbtList();
+
+        for (CubeEvent cubeEvent : cubeEvents) {
+            NbtCompound eventNbt = new NbtCompound();
+            NbtList scriptsList = new NbtList();
+
+            for (CubeEvent.EventScript script : cubeEvent.getScripts()) {
+                NbtCompound scriptNbt = new NbtCompound();
+                scriptNbt.putString("script", script.name);
+                scriptNbt.putString("function", script.function);
+                scriptsList.add(scriptNbt);
+            }
+
+            eventNbt.putString("name", cubeEvent.name);
+            eventNbt.put("scripts", scriptsList);
+            eventsList.add(eventNbt);
+        }
+
+        return eventsList;
     }
 }

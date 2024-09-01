@@ -2,24 +2,23 @@ package com.cubecode.api.scripts.code;
 
 import com.cubecode.api.scripts.code.entities.ScriptEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
-import net.minecraft.entity.Entity;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScriptEvent<S extends Entity, O extends Entity> {
+public class ScriptEvent {
     private final String script;
     private final String function;
 
-    private final ScriptEntity<S> subject;
-    private final ScriptEntity<O> object;
+    private final ScriptEntity subject;
+    private final ScriptEntity object;
     private final ScriptWorld world;
     private final ScriptServer server;
 
     private Map<String, Object> values = new HashMap<>();
     private boolean canceled = false;
 
-    public ScriptEvent(String script, String function, ScriptEntity<S> subject, ScriptEntity<O> object, ScriptWorld world, ScriptServer server) {
+    public ScriptEvent(String script, String function, ScriptEntity subject, ScriptEntity object, ScriptWorld world, ScriptServer server) {
         this.script = script;
         this.function = function;
 
@@ -37,11 +36,11 @@ public class ScriptEvent<S extends Entity, O extends Entity> {
         return this.function;
     }
 
-    public ScriptEntity<S> getSubject() {
+    public ScriptEntity getSubject() {
         return this.subject;
     }
 
-    public ScriptEntity<O> getObject() {
+    public ScriptEntity getObject() {
         return this.object;
     }
 
@@ -54,8 +53,8 @@ public class ScriptEvent<S extends Entity, O extends Entity> {
     }
 
     public ScriptPlayer getPlayer() {
-        ScriptEntity<S> subject = this.getSubject();
-        ScriptEntity<O> object = this.getObject();
+        ScriptEntity subject = this.getSubject();
+        ScriptEntity object = this.getObject();
 
         if (subject instanceof ScriptPlayer) {
             return (ScriptPlayer) subject;

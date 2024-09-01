@@ -43,4 +43,12 @@ public class Script {
     public void run(String sourceName, Properties properties) throws CubeCodeException {
         this.run("main", sourceName, properties);
     }
+
+    public void run(String function, String sourceName) throws CubeCodeException {
+        this.run(function, sourceName, Properties.create());
+    }
+
+    public void run(String sourceName) throws CubeCodeException {
+        this.run("main", sourceName, Properties.create());
+    }
 }
