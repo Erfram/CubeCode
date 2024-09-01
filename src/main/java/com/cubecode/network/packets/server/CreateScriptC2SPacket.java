@@ -43,7 +43,7 @@ public class CreateScriptC2SPacket extends AbstractPacket {
 
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, CreateScriptC2SPacket packet) {
-            String code = CubeCodeConfig.getScriptConfig().contextName + ".server.send(\"Hellow World!\", false)";
+            String code = "function main(c) {\nc.server.send(\"Hello World!\", true)\n}";
 
             String scriptName = packet.scriptName.endsWith(".js") ? packet.scriptName : packet.scriptName + ".js";
 
