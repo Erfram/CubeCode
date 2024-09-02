@@ -84,11 +84,7 @@ public class EventManager extends DirectoryManager {
 
             newScriptEvent.setValues(scriptEvent.getValues());
 
-            Properties newProperties = properties.copy();
-            newProperties.put("Context", newScriptEvent);
-            newProperties.put("CubeCode", new ScriptFactory());
-
-            CubeCode.scriptManager.getScript(eventScript.name).run(eventScript.function, eventScript.name, newProperties);
+            CubeCode.scriptManager.getScript(eventScript.name).run(eventScript.function, eventScript.name);
         } catch (CubeCodeException e) {
             CubeCode.LOGGER.error("Error executing script: {} - {}", eventScript.name, e.getMessage());
             //В консоль
