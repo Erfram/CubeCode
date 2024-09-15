@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Erfram/CubeCode/blob/main/cubecode_logo.png" alt="CubeCode Logo" width="200">
+  <img src="https://github.com/Erfram/CubeCode/blob/1.20.4/cubecode_logo.png" alt="CubeCode Logo" width="200">
 </p>
 <h1 align="center">CubeCode</h1>
 <p align="center">
