@@ -1,10 +1,8 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
-import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
-import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -40,8 +38,7 @@ public class UpdateScriptsC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, UpdateScriptsC2SPacket packet) {
             if (packet.isUpdate) {
-                CubeCode.scriptManager.updateScriptsFromFiles();
-                Dispatcher.sendTo(new UpdateScriptsS2CPacket(CubeCode.scriptManager.getScripts()), player);
+                CubeCode.projectManager.updateScriptsFromFiles();
             }
         }
     }

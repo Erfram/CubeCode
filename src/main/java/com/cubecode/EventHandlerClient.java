@@ -10,10 +10,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 @Environment(EnvType.CLIENT)
 public class EventHandlerClient {
     public static void init() {
-        ClientPlayConnectionEvents.INIT.register((handler, client) -> {
-            Icons.register();
-        });
-
         ClientTickEvents.START_CLIENT_TICK.register((client) -> {
             GifManager.update();
         });

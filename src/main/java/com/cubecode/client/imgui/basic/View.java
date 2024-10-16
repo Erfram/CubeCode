@@ -3,6 +3,7 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
 import imgui.ImGui;
+import imgui.ImVec2;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.HashMap;
@@ -11,6 +12,11 @@ import java.util.UUID;
 public abstract class View {
     private final HashMap<String, Object> variables = new HashMap<>();
     private boolean isInit;
+
+    public ImVec2 windowPos = new ImVec2();
+    public ImVec2 windowSize = new ImVec2();
+    public boolean windowCollapsed = false;
+
     protected final UUID uniqueID;
     protected Theme theme;
 

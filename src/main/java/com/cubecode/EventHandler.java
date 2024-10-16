@@ -1,8 +1,9 @@
 package com.cubecode;
 
+import com.cubecode.api.events.CubeEvent;
 import com.cubecode.api.events.EventManager;
 import com.cubecode.api.scripts.Properties;
-import com.cubecode.api.scripts.ScriptManager;
+import com.cubecode.api.scripts.ProjectManager;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
@@ -22,6 +23,8 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.WorldSavePath;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventHandler {
     public static void init() {
@@ -38,8 +41,8 @@ public class EventHandler {
                 CubeCode.LOGGER.info(String.format("#### Creating a mod directory %s for the world. ####", CubeCode.MOD_ID));
             }
 
-            CubeCode.scriptManager = new ScriptManager(new File(CubeCode.cubeCodeDirectory, "scripts"));
-            CubeCode.eventManager = new EventManager(CubeCode.cubeCodeDirectory);
+            CubeCode.projectManager = new ProjectManager(new File(CubeCode.cubeCodeDirectory, "project"));
+            CubeCode.eventManager = new EventManager(new File(CubeCode.cubeCodeDirectory, "events.json"));
 
             CubeCode.eventManager.register();
 
@@ -49,6 +52,20 @@ public class EventHandler {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerState serverState = ServerState.getServerState(handler.player.server);
             PlayerState playerState = ServerState.getPlayerState(handler.player);
+
+            List<CubeEvent> usedEvents = EventManager.nbtListToCubeEvents(serverState.events);
+
+            List<CubeEvent> events = new ArrayList<>();
+
+            usedEvents.forEach(usedEvent ->
+                CubeCode.eventManager.events.forEach(event -> {
+                    if (usedEvent.name.equals(event.name)) {
+                        events.add(event);
+                    }
+                })
+            );
+
+            serverState.events = EventManager.cubeEventsToNbtList(events);
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> CubeCode.eventManager.trigger("server_started", null, null, null, server));
@@ -96,7 +113,7 @@ public class EventHandler {
                     source.getSource(),
                     entity.getWorld(),
                     entity.getServer()
-            ).setValue("damageType", source.getName()).setValue("damage", amount));
+            ).setValue("damageType", source.getType().msgId()).setValue("damage", amount));
 
             return true;
         });
@@ -109,7 +126,7 @@ public class EventHandler {
                     source.getSource(),
                     entity.getWorld(),
                     entity.getServer()
-            ).setValue("damageType", source.getName()).setValue("damage", amount));
+            ).setValue("damageType", source.getType().msgId()).setValue("damage", amount));
 
             return true;
         });
@@ -122,7 +139,7 @@ public class EventHandler {
                null,
                entity.getWorld(),
                entity.getServer()
-            ).setValue("damageType", source.getName()));
+            ).setValue("damageType", source.getType().msgId()));
         });
 
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register(((world, entity, killedEntity) ->
@@ -142,7 +159,7 @@ public class EventHandler {
                     source.getAttacker(),
                     player.getWorld(),
                     player.getServer()
-            ).setValue("damageType", source.getName()).setValue("damage", amount));
+            ).setValue("damageType", source.getType().msgId()).setValue("damage", amount));
 
             return true;
         });

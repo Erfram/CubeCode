@@ -1,5 +1,7 @@
 package com.cubecode.network.packets.server;
 
+import com.cubecode.CubeCode;
+import com.cubecode.api.events.EventManager;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.state.ServerState;
@@ -39,10 +41,8 @@ public class EventsSyncC2SPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<EventsSyncC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, EventsSyncC2SPacket packet) {
-            ServerState serverState = ServerState.getServerState(server);
-
-            serverState.events = packet.events;
-            serverState.markDirty();
+            CubeCode.eventManager.events = EventManager.nbtListToCubeEvents(packet.events);
+            CubeCode.eventManager.updateEventsFromFile();
         }
     }
 }

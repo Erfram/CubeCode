@@ -1,5 +1,7 @@
 package com.cubecode.utils;
 
+import java.io.IOException;
+
 public class CubeCodeException extends Exception {
 
     public final String sourceName;

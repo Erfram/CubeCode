@@ -1,11 +1,10 @@
 package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.events.CubeEvent;
 import com.cubecode.api.events.EventManager;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
-import com.cubecode.client.views.EventView;
+import com.cubecode.client.views.EventsView;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
@@ -77,7 +76,7 @@ public class EventsRequestedPacket extends AbstractPacket {
             Dispatcher.sendTo(new EventsRequestedPacket(
                     ServerState.getServerState(server).events,
                     EventManager.cubeEventsToNbtList(CubeCode.eventManager.events),
-                    CubeCode.scriptManager.getScripts()
+                    CubeCode.projectManager.getScripts()
             ), player);
         }
     }
@@ -89,7 +88,7 @@ public class EventsRequestedPacket extends AbstractPacket {
             NbtList events = packet.events;
             List<Script> scripts = packet.scripts;
 
-            ImGuiLoader.pushView(new EventView(EventManager.nbtListToCubeEvents(usedEvents), EventManager.nbtListToCubeEvents(events), scripts));
+            ImGuiLoader.pushView(new EventsView(EventManager.nbtListToCubeEvents(events), scripts));
         }
     }
 }

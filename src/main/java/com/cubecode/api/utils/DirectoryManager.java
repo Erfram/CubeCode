@@ -19,8 +19,12 @@ public abstract class DirectoryManager {
         this.DIRECTORY = null;
     }
 
-    public File getFile(String name) {
-        return new File(DIRECTORY, name);
+    public File getFile(String path) {
+        for (File file : this.getFiles()) if (file.getPath().equals(path)) {
+            return file;
+        }
+
+        return null;
     }
 
     public Set<File> getFiles() {
@@ -51,9 +55,9 @@ public abstract class DirectoryManager {
         }
     }
 
-    public String readFileToString(String name) {
+    public String readFileToString(String path) {
         try {
-            return FileUtils.readFileToString(this.getFile(name), Charset.defaultCharset());
+            return FileUtils.readFileToString(new File(path), Charset.defaultCharset());
         } catch (IOException ignored) {
             return "";
         }
@@ -65,12 +69,6 @@ public abstract class DirectoryManager {
 
     public boolean existFile(String name) {
         return this.getFile(name).exists();
-    }
-
-    public boolean renameFile(String name, String newName) {
-        File file = this.getFile(name);
-
-        return file.renameTo(this.getFile(newName));
     }
 
     public File getDirectory() {

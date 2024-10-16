@@ -1,11 +1,11 @@
-package com.cubecode.client.views.textEditor;
+package com.cubecode.client.views.idea;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.client.imgui.themes.ThemeManager;
+import com.cubecode.client.views.idea.utils.JavaScriptDefinition;
 import com.cubecode.utils.Documentation;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
@@ -108,10 +108,9 @@ public class DocumentationView extends View {
             }
 
             ImGui.sameLine(0, 0);
-            Integer icon = Icons.getIcon(apiIcons.get(sortedMap.keySet().stream().toList().get(i)));
-            Integer empty = Icons.getIcon("empty");
+            Icons icon = Icons.valueOf(apiIcons.get(sortedMap.keySet().stream().toList().get(i)).toUpperCase());
 
-            ImGui.image(icon != null ? icon : empty, 16, 16);
+            ImGui.image(icon.getGlId(), 16, 16);
 
             ImGui.sameLine(0, 4);
             ImGui.text(sortedMap.keySet().stream().toList().get(i));
@@ -143,7 +142,7 @@ public class DocumentationView extends View {
         }
 
         this.methods = this.getVariable("search_methods") == null ? classChapter.methods : this.getVariable("search_methods");
-        ImGui.image(Icons.SEARCH, 16, 16);
+        ImGui.image(Icons.SEARCH.getGlId(), 16, 16);
         ImGui.sameLine();
         CubeImGui.inputText(this, "##Search", (searchMethod) -> {
             if (!searchMethod.isEmpty()) {
@@ -206,7 +205,7 @@ public class DocumentationView extends View {
 
             ImGui.sameLine();
 
-            if (ImGui.imageButton(Icons.INFO, 16, 16)) {
+            if (ImGui.imageButton(Icons.INFO.getGlId(), 16, 16)) {
                 ImGuiLoader.pushView(new MethodEditorView(name, script, id));
             }
         }
@@ -233,7 +232,7 @@ public class DocumentationView extends View {
     }
 
     private MutableText parseMethod(String methodName, List<Documentation.Argemunt> arguments) {
-        short[] textRgba = CubeCodeClient.themeManager.getTheme(CubeCodeClient.themeManager.currentTheme).text;
+        short[] textRgba = CubeCodeClient.themeManager.currentTheme.text;
         MutableText method = Text.literal(methodName + "(").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgbaToInt(textRgba[0], textRgba[1], textRgba[2], textRgba[3]))));
 
         for (int t = 0; t < arguments.size(); t++) {

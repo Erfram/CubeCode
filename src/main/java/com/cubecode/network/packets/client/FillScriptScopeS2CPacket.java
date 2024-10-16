@@ -1,7 +1,7 @@
 package com.cubecode.network.packets.client;
 
 import com.cubecode.CubeCode;
-import com.cubecode.client.views.textEditor.ScopeView;
+import com.cubecode.client.views.idea.ScopeView;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

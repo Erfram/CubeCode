@@ -30,7 +30,7 @@ public final class CubeCodeCommand {
 
         Properties properties = CubeCodeCommand.createProperties(scriptName, "main", context);
 
-        Script script = CubeCode.scriptManager.getScript(scriptName);
+        Script script = CubeCode.projectManager.getScript(scriptName);
 
         try {
             script.run(function.isEmpty() ? "main" : function, scriptName, properties);
@@ -46,7 +46,7 @@ public final class CubeCodeCommand {
         String code = MessageArgumentType.getMessage(context, "script").getString();
 
         try {
-            CubeCode.scriptManager.evalCode(code, "eval", properties.getMap());
+            CubeCode.projectManager.evalCode(code, "eval", properties.getMap());
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }

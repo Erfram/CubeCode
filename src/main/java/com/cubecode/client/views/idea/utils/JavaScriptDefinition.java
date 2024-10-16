@@ -1,13 +1,8 @@
-package com.cubecode.client.views.textEditor;
+package com.cubecode.client.views.idea.utils;
 
-import com.cubecode.client.config.CubeCodeConfig;
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
-import net.minecraft.client.resource.language.LanguageDefinition;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public class JavaScriptDefinition {
     public static TextEditorLanguageDefinition build() {

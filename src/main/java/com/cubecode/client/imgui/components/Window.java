@@ -59,6 +59,8 @@ public class Window {
 				this.onExit.run();
 				ImGuiLoader.removeView(view);
 			} else {
+				view.windowCollapsed = ImGui.isWindowCollapsed();
+
 				CubeImGui.manageDocking(view);
 
 				this.callback.run();
@@ -68,6 +70,9 @@ public class Window {
 				}
 			}
 		}
+
+		view.windowPos.set(ImGui.getWindowPosX(), ImGui.getWindowPosY());
+		view.windowSize.set(ImGui.getWindowSizeX(), ImGui.getWindowSizeY());
 		ImGui.end();
 	}
 }

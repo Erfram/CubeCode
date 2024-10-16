@@ -1,13 +1,16 @@
 package com.cubecode.client.imgui;
 
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.basic.View;
+import com.cubecode.utils.Icons;
 import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiMouseCursor;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -21,7 +24,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
-
     public static void gif(String gifPath, float width, float height) {
         gif(gifPath, width, height, 0, () -> {});
     }
@@ -142,14 +144,49 @@ public class CubeImGui {
         }
     }
 
-    public static void mouseClicked(int button, BiConsumer<Float, Float> mouseClickedAction) {
-        if (ImGui.isMouseClicked(button)) {
-            mouseClickedAction.accept(ImGui.getMousePos().x, ImGui.getMousePos().y);
+    public static void menuItem(String id, Runnable menuItemAction) {
+        if (ImGui.menuItem(id)) {
+            menuItemAction.run();
         }
     }
 
-    public static void menuItem(String id, Runnable menuItemAction) {
+    public static void menuItem(String id, Icons icon, float sizeX, float sizeY, Runnable menuItemAction) {
+        ImGui.image(icon.getGlId(), sizeX, sizeY);
+
+        ImGui.sameLine();
         if (ImGui.menuItem(id)) {
+            menuItemAction.run();
+        }
+    }
+
+    public static void menuItemAndTooltip(String id, int r, int g, int b, int a, String text, Runnable menuItemAction) {
+        if (ImGui.menuItem(id)) {
+            menuItemAction.run();
+        }
+
+        ImGui.sameLine();
+
+        ImGui.alignTextToFramePadding();
+
+        ImGui.sameLine();
+
+        ImGui.textColored(r, g, b, a, text);
+    }
+
+    public static void menuItemAndTooltip(String id, Icons icon, float sizeX, float sizeY, int r, int g, int b, int a, String text, Runnable menuItemAction) {
+        ImGui.image(icon.getGlId(), sizeX, sizeY);
+
+        ImGui.sameLine();
+
+        menuItemAndTooltip(id, r, g, b, a, text, menuItemAction);
+    }
+
+    public static void menu(String id, Icons icon, float sizeX, float sizeY, Runnable menuItemAction) {
+        ImGui.image(icon.getGlId(), sizeX, sizeY);
+
+        ImGui.sameLine();
+
+        if (ImGui.beginMenu(id)) {
             menuItemAction.run();
         }
     }
@@ -173,165 +210,6 @@ public class CubeImGui {
     public static void button(String title, float width, float height, Runnable buttonAction) {
         if (ImGui.button(title, width, height)) {
             buttonAction.run();
-        }
-    }
-
-    /**
-     * Displays a button with FramePadding=(0,0) to easily embed within text.
-     * @param title the button text
-     */
-    public static void smallButton(String title, Runnable smallButtonAction) {
-        if (ImGui.smallButton(title)) {
-            smallButtonAction.run();
-        }
-    }
-
-    /**
-     * A flexible button behavior without the visuals. Frequently useful to build custom behaviors using the public api.
-     * @param id the button ID
-     * @param width the button width
-     * @param height the button height
-     */
-    public static void invisibleButton(String id, float width, float height, Runnable invisibleButtonAction) {
-        if (ImGui.invisibleButton(id, width, height)) {
-            invisibleButtonAction.run();
-        }
-    }
-
-    /**
-     * A flexible button behavior without the visuals. Frequently useful to build custom behaviors using the public api.
-     * @param id the button ID
-     * @param width the button width
-     * @param height the button height
-     */
-    public static void invisibleButton(String id, float width, float height, int buttonFlags, Runnable invisibleButtonAction) {
-        if (ImGui.invisibleButton(id, width, height, buttonFlags)) {
-            invisibleButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays a square button with an arrow shape.
-     * @param id the button ID
-     * @param dir the arrow direction {@link imgui.flag.ImGuiDir}
-     * @param arrowButtonAction
-     */
-    public static void arrowButton(String id, int dir, Runnable arrowButtonAction) {
-        if (ImGui.arrowButton(id, dir)) {
-            arrowButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays an image button.
-     * @param textureId the image texture
-     * @param width the image width
-     * @param height the image height
-     */
-    public static void imageButton(int textureId, float width, float height, Runnable imageButtonAction) {
-        if (ImGui.imageButton(textureId, width, height)) {
-            imageButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays an image button.
-     * @param textureId the image texture
-     * @param width the image width
-     * @param height the image height
-     */
-    public static void imageButton(int textureId, float width, float height, float uvX, float uvY, Runnable imageButtonAction) {
-        if (ImGui.imageButton(textureId, width, height, uvX, uvY)) {
-            imageButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays an image button.
-     * @param textureId the image texture
-     * @param width the image width
-     * @param height the image height
-     */
-    public static void imageButton(int textureId, float width, float height, float uvX, float uvY, float uv1X, float uv1Y, int framePadding, Runnable imageButtonAction) {
-        if (ImGui.imageButton(textureId, width, height, uvX, uvY, uv1X, uv1Y, framePadding)) {
-            imageButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays an image button.
-     * @param textureId the image texture
-     * @param width the image width
-     * @param height the image height
-     */
-    public static void imageButton(
-            int textureId,
-            float width, float height,
-            float uvX, float uvY, float uv1X, float uv1Y,
-            int framePadding, float bgColorR, float bgColorG, float bgColorB, float bgColorA, Runnable imageButtonAction) {
-        if (ImGui.imageButton(textureId, width, height, uvX, uvY, uv1X, uv1Y, framePadding, bgColorR, bgColorG, bgColorB, bgColorA)) {
-            imageButtonAction.run();
-        }
-    }
-
-    /**
-     * Displays an image button.
-     * @param textureId the image texture
-     * @param width the image width
-     * @param height the image height
-     */
-    public static void imageButton(
-            int textureId,
-            float width, float height,
-            float uvX, float uvY, float uv1X, float uv1Y,
-            int framePadding, float bgColorR, float bgColorG, float bgColorB, float bgColorA,
-            float tintR, float tintG, float tintB, float tintA,
-            Runnable imageButtonAction) {
-        if (ImGui.imageButton(textureId, width, height, uvX, uvY, uv1X, uv1Y, framePadding, bgColorR, bgColorG, bgColorB, bgColorA, tintR, tintG, tintB, tintA)) {
-            imageButtonAction.run();
-        }
-    }
-
-    public static void display(String id, int fileDialogFlags, float minSizeX, float minSizeY, float maxSizeX, float maxSizeY, Runnable displayAction) {
-        if (ImGuiFileDialog.display(id, fileDialogFlags, minSizeX, minSizeY, maxSizeX, maxSizeY)) {
-            if (ImGuiFileDialog.isOk()) {
-                displayAction.run();
-            }
-            ImGuiFileDialog.close();
-        }
-    }
-
-    public static void keyPressed(int glfwKey, Runnable keyPressedAction) {
-        if (ImGui.isKeyPressed(glfwKey)) {
-            keyPressedAction.run();
-        }
-    }
-
-    public static void keyPressed(Runnable keyPressedAction, int... glfwKeys) {
-        for (int glfwKey : glfwKeys) {
-            if (ImGui.isKeyPressed(glfwKey)) {
-                keyPressedAction.run();
-            }
-        }
-    }
-
-    /**
-     * Creates one or several radio buttons.
-     * @param label the radio button text
-     */
-    public static void radioButton(String label, boolean active, Runnable radioButtonAction) {
-        if (ImGui.radioButton(label, active)) {
-            radioButtonAction.run();
-        }
-    }
-
-    /**
-     * Creates one or several radio buttons.
-     * @param label the radio button text
-     */
-    public static void radioButton(String label, int value, int button, Runnable radioButtonAction) {
-        if (ImGui.radioButton(label, new ImInt(value), button)) {
-            radioButtonAction.run();
         }
     }
 
@@ -385,49 +263,6 @@ public class CubeImGui {
     }
 
     /**
-     * Displays a checkbox.
-     * @param label the checkbox text
-     * @param active the checkbox status, true=checked, false=unchecked
-     */
-    public static void checkbox(String label, boolean active, Runnable checkboxAction) {
-        if (ImGui.checkbox(label, active)) {
-            checkboxAction.run();
-        }
-    }
-
-    /**
-     * Displays a progress bar.
-     *
-     * @param fraction the progress, between 0 and 1
-     */
-    public static void progressBar(float fraction) {
-        ImGui.progressBar(fraction);
-    }
-
-    /**
-     * Displays a progress bar.
-     *
-     * @param fraction the progress, between 0 and 1
-     * @param sizeArgX the anchor x (or the progress bar width)
-     * @param sizeArgY the anchor y (or the progress bar height)
-     */
-    public static void progressBar(float fraction, float sizeArgX, float sizeArgY) {
-        ImGui.progressBar(fraction, sizeArgX, sizeArgY);
-    }
-
-    /**
-     * Displays a progress bar.
-     *
-     * @param fraction the progress, between 0 and 1
-     * @param sizeArgX the anchor x (or the progress bar width)
-     * @param sizeArgY the anchor y (or the progress bar height)
-     * @param overlay an overlaying string
-     */
-    public static void progressBar(float fraction, float sizeArgX, float sizeArgY, String overlay) {
-        ImGui.progressBar(fraction, sizeArgX, sizeArgY, overlay);
-    }
-
-    /**
      * UI element representing a selectable drop-down list.
      */
     public static void combo(View view, String label, int currentItem, String[] items, Consumer<Integer> comboAction) {
@@ -473,671 +308,6 @@ public class CubeImGui {
         if (ImGui.combo(label, variable, itemsSeparatedByZeros, popupMaxHeightInItems)) {
             comboAction.accept(variable.get());
             ImGui.endCombo();
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static <T> void dragFloat(View view, int type, String label, Consumer<Float> dragFloatAction) {
-        view.putVariable(label + view.getUniqueID(), new float[type]);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable) :
-                type == 2 ? ImGui.dragFloat2(label, variable) :
-                type == 3 ? ImGui.dragFloat3(label, variable) :
-                type == 4 && ImGui.dragFloat4(label, variable)) {
-            dragFloatAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static void dragFloat(View view, int type, String label, float speed, Consumer<Float> dragFloatAction) {
-        view.putVariable(label + view.getUniqueID(), new float[type]);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable, speed) :
-                type == 2 ? ImGui.dragFloat2(label, variable, speed) :
-                type == 3 ? ImGui.dragFloat3(label, variable, speed) :
-                type == 4 && ImGui.dragFloat4(label, variable, speed)) {
-            dragFloatAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static void dragFloat(View view, int type, String label, float currenValue, float speed, float min, float max, Consumer<Float> dragFloatAction) {
-        float[] value = new float[type];
-        value[0] = currenValue;
-        view.putVariable(label + view.getUniqueID(), value);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable, speed, min, max) :
-                        type == 2 ? ImGui.dragFloat2(label, variable, speed, min, max) :
-                                type == 3 ? ImGui.dragFloat3(label, variable, speed, min, max) :
-                                        type == 4 && ImGui.dragFloat4(label, variable, speed, min, max)) {
-            dragFloatAction.accept(variable[type]);
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static void dragFloat(View view, int type, String label, float speed, float min, float max, Consumer<Float> dragFloatAction) {
-        view.putVariable(label + view.getUniqueID(), new float[type]);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable, speed, min, max) :
-                type == 2 ? ImGui.dragFloat2(label, variable, speed, min, max) :
-                type == 3 ? ImGui.dragFloat3(label, variable, speed, min, max) :
-                type == 4 && ImGui.dragFloat4(label, variable, speed, min, max)) {
-            dragFloatAction.accept(variable[type]);
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static void dragFloat(View view, int type, String label, float speed, float min, float max, String format, Consumer<Float> dragFloatAction) {
-        view.putVariable(label + view.getUniqueID(), new float[type]);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable, speed, min, max, format) :
-                type == 2 ? ImGui.dragFloat2(label, variable, speed, min, max, format) :
-                type == 3 ? ImGui.dragFloat3(label, variable, speed, min, max, format) :
-                type == 4 && ImGui.dragFloat4(label, variable, speed, min, max, format)) {
-            dragFloatAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays a float drag slider.
-     *
-     * type 1-4.
-     * 1 - Imgui.dragFloat
-     * 2 - Imgui.dragFloat2
-     * 3 - Imgui.dragFloat3
-     * 4 - Imgui.dragFloat4
-     */
-    public static void dragFloat(View view, int type, String label, float speed, float min, float max, String format, int imGuiSliderFlags, Consumer<Float> dragFloatAction) {
-        view.putVariable(label + view.getUniqueID(), new float[type]);
-        float[] variable = view.getVariable(label + view.getUniqueID());
-        if (
-                type == 1 ? ImGui.dragFloat(label, variable, speed, min, max, format, imGuiSliderFlags) :
-                type == 2 ? ImGui.dragFloat2(label, variable, speed, min, max, format, imGuiSliderFlags) :
-                type == 3 ? ImGui.dragFloat3(label, variable, speed, min, max, format, imGuiSliderFlags) :
-                type == 4 && ImGui.dragFloat4(label, variable, speed, min, max, format, imGuiSliderFlags)) {
-            dragFloatAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, BiConsumer<Float, Float> dragFloatRange2Action) {
-        dragFloatRange(view, label, 0, 0, dragFloatRange2Action);
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, float speed, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax, speed)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float speed, BiConsumer<Float, Float> dragFloatRange2Action) {
-        dragFloatRange(view, label, 0, 0, speed, dragFloatRange2Action);
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, float speed, float minDrag, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax, speed, minDrag)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, float speed, float minDrag, float maxDrag, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax, speed, minDrag, maxDrag)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, float speed, float minDrag, float maxDrag, String format, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax, speed, minDrag, maxDrag, format)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float speed, float minDrag, float maxDrag, String format, BiConsumer<Float, Float> dragFloatRange2Action) {
-        dragFloatRange(view, label, 0, 0, speed, minDrag, maxDrag, format, dragFloatRange2Action);
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float initialDrag1, float initialDrag2, float speed, float minDrag, float maxDrag, String format, String formatMax, BiConsumer<Float, Float> dragFloatRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        float[] oneDragValue = {initialDrag1};
-        float[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        float[] fMin = view.getVariable(oneKey);
-        float[] fMax = view.getVariable(twoKey);
-
-        if (ImGui.dragFloatRange2(label, fMin, fMax, speed, minDrag, maxDrag, format, formatMax)) {
-            dragFloatRange2Action.accept(fMin[0], fMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 float drag range sliders, side by side.
-     *
-     * ImGui - dragFloatRange2
-     */
-    public static void dragFloatRange(View view, String label, float speed, float minDrag, float maxDrag, String format, String formatMax, BiConsumer<Float, Float> dragFloatRange2Action) {
-        dragFloatRange(view, label, 0, 0, speed, minDrag, maxDrag, format, formatMax, dragFloatRange2Action);
-    }
-
-    /**
-     * Displays an int drag slider.
-     */
-    public static void dragInt(View view, int type, String label, Consumer<Integer> dragIntAction) {
-        String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[1]);
-        
-        int[] variable = view.getVariable(labelkey);
-        if (
-                type == 1 ? ImGui.dragInt(label, variable) :
-                type == 2 ? ImGui.dragInt2(label, variable) :
-                type == 3 ? ImGui.dragInt3(label, variable) :
-                type == 4 && ImGui.dragInt4(label, variable)
-        ) {
-            dragIntAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays an int drag slider.
-     */
-    public static void dragInt(View view, int type, String label, float speed, Consumer<Integer> dragIntAction) {
-        String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[1]);
-
-        int[] variable = view.getVariable(labelkey);
-        if (
-                type == 1 ? ImGui.dragInt(label, variable, speed) :
-                type == 2 ? ImGui.dragInt2(label, variable, speed) :
-                type == 3 ? ImGui.dragInt3(label, variable, speed) :
-                type == 4 && ImGui.dragInt4(label, variable, speed)
-        ) {
-            dragIntAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays an int drag slider.
-     */
-    public static void dragInt(View view, int type, String label, float speed, float min, Consumer<Integer> dragIntAction) {
-        String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[1]);
-
-        int[] variable = view.getVariable(labelkey);
-        if (
-                type == 1 ? ImGui.dragInt(label, variable, speed, min) :
-                type == 2 ? ImGui.dragInt2(label, variable, speed, min) :
-                type == 3 ? ImGui.dragInt3(label, variable, speed, min) :
-                type == 4 && ImGui.dragInt4(label, variable, speed, min)
-        ) {
-            dragIntAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays an int drag slider.
-     */
-    public static void dragInt(View view, int type, String label, float speed, float min, float max, Consumer<Integer> dragIntAction) {
-        String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[type]);
-
-        int[] variable = view.getVariable(labelkey);
-        if (
-                type == 1 ? ImGui.dragInt(label, variable, speed, min, max) :
-                type == 2 ? ImGui.dragInt2(label, variable, speed, min, max) :
-                type == 3 ? ImGui.dragInt3(label, variable, speed, min, max) :
-                type == 4 && ImGui.dragInt4(label, variable, speed, min, max)
-        ) {
-            dragIntAction.accept(variable[0]);
-        }
-    }
-
-    /**
-     * Displays an int drag slider.
-     */
-    public static void dragInt(View view, int type, String label, float speed, float min, float max, String format, Consumer<Integer> dragIntAction) {
-        String labelkey = label + view.getUniqueID();
-        view.putVariable(labelkey, new int[1]);
-
-        int[] variable = view.getVariable(labelkey);
-        if (
-                type == 1 ? ImGui.dragInt(label, variable, speed, min, max, format) :
-                type == 2 ? ImGui.dragInt2(label, variable, speed, min, max, format) :
-                type == 3 ? ImGui.dragInt3(label, variable, speed, min, max, format) :
-                type == 4 && ImGui.dragInt4(label, variable, speed, min, max, format)
-        ) {
-            dragIntAction.accept(variable[0]);
-        }
-    }
-
-    public static void image(int textureID, float width, float height) {
-        ImGui.image(textureID, width, height);
-    }
-
-    public static void image(int textureID, float width, float height, float uv0X, float uv0Y) {
-        ImGui.image(textureID, width, height, uv0X, uv0Y);
-    }
-
-    public static void image(int textureID, float width, float height, float uv0X, float uv0Y, float uv1X, float uv1Y) {
-        ImGui.image(textureID, width, height, uv0X, uv0Y, uv1X, uv1Y);
-    }
-
-    public static void image(int textureID, float width, float height, float uv0X, float uv0Y, float uv1X, float uv1Y, float tintColorR, float tintColorG, float tintColorB, float tintColorA) {
-        ImGui.image(textureID, width, height, uv0X, uv0Y, uv1X, uv1Y, tintColorR, tintColorG, tintColorB, tintColorA);
-    }
-
-    public static void image(int textureID, float width, float height, float uv0X, float uv0Y, float uv1X, float uv1Y, float tintColorR, float tintColorG, float tintColorB, float tintColorA, float borderR, float borderG, float borderB, float borderA) {
-        ImGui.image(textureID, width, height, uv0X, uv0Y, uv1X, uv1Y, tintColorR, tintColorG, tintColorB, tintColorA, borderR, borderG, borderB, borderA);
-    }
-
-    /**
-     * Draw a small circle + keep the cursor on the same line. advance cursor x position by GetTreeNodeToLabelSpacing(), same distance that TreeNode() uses
-     */
-    public static void bullet() {
-        ImGui.bullet();
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        dragIntRange(view, label, 0, 0, dragIntRange2Action);
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, int speed, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax, speed)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int speed, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        dragIntRange(view, label, 0, 0, speed, dragIntRange2Action);
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, int speed, int minDrag, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax, speed, minDrag)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, int speed, int minDrag, int maxDrag, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax, speed, minDrag, maxDrag)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, int speed, int minDrag, int maxDrag, String format, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax, speed, minDrag, maxDrag, format)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int speed, int minDrag, int maxDrag, String format, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        dragIntRange(view, label, 0, 0, speed, minDrag, maxDrag, format, dragIntRange2Action);
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int initialDrag1, int initialDrag2, int speed, int minDrag, int maxDrag, String format, String formatMax, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        String oneKey = "one_" + view.getUniqueID();
-        String twoKey = "two_" + view.getUniqueID();
-
-        int[] oneDragValue = {initialDrag1};
-        int[] twoDragValue = {initialDrag2};
-
-        view.putVariable(oneKey, oneDragValue);
-        view.putVariable(twoKey, twoDragValue);
-
-        int[] iMin = view.getVariable(oneKey);
-        int[] iMax = view.getVariable(twoKey);
-
-        if (ImGui.dragIntRange2(label, iMin, iMax, speed, minDrag, maxDrag, format, formatMax)) {
-            dragIntRange2Action.accept(iMin[0], iMax[0]);
-        }
-    }
-
-    /**
-     * Displays 2 int drag range sliders, side by side.
-     *
-     * ImGui - dragIntRange2
-     */
-    public static void dragIntRange(View view, String label, int speed, int minDrag, int maxDrag, String format, String formatMax, BiConsumer<Integer, Integer> dragIntRange2Action) {
-        dragIntRange(view, label, 0, 0, speed, minDrag, maxDrag, format, formatMax, dragIntRange2Action);
-    }
-
-    public static void dragScalar(View view, String label, int currentValue, int dataType, int speed, Consumer<Integer> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImInt(currentValue));
-
-        ImInt variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, int currentValue, int dataType, int speed, int min, Consumer<Integer> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImInt(currentValue));
-
-        ImInt variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, int currentValue, int dataType, int speed, int min, int max, Consumer<Integer> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImInt(currentValue));
-
-        ImInt variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min, max)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, float currentValue, int dataType, float speed, Consumer<Float> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImFloat(currentValue));
-
-        ImFloat variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, float currentValue, int dataType, float speed, float min, Consumer<Float> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImFloat(currentValue));
-
-        ImFloat variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, Float currentValue, int dataType, float speed, float min, float max, Consumer<Float> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImFloat(currentValue));
-
-        ImFloat variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min, max)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, float currentValue, int dataType, float speed, float min, float max, String format, Consumer<Float> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImFloat(currentValue));
-
-        ImFloat variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min, max, format)) {
-            dragScalarAction.accept(variable.get());
-        }
-    }
-
-    public static void dragScalar(View view, String label, float currentValue, int dataType, float speed, float min, float max, String format, int imGuiSliderFlags, Consumer<Float> dragScalarAction) {
-        view.putVariable(label + view.getUniqueID(), new ImFloat(currentValue));
-
-        ImFloat variable = view.getVariable(label + view.getUniqueID());
-        if (ImGui.dragScalar(label, dataType, variable, speed, min, max, format, imGuiSliderFlags)) {
-            dragScalarAction.accept(variable.get());
         }
     }
 
@@ -1221,15 +391,6 @@ public class CubeImGui {
         return variable;
     }
 
-    public static void withItemWidth(float width, Runnable withItemWidthAction) {
-        ImGui.pushItemWidth(width);
-        try {
-            withItemWidthAction.run();
-        } finally {
-            ImGui.popItemWidth();
-        }
-    }
-
     /**
      * available variables:
      * "width_" + uniqueId
@@ -1257,5 +418,154 @@ public class CubeImGui {
         }
 
         view.setVariable(view.getUniqueID().toString(), isDocked);
+    }
+
+    public static void imageButton(Icons icon, String tooltip, float sizeX, float sizeY, Runnable imageButtonAction) {
+        if (ImGui.imageButton(icon.getGlId(), sizeX, sizeY)) {
+            imageButtonAction.run();
+        }
+
+        if (ImGui.isItemHovered()) {
+            ImGui.setTooltip(tooltip);
+        }
+    }
+
+    /**
+     * Example:
+     * <pre>{@code
+     * float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
+     *
+     * CubeImGui.beginChild("child", availableWidth * ((float)this.getVariable("splitter")), 0, true, () -> {});
+     *
+     * CubeImGui.splitter(this, "splitter", 4, availableWidth, ImGui.getItemRectMaxY(), 0.3f, 0.1f, 0.9f)
+     * }</pre>
+     */
+    public static void verticalSplitter(View view, String splitterId, float splitterWidth, float availableWidth, float availableHeight, float defaultRatio, float minSplitRatio, float maxSplitRatio) {
+        view.putVariable(splitterId, defaultRatio);
+
+        ImGui.invisibleButton(splitterId, splitterWidth, availableHeight);
+
+        short[] border = CubeCodeClient.themeManager.currentTheme.border;
+
+        ImGui.getWindowDrawList().addRect(
+                ImGui.getItemRectMin().x, ImGui.getItemRectMin().y,
+                ImGui.getItemRectMax().x, availableHeight,
+                ImGui.colorConvertFloat4ToU32(border[0], border[1], border[2], border[3])
+        );
+
+        if (ImGui.isItemActive()) {
+            float mouseDeltaX = ImGui.getIO().getMouseDeltaX();
+            float newSplitRatio = ((float)view.getVariable(splitterId)) + mouseDeltaX / availableWidth;
+
+            if (newSplitRatio >= minSplitRatio && newSplitRatio <= maxSplitRatio) {
+                view.setVariable(splitterId, newSplitRatio);
+            }
+        }
+
+        if (ImGui.isItemHovered()) {
+            ImGui.setMouseCursor(ImGuiMouseCursor.ResizeEW);
+        }
+    }
+
+    /**
+     * Example:
+     * <pre>{@code
+     * float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
+     *
+     * CubeImGui.beginChild("child", availableWidth * ((float)this.getVariable("splitter")), 0, true, () -> {});
+     *
+     * CubeImGui.splitter(this, "splitter", 4, availableWidth, ImGui.getItemRectMaxY())
+     * }</pre>
+     */
+    public static void verticalSplitter(View view, String splitterId, float splitterWidth, float availableWidth, float availableHeight) {
+        verticalSplitter(view, splitterId, splitterWidth, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
+    }
+
+    /**
+     * Example:
+     * <pre>{@code
+     * float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
+     *
+     * CubeImGui.beginChild("child", availableWidth * ((float)this.getVariable("splitter")), 0, true, () -> {});
+     *
+     * CubeImGui.splitter(this, "splitter", availableWidth, ImGui.getItemRectMaxY())
+     * }</pre>
+     */
+    public static void verticalSplitter(View view, String splitterId, float availableWidth, float availableHeight) {
+        verticalSplitter(view, splitterId, 4, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
+    }
+
+    /**
+     * Example:
+     * <pre>{@code
+     * float availableHeight = ImGui.getWindowSize().y - ImGui.getStyle().getWindowPaddingY();
+     *
+     * CubeImGui.beginChild("child", 0, availableHeight * ((float)this.getVariable("splitter")), true, () -> {});
+     *
+     * CubeImGui.horizontalSplitter(this, "splitter", 5, ImGui.getWindowWidth(), availableHeight, 0.3f, 0.1f, 0.9f);
+     * }</pre>
+     */
+    public static void horizontalSplitter(View view, String splitterId, float splitterHeight, float availableWidth, float availableHeight, float defaultRatio, float minSplitRatio, float maxSplitRatio) {
+        view.putVariable(splitterId, defaultRatio);
+        float currentSplitRatio = view.getVariable(splitterId);
+
+        ImGui.invisibleButton(splitterId, availableWidth, splitterHeight);
+
+        ImDrawList drawList = ImGui.getWindowDrawList();
+        ImVec2 minPos = ImGui.getItemRectMin();
+        ImVec2 maxPos = ImGui.getItemRectMax();
+        short[] borderColor = CubeCodeClient.themeManager.currentTheme.border;
+        int borderColorU32 = ImGui.colorConvertFloat4ToU32(borderColor[0], borderColor[1], borderColor[2], borderColor[3]);
+        drawList.addRect(
+                minPos.x, minPos.y,
+                availableWidth, maxPos.y,
+                borderColorU32
+        );
+
+
+        if (ImGui.isItemActive()) {
+            float mouseDeltaY = ImGui.getIO().getMouseDeltaY();
+            float newSplitRatio = currentSplitRatio + mouseDeltaY / availableHeight;
+
+            if (newSplitRatio >= minSplitRatio && newSplitRatio <= maxSplitRatio) {
+                view.setVariable(splitterId, newSplitRatio);
+            }
+        }
+
+        if (ImGui.isItemHovered()) {
+            ImGui.setMouseCursor(ImGuiMouseCursor.ResizeNS);
+        }
+    }
+
+    public static void horizontalSplitter(View view, String splitterId, float splitterHeight, float availableWidth, float availableHeight, float defaultRatio) {
+        horizontalSplitter(view, splitterId, splitterHeight, availableWidth, availableHeight, defaultRatio, 0.1f, 0.9f);
+    }
+
+    /**
+     * Example:
+     * <pre>{@code
+     * float availableHeight = ImGui.getWindowSize().y - ImGui.getStyle().getWindowPaddingY();
+     *
+     * Float horizontalSplitter = this.getVariable("horizontal_splitter");
+     *
+     * if (horizontalSplitter != null) {
+     *     CubeImGui.beginChild("a", 0, availableHeight * horizontalSplitter, true, () -> {
+     *         ImGui.button("lox");
+     *     });
+     * }
+     *
+     * CubeImGui.horizontalSplitter(this, "horizontal_splitter", 5, ImGui.getItemRectMaxX(), availableHeight);
+     *
+     * CubeImGui.beginChild("b", 0, 0, true, () -> {
+     *     ImGui.button("f");
+     * });
+     * }</pre>
+     */
+    public static void horizontalSplitter(View view, String splitterId, float splitterHeight, float availableWidth, float availableHeight) {
+        horizontalSplitter(view, splitterId, splitterHeight, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
+    }
+
+    public static void horizontalSplitter(View view, String splitterId, float availableWidth, float availableHeight) {
+        horizontalSplitter(view, splitterId, 4, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
     }
 }

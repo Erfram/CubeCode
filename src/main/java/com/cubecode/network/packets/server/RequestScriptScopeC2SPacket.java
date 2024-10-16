@@ -1,15 +1,13 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
+import com.cubecode.api.scripts.ProjectManager;
 import com.cubecode.api.scripts.Script;
-import com.cubecode.api.scripts.ScriptManager;
-import com.cubecode.api.scripts.ScriptScope;
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
-import com.cubecode.network.packets.client.UpdateScriptsS2CPacket;
+import com.cubecode.utils.PacketByteBufUtils;
 import dev.latvian.mods.rhino.Scriptable;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.nbt.NbtCompound;
@@ -25,24 +23,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RequestScriptScopeC2SPacket extends AbstractPacket {
-    public String scriptName;
+    public Script script;
 
     public RequestScriptScopeC2SPacket() {
 
     }
 
-    public RequestScriptScopeC2SPacket(String scriptName) {
-        this.scriptName = scriptName;
+    public RequestScriptScopeC2SPacket(Script script) {
+        this.script = script;
     }
 
     @Override
     public void toBytes(PacketByteBuf buf) {
-        buf.writeString(this.scriptName);
+        PacketByteBufUtils.writeScript(buf, this.script);
     }
 
     @Override
     public void fromBytes(PacketByteBuf buf) {
-        this.scriptName = buf.readString();
+        this.script = PacketByteBufUtils.readScript(buf);
     }
 
     @Override
@@ -54,7 +52,7 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
 
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestScriptScopeC2SPacket packet) {
-            Script script = CubeCode.scriptManager.getScript(packet.scriptName);
+            Script script = packet.script;
             script.evaluate();
             ArrayList<Scriptable> scopes = new ArrayList<>();
             scopes.add(script.scope);
@@ -68,7 +66,7 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
             for (int i = scopes.size() - 1; i >= 0; i--) {
                 NbtCompound scope = new NbtCompound();
                 NbtList keys = new NbtList();
-                Arrays.stream(scopes.get(i).getAllIds(ScriptManager.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
+                Arrays.stream(scopes.get(i).getAllIds(ProjectManager.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
                 scope.put("keys", keys);
                 prev.put(scopes.get(i).toString(), scope);
                 prev = scope;

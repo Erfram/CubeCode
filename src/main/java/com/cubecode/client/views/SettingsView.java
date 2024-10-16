@@ -6,6 +6,8 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.imgui.fonts.FontManager;
+import com.cubecode.client.imgui.themes.CubeTheme;
+import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
@@ -37,19 +39,9 @@ public class SettingsView extends View {
     public void init() {
         Map<String, Runnable> general = new LinkedHashMap<>();
 
-        general.put("Appearance", this::renderAppearanceContent);
+        general.put(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), this::renderAppearanceContent);
 
-        settings.put("General", general);
-
-        HashMap<String, Runnable> general2 = new LinkedHashMap<>();
-        general2.put("ff", () -> {});
-
-        settings.put("General 2", general2);
-
-        HashMap<String, Runnable> general3 = new LinkedHashMap<>();
-        general3.put("ff", () -> {});
-
-        settings.put("General 3", general3);
+        settings.put(Text.translatable("imgui.cubecode.windows.settings.general").getString(), general);
 
         float posX = (windowWidth - viewWidth) * 0.5f;
         float posY = (windowHeight - viewHeight) * 0.5f;
@@ -60,14 +52,14 @@ public class SettingsView extends View {
 
     @Override
     public String getName() {
-        return String.format("Settings ##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.dashboard.settings.title").getString()+" ##%s", uniqueID);
     }
 
     @Override
     public void render() {
-
         Window.create()
                 .title(getName())
+                .onExit(CubeCodeConfig::saveConfig)
                 .callback(() -> {
                     CubeImGui.beginChild("Settings Pane", 200, 0, false, this::renderSettingsPane);
 
@@ -76,8 +68,6 @@ public class SettingsView extends View {
                     CubeImGui.beginChild("Content Pane", 0, 0, true, selectedSetting);
                 })
                 .render(this);
-
-
     }
 
     private void renderSettingsPane() {
@@ -103,15 +93,16 @@ public class SettingsView extends View {
     }
 
     private void renderAppearanceContent() {
-        ImGui.text("Theme: ");
+        ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.theme").getString()+": ");
         ImGui.sameLine();
 
         CubeImGui.combo(this, "##Themes", themes.indexOf(CubeCodeConfig.getSettingsConfig().general.appearance.theme), themes.toArray(new String[0]), (theme) -> {
-            CubeCodeConfig.getSettingsConfig().general.appearance.theme = themes.get(((ImInt) this.getVariable("##Themes" + this.getUniqueID())).get());
-            CubeCodeClient.themeManager.currentTheme = themes.get(((ImInt) this.getVariable("##Themes" + this.getUniqueID())).get());
+            String th = themes.get(((ImInt) this.getVariable("##Themes" + this.getUniqueID())).get());
+            CubeCodeConfig.getSettingsConfig().general.appearance.theme = th;
+            CubeCodeClient.themeManager.currentTheme = CubeCodeClient.themeManager.getTheme(th);
         });
 
-        ImGui.text("Font: ");
+        ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.font").getString()+": ");
         ImGui.sameLine();
 
         CubeImGui.combo(this, "##Fonts", fonts.indexOf(CubeCodeConfig.getSettingsConfig().general.appearance.font), fonts.toArray(new String[0]), (font) -> {
@@ -120,7 +111,7 @@ public class SettingsView extends View {
         });
 
         ImGui.sameLine(0, 0);
-        ImGui.image(Icons.INFO, 21, 21);
+        ImGui.image(Icons.INFO.getGlId(), 21, 21);
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
             ImGui.text("После добавления шрифта в конфиг, перезагрузите игру.");

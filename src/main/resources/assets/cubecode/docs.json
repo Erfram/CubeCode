@@ -1,7 +1,7 @@
 {
   "chapters": {
     "ScriptBlockEntity": {
-      "description": "",
+      "description": "Can't to get",
       "script": "",
       "methods": [
         {
@@ -69,26 +69,26 @@
     },
     "ScriptBlockState": {
       "description": "",
-      "script": "",
+      "script": "c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getBlockId(), false)",
       "methods": [
         {
           "name": "getMinecraftBlockState",
           "description": "Returns the current Minecraft block state",
-          "script": "Context.getPlayer().getMinecraftBlockState();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();",
           "arguments": [],
           "returnType": "BlockState"
         },
         {
           "name": "getId",
           "description": "Returns the identifier of the block state",
-          "script": "Context.getPlayer().getId();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getId();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "isSame",
           "description": "Checks if this block state is the same as the given state",
-          "script": "Context.getPlayer().isSame(CubeCode.createBlockState(\"minecraft:dirt\"));",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));",
           "arguments": [
             {
               "name": "state",
@@ -100,7 +100,7 @@
         {
           "name": "isSameBlock",
           "description": "Checks if this block state is from the same block as the given state",
-          "script": "Context.getPlayer().isSameBlock(CubeCode.createBlockState(\"minecraft:dirt\"));",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isSameBlock(CubeCode.createBlockState(\"minecraft:dirt\"));",
           "arguments": [
             {
               "name": "state",
@@ -112,28 +112,28 @@
         {
           "name": "isOpaque",
           "description": "Checks if the block state is opaque",
-          "script": "Context.getPlayer().isOpaque();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isOpaque();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isAir",
           "description": "Checks if the block state represents air",
-          "script": "Context.getPlayer().isAir();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isAir();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isBurnable",
           "description": "Checks if the block state is burnable",
-          "script": "Context.getPlayer().isBurnable();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isBurnable();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "hasCollision",
           "description": "Checks if the block state has collision at the given coordinates in the world",
-          "script": "Context.getPlayer().hasCollision(Context.getWorld(), 344, 34, 994);",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").hasCollision(c.getWorld(), 344, 34, 994);",
           "arguments": [
             {
               "name": "world",
@@ -157,56 +157,56 @@
         {
           "name": "getProperties",
           "description": "Returns a list of property names for the block state",
-          "script": "Context.getPlayer().getProperties();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getProperties();",
           "arguments": [],
           "returnType": "List<String>"
         },
         {
           "name": "getName",
           "description": "Returns the name of the block",
-          "script": "Context.getPlayer().getName();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getName();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getBlastResistance",
           "description": "Returns the blast resistance of the block",
-          "script": "Context.getPlayer().getBlastResistance();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getBlastResistance();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getSlipperiness",
           "description": "Returns the slipperiness of the block",
-          "script": "Context.getPlayer().getSlipperiness();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getSlipperiness();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getHardness",
           "description": "Returns the hardness of the block",
-          "script": "Context.getPlayer().getHardness();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getHardness();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getVelocityMultiplier",
           "description": "Returns the velocity multiplier of the block",
-          "script": "Context.getPlayer().getVelocityMultiplier();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getVelocityMultiplier();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getJumpVelocityMultiplier",
           "description": "Returns the jump velocity multiplier of the block",
-          "script": "Context.getPlayer().getJumpVelocityMultiplier();",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getJumpVelocityMultiplier();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getProperty",
           "description": "Returns the value of the specified property",
-          "script": "Context.getPlayer().getProperty(\"name\");",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getProperty(\"name\");",
           "arguments": [
             {
               "name": "name",
@@ -218,7 +218,7 @@
         {
           "name": "setProperty",
           "description": "Sets the value of the specified property",
-          "script": "Context.getPlayer().setProperty(\"name\", \"LIRAY\");",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").setProperty(\"name\", \"LIRAY\");",
           "arguments": [
             {
               "name": "name",
@@ -235,19 +235,19 @@
     },
     "ScriptEntity": {
       "description": "Docs for entity bruh",
-      "script": "let player = Context.getPlayer(); \n\nplayer.setPosition(224, 56, 87); \nplayer.setRotations(90, 180, 0); \nContext.getServer().send(\"Player \" + player.getName() + \" has changed his location.\", false);",
+      "script": "function main(c) {\n    let player = c.getPlayer(); \n\n    player.setPosition(224, 56, 87); \n    player.setRotations(90, 180, 0); \n    c.getServer().send(\"Player \" + player.getName() + \" has changed his location.\", false);\n}",
       "methods": [
         {
           "name": "getMinecraftEntity",
           "description": "Allows you to use minecraft mappings on an entity.",
-          "script": "//You can use minecraft mappings\n//Minecraft mappings search site https://mcp.thiakil.com\nContext.getServer().send(Context.getPlayer().getMinecraftEntity().func_145782_y(), false);",
+          "script": "//You can use yarn mappings\n//All mappings search site https://linkie.shedaniel.dev/\nc.getServer().send(c.getPlayer().getMinecraftEntity().getType(), false);",
           "arguments": [],
           "returnType": "Entity"
         },
         {
           "name": "setPosition",
           "description": "Sets the entity's position in the world",
-          "script": "Context.getPlayer().setPosition(485, 43, 43);",
+          "script": "c.getPlayer().setPosition(485, 43, 43);",
           "arguments": [
             {
               "name": "x",
@@ -267,14 +267,14 @@
         {
           "name": "getPosition",
           "description": "Returns the entity's current position",
-          "script": "Context.getPlayer().getPosition();",
+          "script": "c.getPlayer().getPosition();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "setRotations",
           "description": "Sets the entity's rotation angles",
-          "script": "Context.getPlayer().setRotations(90, 90, 0);",
+          "script": "c.getPlayer().setRotations(90, 90, 0);",
           "arguments": [
             {
               "name": "pitch",
@@ -294,7 +294,7 @@
         {
           "name": "setRotations",
           "description": "Sets the entity's rotation angles including body yaw",
-          "script": "Context.getPlayer().setRotations(90, 90, 0, 0);",
+          "script": "c.getPlayer().setRotations(90, 90, 0, 0);",
           "arguments": [
             {
               "name": "pitch",
@@ -318,21 +318,21 @@
         {
           "name": "getRotations",
           "description": "Returns the entity's current rotation angles",
-          "script": "Context.getPlayer().getRotations();",
+          "script": "c.getPlayer().getRotations();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "getBodyYaw",
           "description": "Returns the entity's current body yaw angle",
-          "script": "Context.getPlayer().getBodyYaw();",
+          "script": "c.getPlayer().getBodyYaw();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "addVelocity",
           "description": "Adds to the entity's current velocity",
-          "script": "Context.getPlayer().addVelocity(0, 1, 0);",
+          "script": "c.getPlayer().addVelocity(0, 1, 0);",
           "arguments": [
             {
               "name": "x",
@@ -352,7 +352,7 @@
         {
           "name": "setVelocity",
           "description": "Sets the entity's velocity",
-          "script": "Context.getPlayer().setVelocity(0, 1, 0);",
+          "script": "c.getPlayer().setVelocity(0, 1, 0);",
           "arguments": [
             {
               "name": "x",
@@ -372,28 +372,28 @@
         {
           "name": "getVelocity",
           "description": "Returns the entity's current velocity",
-          "script": "Context.getPlayer().getVelocity();",
+          "script": "c.getPlayer().getVelocity();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "getWorld",
           "description": "Returns the world the entity is in",
-          "script": "Context.getPlayer().getWorld();",
+          "script": "c.getPlayer().getWorld();",
           "arguments": [],
           "returnType": "ScriptWorld"
         },
         {
           "name": "getDimension",
           "description": "Returns the dimension the entity is in",
-          "script": "Context.getPlayer().getDimension();",
+          "script": "c.getPlayer().getDimension();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "swingHand",
           "description": "Makes the entity swing the specified hand",
-          "script": "Context.getPlayer().swingHand();",
+          "script": "c.getPlayer().swingHand(\"main\");",
           "arguments": [
             {
               "name": "hand",
@@ -405,7 +405,7 @@
         {
           "name": "damage",
           "description": "Applies damage to the entity",
-          "script": "Context.getPlayer().damage();",
+          "script": "c.getPlayer().damage(10);",
           "arguments": [
             {
               "name": "damage",
@@ -417,7 +417,7 @@
         {
           "name": "damage",
           "description": "Applies damage of a specific type to the entity",
-          "script": "Context.getPlayer().damage(\"mob\", 10);",
+          "script": "c.getPlayer().damage(\"mob\", 10);",
           "arguments": [
             {
               "name": "damageType",
@@ -433,56 +433,56 @@
         {
           "name": "getDistanceTraveled",
           "description": "Returns the total distance the entity has traveled",
-          "script": "Context.getPlayer().getDistanceTraveled();",
+          "script": "c.getPlayer().getDistanceTraveled();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getId",
           "description": "Returns the entity's unique identifier",
-          "script": "Context.getPlayer().getId();",
+          "script": "c.getPlayer().getId();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getName",
           "description": "Returns the entity's name",
-          "script": "Context.getPlayer().getName();",
+          "script": "c.getPlayer().getName();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getFacing",
           "description": "Returns the direction the entity is facing",
-          "script": "Context.getPlayer().getFacing();",
+          "script": "c.getPlayer().getFacing();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getWidth",
           "description": "Returns the entity's width",
-          "script": "Context.getPlayer().getWidth();",
+          "script": "c.getPlayer().getWidth();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getHeight",
           "description": "Returns the entity's height",
-          "script": "Context.getPlayer().getHeight();",
+          "script": "c.getPlayer().getHeight();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "isPlayer",
           "description": "Checks if the entity is a player",
-          "script": "Context.getPlayer().isPlayer();",
+          "script": "c.getPlayer().isPlayer();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "setGlowing",
           "description": "Sets whether the entity is glowing",
-          "script": "Context.getPlayer().setGlowing();",
+          "script": "c.getPlayer().setGlowing(true);",
           "arguments": [
             {
               "name": "isGlowing",
@@ -494,21 +494,21 @@
         {
           "name": "isGlowing",
           "description": "Checks if the entity is glowing",
-          "script": "Context.getPlayer().isGlowing();",
+          "script": "c.getPlayer().isGlowing();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "getMovementSpeed",
           "description": "Returns the entity's movement speed",
-          "script": "Context.getPlayer().getMovementSpeed();",
+          "script": "c.getPlayer().getMovementSpeed();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "setMovementSpeed",
           "description": "Sets the entity's movement speed",
-          "script": "Context.getPlayer().setMovementSpeed(3);",
+          "script": "c.getPlayer().setMovementSpeed(3);",
           "arguments": [
             {
               "name": "movementSpeed",
@@ -520,35 +520,35 @@
         {
           "name": "getRotationVector",
           "description": "Returns the entity's rotation as a vector",
-          "script": "Context.getPlayer().getRotationVector();",
+          "script": "c.getPlayer().getRotationVector();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "getHealth",
           "description": "Returns the entity's current health",
-          "script": "Context.getPlayer().getHealth();",
+          "script": "c.getPlayer().getHealth();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getMaxHealth",
           "description": "Returns the entity's maximum health",
-          "script": "Context.getPlayer().getMaxHealth();",
+          "script": "c.getPlayer().getMaxHealth();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "getArmor",
           "description": "Returns the entity's armor value",
-          "script": "Context.getPlayer().getArmor();",
+          "script": "c.getPlayer().getArmor();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "setSneaking",
           "description": "Sets whether the entity is sneaking",
-          "script": "Context.getPlayer().setSneaking(true);",
+          "script": "c.getPlayer().setSneaking(true);",
           "arguments": [
             {
               "name": "sneaking",
@@ -560,14 +560,14 @@
         {
           "name": "isSneaking",
           "description": "Checks if the entity is sneaking",
-          "script": "Context.getPlayer().isSneaking();",
+          "script": "c.getPlayer().isSneaking();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "setSprinting",
           "description": "Sets whether the entity is sprinting",
-          "script": "Context.getPlayer().setSprinting(true);",
+          "script": "c.getPlayer().setSprinting(true);",
           "arguments": [
             {
               "name": "sprinting",
@@ -579,35 +579,35 @@
         {
           "name": "isSprinting",
           "description": "Checks if the entity is sprinting",
-          "script": "Context.getPlayer().isSprinting();",
+          "script": "c.getPlayer().isSprinting();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isTouchingWater",
           "description": "Checks if the entity is touching water",
-          "script": "Context.getPlayer().isTouchingWater();",
+          "script": "c.getPlayer().isTouchingWater();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isInLava",
           "description": "Checks if the entity is in lava",
-          "script": "Context.getPlayer().isInLava();",
+          "script": "c.getPlayer().isInLava();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isBurning",
           "description": "Checks if the entity is on fire",
-          "script": "Context.getPlayer().isBurning();",
+          "script": "c.getPlayer().isBurning();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "setBurning",
           "description": "Sets the entity on fire for the specified number of ticks",
-          "script": "Context.getPlayer().setBurning();",
+          "script": "c.getPlayer().setBurning(20);",
           "arguments": [
             {
               "name": "ticks",
@@ -619,35 +619,35 @@
         {
           "name": "isOnGround",
           "description": "Checks if the entity is on the ground",
-          "script": "Context.getPlayer().isOnGround();",
+          "script": "c.getPlayer().isOnGround();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "kill",
           "description": "Kills the entity",
-          "script": "Context.getPlayer().kill();",
+          "script": "c.getPlayer().kill();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "getEyeHeight",
           "description": "Returns the height of the entity's eyes above its feet",
-          "script": "Context.getPlayer().getEyeHeight();",
+          "script": "c.getPlayer().getEyeHeight();",
           "arguments": [],
           "returnType": "double"
         },
         {
           "name": "getEyePos",
           "description": "Returns the position of the entity's eyes",
-          "script": "Context.getPlayer().getEyePos();",
+          "script": "c.getPlayer().getEyePos();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "rayTraceBlock",
           "description": "Performs a ray trace for blocks from the entity's eyes",
-          "script": "let player = Context.getPlayer();\nlet rayTrace = player.rayTraceBlock(10, false);\n\nContext.getServer().send(rayTrace.getBlockSide(), false);",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let rayTrace = player.rayTraceBlock(10, false);\n\n    c.getServer().send(rayTrace.getBlockSide(), false);\n}",
           "arguments": [
             {
               "name": "maxDistance",
@@ -663,7 +663,7 @@
         {
           "name": "rayTraceEntity",
           "description": "Performs a ray trace for entities from the entity's eyes",
-          "script": "let player = Context.getPlayer();\nlet rayTrace = player.rayTraceEntity(10);\n\nContext.getServer().send(rayTrace.getEntity().setVelocity(0, 1, 0), false);",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let rayTrace = player.rayTraceEntity(10);\n\n    c.getServer().send(rayTrace.getEntity().setVelocity(0, 1, 0), false);\n}",
           "arguments": [
             {
               "name": "maxDistance",
@@ -675,35 +675,35 @@
         {
           "name": "getUUID",
           "description": "Returns the entity's UUID",
-          "script": "Context.getPlayer().getUUID();",
+          "script": "c.getPlayer().getUUID();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getType",
           "description": "Returns the entity's type",
-          "script": "Context.getPlayer().getType();",
+          "script": "c.getPlayer().getType();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getMainItemStack",
           "description": "Returns the item stack in the entity's main hand",
-          "script": "Context.getPlayer().getMainItemStack();",
+          "script": "c.getPlayer().getMainItemStack();",
           "arguments": [],
           "returnType": "ScriptItemStack"
         },
         {
           "name": "getOffItemStack",
           "description": "Returns the item stack in the entity's off hand",
-          "script": "Context.getPlayer().getOffItemStack();",
+          "script": "c.getPlayer().getOffItemStack();",
           "arguments": [],
           "returnType": "ScriptItemStack"
         },
         {
           "name": "getLook",
           "description": "Returns the direction the entity is looking as a vector",
-          "script": "let player = Context.getPlayer();\nlet look = player.getLook(); \n\nplayer.setVelocity(look.x, look.y, look.z);",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let look = player.getLook(); \n\n    player.setVelocity(look.x, look.y, look.z);\n}",
           "arguments": [],
           "returnType": "ScriptVector"
         }
@@ -711,26 +711,26 @@
     },
     "ScriptPlayer": {
       "description": "Tab with methods that can be used on players.",
-      "script": "let player = Context.getPlayer();\nlet states = player.getStates();\n\nstates.putString(\"example\", \"Nina\");\nplayer.send(states.getString(\"example\"));",
+      "script": "function main(c) {\n    let player = c.getPlayer();\n    let states = player.getStates();\n\n    states.putString(\"example\", \"Minecraft\");\n    player.send(states.getString(\"example\"));\n}",
       "methods": [
         {
           "name": "getMinecraftPlayer",
           "description": "Returns the Minecraft player entity associated with this script player",
-          "script": "Context.getPlayer().getMinecraftPlayer();",
+          "script": "c.getPlayer().getMinecraftPlayer();",
           "arguments": [],
           "returnType": "PlayerEntity"
         },
         {
           "name": "getStates",
           "description": "Returns the CubeCode states for this player",
-          "script": "Context.getPlayer().getStates();",
+          "script": "c.getPlayer().getStates();",
           "arguments": [],
           "returnType": "CubeCodeStates"
         },
         {
           "name": "send",
           "description": "Sends a message to the player",
-          "script": "Context.getPlayer().send(\"Kukold\");",
+          "script": "c.getPlayer().send(\"Kukold\");",
           "arguments": [
             {
               "name": "message",
@@ -742,7 +742,7 @@
         {
           "name": "setRotations",
           "description": "Sets the player's rotation angles",
-          "script": "Context.getPlayer().setRotations(90, 90, 0);",
+          "script": "c.getPlayer().setRotations(90, 90, 0);",
           "arguments": [
             {
               "name": "pitch",
@@ -762,7 +762,7 @@
         {
           "name": "setVelocity",
           "description": "Sets the player's velocity",
-          "script": "Context.getPlayer().setVelocity(0, 1, 0);",
+          "script": "c.getPlayer().setVelocity(0, 1, 0);",
           "arguments": [
             {
               "name": "x",
@@ -782,7 +782,7 @@
         {
           "name": "addVelocity",
           "description": "Adds to the player's current velocity",
-          "script": "Context.getPlayer().addVelocity(0, 1, 0);",
+          "script": "c.getPlayer().addVelocity(0, 1, 0);",
           "arguments": [
             {
               "name": "x",
@@ -802,7 +802,7 @@
         {
           "name": "executeCommand",
           "description": "Executes a command as the player",
-          "script": "Context.getPlayer().executeCommand(\"say @s never using this method!\");",
+          "script": "c.getPlayer().executeCommand(\"say @s never using this method!\");",
           "arguments": [
             {
               "name": "command",
@@ -814,14 +814,14 @@
         {
           "name": "getGameMode",
           "description": "Returns the player's current game mode",
-          "script": "Context.getPlayer().getGameMode();",
+          "script": "c.getPlayer().getGameMode();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "setGameMode",
           "description": "Sets the player's game mode",
-          "script": "Context.getPlayer().setGameMode(1);",
+          "script": "c.getPlayer().setGameMode(1);",
           "arguments": [
             {
               "name": "gameMode",
@@ -833,14 +833,14 @@
         {
           "name": "setSpawnPoint",
           "description": "Sets the player's spawn point to their current location",
-          "script": "Context.getPlayer().setSpawnPoint();",
+          "script": "c.getPlayer().setSpawnPoint();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "setSpawnPoint",
           "description": "Sets the player's spawn point to the specified coordinates and angle",
-          "script": "Context.getPlayer().setSpawnPoint(2232, 23, 232, 90);",
+          "script": "c.getPlayer().setSpawnPoint(2232, 23, 232, 90);",
           "arguments": [
             {
               "name": "x",
@@ -864,7 +864,7 @@
         {
           "name": "setSpawnPoint",
           "description": "Sets the player's spawn point in the specified world, coordinates, and angle",
-          "script": "Context.getPlayer().setSpawnPoint(Context.getWorld(), 2232, 23, 232, 90);",
+          "script": "c.getPlayer().setSpawnPoint(c.getWorld(), 2232, 23, 232, 90);",
           "arguments": [
             {
               "name": "world",
@@ -892,21 +892,21 @@
         {
           "name": "getSpawnPoint",
           "description": "Returns the player's current spawn point",
-          "script": "Context.getPlayer().getSpawnPoint();",
+          "script": "c.getPlayer().getSpawnPoint();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "isFlying",
           "description": "Checks if the player is currently flying",
-          "script": "Context.getPlayer().isFlying();",
+          "script": "c.getPlayer().isFlying();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "setFlySpeed",
           "description": "Sets the player's flying speed",
-          "script": "Context.getPlayer().setFlySpeed(2);",
+          "script": "c.getPlayer().setFlySpeed(2);",
           "arguments": [
             {
               "name": "flySpeed",
@@ -918,14 +918,14 @@
         {
           "name": "getWalkSpeed",
           "description": "Returns the player's current walking speed",
-          "script": "Context.getPlayer().getWalkSpeed();",
+          "script": "c.getPlayer().getWalkSpeed();",
           "arguments": [],
           "returnType": "float"
         },
         {
           "name": "setWalkSpeed",
           "description": "Sets the player's walking speed",
-          "script": "Context.getPlayer().setWalkSpeed();",
+          "script": "c.getPlayer().setWalkSpeed();",
           "arguments": [
             {
               "name": "walkSpeed",
@@ -937,14 +937,14 @@
         {
           "name": "resetWalkSpeed",
           "description": "Resets the player's walking speed to the default value",
-          "script": "Context.getPlayer().resetWalkSpeed();",
+          "script": "c.getPlayer().resetWalkSpeed();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "playStaticSound",
           "description": "Plays a static sound for the player at the specified location",
-          "script": "Context.getPlayer().playStaticSound(\"block.anvil.break\", \"master\", 784, 89, 884, 1, 1);",
+          "script": "c.getPlayer().playStaticSound(\"block.anvil.break\", \"master\", 784, 89, 884, 1, 1);",
           "arguments": [
             {
               "name": "soundEvent",
@@ -980,7 +980,7 @@
         {
           "name": "stopStaticSound",
           "description": "Stops a static sound for the player",
-          "script": "Context.getPlayer().stopStaticSound();",
+          "script": "c.getPlayer().stopStaticSound();",
           "arguments": [
             {
               "name": "soundId",
@@ -996,7 +996,7 @@
         {
           "name": "getInventory",
           "description": "Returns player inventory",
-          "script": "Context.getPlayer().getInventory();",
+          "script": "c.getPlayer().getInventory();",
           "arguments": [],
           "returnType": "ScriptInventory"
         }
@@ -1004,33 +1004,33 @@
     },
     "ScriptInventory": {
       "description": "",
-      "script": "",
+      "script": "c.getPlayer().getInventory().clear();",
       "methods": [
         {
           "name": "getMinecraftInventory",
           "description": "Returns the Minecraft inventory associated with this script inventory",
-          "script": "Context.getPlayer().getInventory().getMinecraftInventory();",
+          "script": "c.getPlayer().getInventory().getMinecraftInventory();",
           "arguments": [],
           "returnType": "Inventory"
         },
         {
           "name": "isEmpty",
           "description": "Checks if the inventory is empty",
-          "script": "Context.getPlayer().getInventory().isEmpty();",
+          "script": "c.getPlayer().getInventory().isEmpty();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "size",
           "description": "Returns the size of the inventory",
-          "script": "Context.getPlayer().getInventory().size();",
+          "script": "c.getPlayer().getInventory().size();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "getStack",
           "description": "Returns the item stack at the specified index in the inventory",
-          "script": "Context.getPlayer().getInventory().getStack(0);",
+          "script": "c.getPlayer().getInventory().getStack(0);",
           "arguments": [
             {
               "name": "index",
@@ -1042,7 +1042,7 @@
         {
           "name": "removeStack",
           "description": "Removes and returns the item stack at the specified index in the inventory",
-          "script": "Context.getPlayer().getInventory().removeStack();",
+          "script": "c.getPlayer().getInventory().removeStack();",
           "arguments": [
             {
               "name": "index",
@@ -1054,7 +1054,7 @@
         {
           "name": "setStack",
           "description": "Sets the item stack at the specified index in the inventory",
-          "script": "Context.getPlayer().getInventory().setStack(0, Context.getPlayer().getMainItemStack());",
+          "script": "c.getPlayer().getInventory().setStack(0, c.getPlayer().getMainItemStack());",
           "arguments": [
             {
               "name": "index",
@@ -1070,14 +1070,14 @@
         {
           "name": "clear",
           "description": "Clears all items from the inventory",
-          "script": "Context.getPlayer().getInventory().clear();",
+          "script": "c.getPlayer().getInventory().clear();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "getName",
           "description": "Returns the name of the inventory",
-          "script": "Context.getPlayer().getInventory().getName();",
+          "script": "c.getPlayer().getInventory().getName();",
           "arguments": [],
           "returnType": "String"
         }
@@ -1090,14 +1090,14 @@
         {
           "name": "getItemStack",
           "description": "Returns the Minecraft ItemStack associated with this script item stack",
-          "script": "Context.getPlayer().getMainItemStack().getItem().getItemStack();",
+          "script": "c.getPlayer().getMainItemStack().getItem().getItemStack();",
           "arguments": [],
           "returnType": "ItemStack"
         },
         {
           "name": "getMinecraftItem",
           "description": "Returns the Minecraft Item associated with this script item",
-          "script": "Context.getPlayer().getMainItemStack().getItem().getMinecraftItem();",
+          "script": "c.getPlayer().getMainItemStack().getItem().getMinecraftItem();",
           "arguments": [],
           "returnType": "Item"
         }
@@ -1105,54 +1105,54 @@
     },
     "ScriptItemStack": {
       "description": "",
-      "script": "",
+      "script": "c.getPlayer().send(c.getPlayer().getMainItemStack().getId());",
       "methods": [
         {
           "name": "getMinecraftItemStack",
           "description": "Returns the Minecraft ItemStack associated with this script item stack",
-          "script": "Context.getPlayer().getMainItemStack().getMinecraftItemStack();",
+          "script": "c.getPlayer().getMainItemStack().getMinecraftItemStack();",
           "arguments": [],
           "returnType": "ItemStack"
         },
         {
           "name": "isEmpty",
           "description": "Checks if the item stack is empty",
-          "script": "Context.getPlayer().getMainItemStack().isEmpty();",
+          "script": "c.getPlayer().getMainItemStack().isEmpty();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "copy",
           "description": "Creates and returns a copy of this item stack",
-          "script": "Context.getPlayer().getMainItemStack().copy();",
+          "script": "c.getPlayer().getMainItemStack().copy();",
           "arguments": [],
           "returnType": "ScriptItemStack"
         },
         {
           "name": "getItem",
           "description": "Returns the ScriptItem associated with this item stack",
-          "script": "Context.getPlayer().getMainItemStack().getItem();",
+          "script": "c.getPlayer().getMainItemStack().getItem();",
           "arguments": [],
           "returnType": "ScriptItem"
         },
         {
           "name": "getMaxCount",
           "description": "Returns the maximum stack size for this item",
-          "script": "Context.getPlayer().getMainItemStack().getMaxCount();",
+          "script": "c.getPlayer().getMainItemStack().getMaxCount();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "getCount",
           "description": "Returns the current count of items in this stack",
-          "script": "Context.getPlayer().getMainItemStack().getCount();",
+          "script": "c.getPlayer().getMainItemStack().getCount();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "setCount",
           "description": "Sets the count of items in this stack",
-          "script": "Context.getPlayer().getMainItemStack().setCount(0);",
+          "script": "c.getPlayer().getMainItemStack().setCount(0);",
           "arguments": [
             {
               "name": "count",
@@ -1164,7 +1164,7 @@
         {
           "name": "addEnchantment",
           "description": "Adds an enchantment to the item stack",
-          "script": "Context.getPlayer().getMainItemStack().addEnchantment(\"mending\", 0);",
+          "script": "c.getPlayer().getMainItemStack().addEnchantment(\"mending\", 0);",
           "arguments": [
             {
               "name": "enchantment",
@@ -1180,21 +1180,21 @@
         {
           "name": "getEnchantments",
           "description": "Returns the list of enchantments on the item stack",
-          "script": "Context.getPlayer().getMainItemStack().getEnchantments();",
+          "script": "c.getPlayer().getMainItemStack().getEnchantments();",
           "arguments": [],
           "returnType": "ScriptNbtList"
         },
         {
           "name": "isEnchantable",
           "description": "Checks if the item stack can be enchanted",
-          "script": "Context.getPlayer().getMainItemStack().isEnchantable();",
+          "script": "c.getPlayer().getMainItemStack().isEnchantable();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "getId",
           "description": "Returns the identifier of the item",
-          "script": "Context.getPlayer().getMainItemStack().getId();",
+          "script": "c.getPlayer().getMainItemStack().getId();",
           "arguments": [],
           "returnType": "String"
         }
@@ -1311,7 +1311,7 @@
         {
           "name": "getByte",
           "description": "Gets a byte value from this NBT compound",
-          "script": "CubeCode.createCompound(\"{}\").getByte(\"Count\");",
+          "script": "CubeCode.createCompound(\"{Count:64b}\").getByte(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1339,7 +1339,7 @@
         {
           "name": "getShort",
           "description": "Gets a short value from this NBT compound",
-          "script": "CubeCode.createCompound(\"{}\").getShort(\"Count\");",
+          "script": "CubeCode.createCompound(\"{Count:666}\").getShort(\"Count\");",
           "arguments": [
             {
               "name": "key",
@@ -1535,7 +1535,7 @@
         {
           "name": "getCompound",
           "description": "Gets a compound NBT from this NBT compound",
-          "script": "CubeCode.createCompound(\"{}\").getCompound(\"tag\");",
+          "script": "CubeCode.createCompound(\"{tag:{}}\").getCompound(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -1591,7 +1591,7 @@
         {
           "name": "get",
           "description": "Gets a value from this NBT compound",
-          "script": "CubeCode.createCompound(\"{}\").get(\"tag\");",
+          "script": "CubeCode.createCompound(\"{tag:{Name:\"i use arch btw\"}}\").get(\"tag\");",
           "arguments": [
             {
               "name": "key",
@@ -2105,61 +2105,61 @@
     },
     "ScriptEvent": {
       "description": "Docs for event bruh",
-      "script": "",
+      "script": "c.getPlayer().send(c.getPlayer().getName());",
       "methods": [
         {
           "name": "getFunction",
           "description": "Returns the function associated with this event",
-          "script": "Context.getFunction();",
+          "script": "c.getFunction();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getSubject",
           "description": "Returns the subject entity of this event",
-          "script": "Context.getSubject();",
+          "script": "c.getSubject();",
           "arguments": [],
           "returnType": "ScriptEntity"
         },
         {
           "name": "getObject",
           "description": "Returns the object entity of this event",
-          "script": "Context.getObject();",
+          "script": "c.getObject();",
           "arguments": [],
           "returnType": "ScriptEntity"
         },
         {
           "name": "getWorld",
           "description": "Returns the world in which this event occurred",
-          "script": "Context.getWorld();",
+          "script": "c.getWorld();",
           "arguments": [],
           "returnType": "ScriptWorld"
         },
         {
           "name": "getServer",
           "description": "Returns the server associated with this event",
-          "script": "Context.getServer();",
+          "script": "c.getServer();",
           "arguments": [],
           "returnType": "ScriptServer"
         },
         {
           "name": "getPlayer",
           "description": "Returns the player associated with this event",
-          "script": "Context.getPlayer();",
+          "script": "c.getPlayer();",
           "arguments": [],
           "returnType": "ScriptPlayer"
         },
         {
           "name": "getValues",
           "description": "Returns a map of all values associated with this event",
-          "script": "Context.getValues();",
+          "script": "c.getValues();",
           "arguments": [],
           "returnType": "Map<String, Object>"
         },
         {
           "name": "getValue",
           "description": "Returns the value associated with the specified key",
-          "script": "Context.getValue(\"id\");",
+          "script": "c.getValue(\"id\");",
           "arguments": [
             {
               "name": "key",
@@ -2171,7 +2171,7 @@
         {
           "name": "setValue",
           "description": "Sets a value for the specified key",
-          "script": "Context.setValue(\"id\", \"dyamo\");",
+          "script": "c.setValue(\"id\", \"dyamo\");",
           "arguments": [
             {
               "name": "key",
@@ -2187,14 +2187,14 @@
         {
           "name": "cancel",
           "description": "Cancels this event",
-          "script": "Context.cancel();",
+          "script": "c.cancel();",
           "arguments": [],
           "returnType": "void"
         },
         {
           "name": "setCanceled",
           "description": "Sets the canceled state of this event",
-          "script": "Context.setCanceled(true);",
+          "script": "c.setCanceled(true);",
           "arguments": [
             {
               "name": "canceled",
@@ -2206,7 +2206,7 @@
         {
           "name": "isCanceled",
           "description": "Checks if this event is canceled",
-          "script": "Context.isCanceled();",
+          "script": "c.isCanceled();",
           "arguments": [],
           "returnType": "boolean"
         }
@@ -2219,7 +2219,7 @@
         {
           "name": "createCompound",
           "description": "Creates a new ScriptNbtCompound from the given NBT string",
-          "script": "CubeCode.createCompound(\"{id:\"krutosti\"}\");",
+          "script": "CubeCode.createCompound(\"{id:\"kruto\"}\");",
           "arguments": [
             {
               "name": "nbt",
@@ -2231,7 +2231,7 @@
         {
           "name": "getClassName",
           "description": "Returns the class name of the given object",
-          "script": "CubeCode.getClassName(Context.getPlayer());",
+          "script": "CubeCode.getClassName(c.getPlayer());",
           "arguments": [
             {
               "name": "value",
@@ -2276,54 +2276,54 @@
     },
     "ScriptRayTrace": {
       "description": "Docs for rayTrace bruh",
-      "script": "let rayTrace = Context.getPlayer().rayTraceBlock(5, false);\n\nContext.getPlayer().send(rayTrace.getBlock());",
+      "script": "let rayTrace = c.getPlayer().rayTraceBlock(5, false);\n\nc.getPlayer().send(rayTrace.getBlock().getBlockId();",
       "methods": [
         {
           "name": "isBlock",
           "description": "Checks if the ray trace hit a block",
-          "script": "Context.getPlayer().rayTraceBlock(5, false).isBlock();",
+          "script": "c.getPlayer().rayTraceBlock(5, false).isBlock();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isEntity",
           "description": "Checks if the ray trace hit an entity",
-          "script": "Context.getPlayer().rayTraceEntity(5).isEntity();",
+          "script": "c.getPlayer().rayTraceEntity(5).isEntity();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isMissed",
           "description": "Checks if the ray trace missed and hit nothing",
-          "script": "Context.getPlayer().rayTraceBlock(5, false).isMissed();",
+          "script": "c.getPlayer().rayTraceBlock(5, false).isMissed();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "getEntity",
           "description": "Returns the entity hit by the ray trace, if any",
-          "script": "Context.getPlayer().rayTraceEntity(5).getEntity();",
+          "script": "c.getPlayer().rayTraceEntity(5).getEntity();",
           "arguments": [],
           "returnType": "ScriptEntity"
         },
         {
           "name": "getBlock",
           "description": "Returns the position of the block hit by the ray trace, if any",
-          "script": "Context.getPlayer().rayTraceBlock(5, false).getBlock();",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getBlock();",
           "arguments": [],
           "returnType": "ScriptVector"
         },
         {
           "name": "getBlockSide",
           "description": "Returns the side of the block that was hit by the ray trace",
-          "script": "Context.getPlayer().rayTraceBlock(5, false).getBlockSide();",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getBlockSide();",
           "arguments": [],
           "returnType": "String"
         },
         {
           "name": "getHitPosition",
           "description": "Returns the exact position where the ray trace hit",
-          "script": "Context.getPlayer().rayTraceBlock(5, false).getHitPosition();",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getHitPosition();",
           "arguments": [],
           "returnType": "ScriptVector"
         }
@@ -2331,19 +2331,19 @@
     },
     "ScriptServer": {
       "description": "Tab with methods that can be used on server.",
-      "script": "let players = Context.getServer().getAllPlayers();\n\nplayers.forEach(function(player) {\n\tplayer.send(player.getName());\n});",
+      "script": "let players = c.getServer().getAllPlayers();\n\nplayers.forEach(function(player) {\n    player.send(player.getName());\n});",
       "methods": [
         {
           "name": "getAllPlayers",
           "description": "Returns a list of all players on the server",
-          "script": "let allPlayers = Context.getServer().getAllPlayers();\n\nContext.getPlayer().send(allPlayers[Math.floor(Math.random() * allPlayers.length)].getName());",
+          "script": "let allPlayers = c.getServer().getAllPlayers();\n\nc.getPlayer().send(allPlayers[Math.floor(Math.random() * allPlayers.length)].getName());",
           "arguments": [],
           "returnType": "List<ScriptPlayer>"
         },
         {
           "name": "getWorld",
           "description": "Returns the world with the specified name",
-          "script": "Context.getServer().getWorld(\"overworld\");",
+          "script": "c.getServer().getWorld(\"overworld\");",
           "arguments": [
             {
               "name": "worldName",
@@ -2355,49 +2355,49 @@
         {
           "name": "getMaxPlayerCount",
           "description": "Returns the maximum number of players allowed on the server",
-          "script": "Context.getServer().getMaxPlayerCount();",
+          "script": "c.getServer().getMaxPlayerCount();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "isSingleplayer",
           "description": "Checks if the server is running in singleplayer mode",
-          "script": "Context.getServer().isSingleplayer();",
+          "script": "c.getServer().isSingleplayer();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isDedicated",
           "description": "Checks if the server is a dedicated server",
-          "script": "Context.getServer().isDedicated();",
+          "script": "c.getServer().isDedicated();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isHardcore",
           "description": "Checks if the server is running in hardcore mode",
-          "script": "Context.getServer().isHardcore();",
+          "script": "c.getServer().isHardcore();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "isOnlineMode",
           "description": "Checks if the server is running in online mode",
-          "script": "Context.getServer().isOnlineMode();",
+          "script": "c.getServer().isOnlineMode();",
           "arguments": [],
           "returnType": "boolean"
         },
         {
           "name": "getTicks",
           "description": "Returns the current number of ticks of the server",
-          "script": "Context.getServer().getTicks();",
+          "script": "c.getServer().getTicks();",
           "arguments": [],
           "returnType": "int"
         },
         {
           "name": "send",
           "description": "Sends a message to all players on the server",
-          "script": "Context.getServer().send(\"Alpha\", false);",
+          "script": "c.getServer().send(\"Beta\", false);",
           "arguments": [
             {
               "name": "message",
@@ -2413,7 +2413,7 @@
         {
           "name": "getPlayer",
           "description": "Returns the player with the specified nickname",
-          "script": "Context.getServer().getPlayer(\"Llama\");",
+          "script": "c.getServer().getPlayer(\"Llama\");",
           "arguments": [
             {
               "name": "nickName",
@@ -2425,14 +2425,14 @@
         {
           "name": "getStates",
           "description": "Returns the CubeCode states for the server",
-          "script": "Context.getServer().getStates();",
+          "script": "c.getServer().getStates();",
           "arguments": [],
           "returnType": "CubeCodeStates"
         },
         {
           "name": "executeScript",
           "description": "Executes a script with the specified name",
-          "script": "Context.getServer().executeScript();\n\n//docs.js\nServer.send(\"CubeCode\", false);",
+          "script": "c.getServer().executeScript(\"docs.js\");\n\n//docs.js\nServer.send(\"CubeCode\", false);",
           "arguments": [
             {
               "name": "scriptName",
@@ -2445,7 +2445,7 @@
     },
     "ScriptVector": {
       "description": "Docs for vectors bruh",
-      "script": "let vector = CubeCode.vector(21, 45, 232);\n\nContext.getPlayer().send(\"Vector's length is \" + vector.length().toString());",
+      "script": "let vector = CubeCode.vector(21, 45, 232);\n\nc.getPlayer().send(\"Vector's length is \" + vector.length().toString());",
       "methods": [
         {
           "name": "add",
@@ -2529,19 +2529,19 @@
     },
     "ScriptWorld": {
       "description": "Tab with methods that can be used on world.",
-      "script": "let block = Context.getWorld().getBlock(213, 24, 232);\n\nContext.getWorld().setBlock(block, 232, 55, 563);",
+      "script": "let block = c.getWorld().getBlock(213, 24, 232);\n\nc.getWorld().setBlock(block, 232, 55, 563);",
       "methods": [
         {
           "name": "getMinecraftWorld",
           "description": "Returns the Minecraft World object associated with this script world",
-          "script": "//You can use minecraft mappings\n//Minecraft mappings search site https://mcp.thiakil.com\nContext.getWorld().getMinecraftWorld().func_175726_f(CubeCode.vector(232, 232, 223).toBlockPos());",
+          "script": "//You can use yarn mappings\n//All mappings search site https://linkie.shedaniel.dev/\nc.getWorld().getMinecraftWorld().getWorldChunk(CubeCode.vector(232, 232, 223).toBlockPos());",
           "arguments": [],
           "returnType": "World"
         },
         {
           "name": "getBlock",
           "description": "Returns the block state at the specified coordinates",
-          "script": "Context.getWorld().getBlock(213, 234, 232);",
+          "script": "c.getWorld().getBlock(213, 234, 232);",
           "arguments": [
             {
               "name": "x",
@@ -2561,7 +2561,7 @@
         {
           "name": "getBlock",
           "description": "Returns the block state at the specified vector position",
-          "script": "Context.getWorld().getBlock(CubeCode.vector(213, 234, 232));",
+          "script": "c.getWorld().getBlock(CubeCode.vector(213, 234, 232));",
           "arguments": [
             {
               "name": "vector",
@@ -2573,7 +2573,7 @@
         {
           "name": "setBlock",
           "description": "Sets the block at the specified coordinates to the given block state",
-          "script": "Context.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), 223, 223, 223);",
+          "script": "c.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), 223, 223, 223);",
           "arguments": [
             {
               "name": "scriptBlockState",
@@ -2597,7 +2597,7 @@
         {
           "name": "setBlock",
           "description": "Sets the block at the specified vector position to the given block state",
-          "script": "Context.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), CubeCode.vector(223, 223, 223));",
+          "script": "c.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), CubeCode.vector(223, 223, 223));",
           "arguments": [
             {
               "name": "scriptBlockState",
@@ -2613,14 +2613,14 @@
         {
           "name": "getServer",
           "description": "Returns the server associated with this world",
-          "script": "Context.getWorld().getServer();",
+          "script": "c.getWorld().getServer();",
           "arguments": [],
           "returnType": "ScriptServer"
         },
         {
           "name": "getEntities",
           "description": "Returns a list of entities that match the given selector",
-          "script": "let entities = Context.getWorld().getEntities(\"@e[type=minecraft:cow]\");\n\nentities.forEach(function(entity) {\n\tentity.setVelocity(0, 1, 0);\n});",
+          "script": "let entities = c.getWorld().getEntities(\"@e[type=minecraft:cow]\");\n\nentities.forEach(entity => entity.setVelocity(0, 1, 0));",
           "arguments": [
             {
               "name": "selector",
@@ -2632,7 +2632,7 @@
         {
           "name": "getEntity",
           "description": "Returns the entity with the specified UUID",
-          "script": "Context.getWorld().getEntity(\"5c5d80c8-7583-47f9-bb0e-de13fc816ad5\");",
+          "script": "c.getWorld().getEntity(\"5c5d80c8-7583-47f9-bb0e-de13fc816ad5\");",
           "arguments": [
             {
               "name": "uuid",
@@ -2644,7 +2644,7 @@
         {
           "name": "spawnEntity",
           "description": "Spawns an entity of the specified type at the given coordinates",
-          "script": "Context.getWorld().spawnEntity(\"minecraft:cow\", 232, 20, 232);",
+          "script": "c.getWorld().spawnEntity(\"minecraft:cow\", 232, 20, 232);",
           "arguments": [
             {
               "name": "id",
@@ -2668,7 +2668,7 @@
         {
           "name": "playSound",
           "description": "Plays a sound at the specified location with custom parameters",
-          "script": "Context.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\", 1, 1, true);",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\", 1, 1, true);",
           "arguments": [
             {
               "name": "x",
@@ -2708,7 +2708,7 @@
         {
           "name": "playSound",
           "description": "Plays a sound at the specified location with default parameters",
-          "script": "Context.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\");",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\");",
           "arguments": [
             {
               "name": "x",
@@ -2736,7 +2736,7 @@
         {
           "name": "getEntities",
           "description": "Returns a list of entities within the specified bounding box",
-          "script": "Context.getWorld().getEntities(\"@e[type=minecraft:cow]\", 211, 213, 123, 311, 210, 120).forEach(function(entity) {\n\tentity.setVelocity(0, 1, 0);\n});",
+          "script": "c.getWorld().getEntities(\"@e[type=minecraft:cow]\", 211, 213, 123, 311, 210, 120).forEach(function(entity) {\n    entity.setVelocity(0, 1, 0);\n});",
           "arguments": [
             {
               "name": "entity",
@@ -2772,7 +2772,7 @@
         {
           "name": "getEntities",
           "description": "Returns a list of entities within the bounding box defined by two vectors",
-          "script": "Context.getWorld().getEntities(\"@e[type=minecraft:cow]\", CubeCode.vector(211, 213, 123), CubeCode.vector(311, 210, 120)).forEach(function(entity) {\nentity.setVelocity(0, 1, 0);});",
+          "script": "c.getWorld().getEntities(\n     \"@e[type=minecraft:cow]\", \n     CubeCode.vector(211, 213, 123), \n     CubeCode.vector(311, 210, 120)\n).forEach(function(entity) {\n    entity.setVelocity(0, 1, 0);\n});",
           "arguments": [
             {
               "name": "entity",
@@ -2793,19 +2793,19 @@
     },
     "CubeCodeStates": {
       "description": "Docs for states bruh",
-      "script": "let states = Context.getPlayer().getStates();\nlet array = [1337, \"TheBendy\"];\n\nstates.putString(\"example\", JSON.stringify(array));  // \"[1337,\\\"TheBendy\\\"]\"\narray == JSON.parse(states.getString(\"example\")); // true",
+      "script": "function main(c) {\n    let states = c.getPlayer().getStates();\n    let array = [1337, \"TheBendy\"];\n\n    states.putString(\"example\", JSON.stringify(array));  // \"[1337,\\\"TheBendy\\\"]\"\n    array == JSON.parse(states.getString(\"example\")); // true\n}",
       "methods": [
         {
           "name": "getKeys",
           "description": "Returns a list of all state keys",
-          "script": "let keys = Context.getPlayer().getStates().getKeys();\n\nContext.getPlayer().send(keys[\"example\"]); //1337",
+          "script": "let keys = c.getPlayer().getStates().getKeys();\n\nc.getPlayer().send(keys[\"example\"]); //1337",
           "arguments": [],
           "returnType": "List"
         },
         {
           "name": "putString",
           "description": "Adds a string value for the specified key",
-          "script": "Context.getPlayer().getStates().putString(\"example\", \"Name\");",
+          "script": "c.getPlayer().getStates().putString(\"example\", \"Name\");",
           "arguments": [
             {
               "name": "key",
@@ -2821,7 +2821,7 @@
         {
           "name": "putInt",
           "description": "Adds an integer value for the specified key",
-          "script": "Context.getPlayer().getStates().putInt(\"example\", 2204);",
+          "script": "c.getPlayer().getStates().putInt(\"example\", 2204);",
           "arguments": [
             {
               "name": "key",
@@ -2837,7 +2837,7 @@
         {
           "name": "putDouble",
           "description": "Adds a double value for the specified key",
-          "script": "Context.getPlayer().getStates().putDouble(\"example\", 100.8974);",
+          "script": "c.getPlayer().getStates().putDouble(\"example\", 100.8974);",
           "arguments": [
             {
               "name": "key",
@@ -2853,7 +2853,7 @@
         {
           "name": "putFloat",
           "description": "Adds a float value for the specified key",
-          "script": "Context.getPlayer().getStates().putFloat(\"example\", 100.89);",
+          "script": "c.getPlayer().getStates().putFloat(\"example\", 100.89);",
           "arguments": [
             {
               "name": "key",
@@ -2869,7 +2869,7 @@
         {
           "name": "putBoolean",
           "description": "Adds a boolean value for the specified key",
-          "script": "Context.getPlayer().getStates().putBoolean(\"example\", true);",
+          "script": "СЃ.getPlayer().getStates().putBoolean(\"example\", true);",
           "arguments": [
             {
               "name": "key",
@@ -2885,7 +2885,7 @@
         {
           "name": "putByte",
           "description": "Adds a byte value for the specified key",
-          "script": "Context.getPlayer().getStates().putByte(\"example\", 128);",
+          "script": "СЃ.getPlayer().getStates().putByte(\"example\", 128);",
           "arguments": [
             {
               "name": "key",
@@ -2901,7 +2901,7 @@
         {
           "name": "putNbt",
           "description": "Adds an NbtCompound object for the specified key",
-          "script": "Context.getPlayer().getStates().putNbt(\"example\", CubeCode.createCompound(\"{}\"));",
+          "script": "СЃ.getPlayer().getStates().putNbt(\"example\", CubeCode.createCompound(\"{}\"));",
           "arguments": [
             {
               "name": "key",
@@ -2917,7 +2917,7 @@
         {
           "name": "getString",
           "description": "Returns the string value for the specified key",
-          "script": "Context.getPlayer().getStates().getString(\"example\");",
+          "script": "c.getPlayer().getStates().getString(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2929,7 +2929,7 @@
         {
           "name": "getInt",
           "description": "Returns the integer value for the specified key",
-          "script": "Context.getPlayer().getStates().getInt(\"example\");",
+          "script": "c.getPlayer().getStates().getInt(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2941,7 +2941,7 @@
         {
           "name": "getDouble",
           "description": "Returns the double value for the specified key",
-          "script": "Context.getPlayer().getStates().getDouble(\"example\");",
+          "script": "c.getPlayer().getStates().getDouble(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2953,7 +2953,7 @@
         {
           "name": "getFloat",
           "description": "Returns the float value for the specified key",
-          "script": "Context.getPlayer().getStates().getFloat(\"example\");",
+          "script": "c.getPlayer().getStates().getFloat(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2965,7 +2965,7 @@
         {
           "name": "getBoolean",
           "description": "Returns the boolean value for the specified key",
-          "script": "Context.getPlayer().getStates().getBoolean(\"example\");",
+          "script": "c.getPlayer().getStates().getBoolean(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2977,7 +2977,7 @@
         {
           "name": "getByte",
           "description": "Returns the byte value for the specified key",
-          "script": "Context.getPlayer().getStates().getByte(\"example\");",
+          "script": "c.getPlayer().getStates().getByte(\"example\");",
           "arguments": [
             {
               "name": "key",
@@ -2989,7 +2989,7 @@
         {
           "name": "getNbt",
           "description": "Returns the NbtCompound object for the specified key",
-          "script": "Context.getPlayer().getStates().getNbt(\"example\");",
+          "script": "c.getPlayer().getStates().getNbt(\"example\");",
           "arguments": [
             {
               "name": "key",

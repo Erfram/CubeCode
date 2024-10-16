@@ -1,6 +1,5 @@
 package com.cubecode.api.scripts.code;
 
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.utils.CubeCodeException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
@@ -89,6 +88,6 @@ public class ScriptServer {
                 this
         ));
 
-        CubeCode.scriptManager.evalCode(CubeCode.scriptManager.getScript(scriptName).code, scriptName, properties);
+        CubeCode.projectManager.evalCode(CubeCode.projectManager.getScript(scriptName).code, scriptName, properties);
     }
 }

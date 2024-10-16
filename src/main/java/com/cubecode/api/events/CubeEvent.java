@@ -1,10 +1,7 @@
 package com.cubecode.api.events;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CubeEvent {

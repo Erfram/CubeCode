@@ -1,5 +1,6 @@
-package com.cubecode.client.views.textEditor;
+package com.cubecode.client.views.idea;
 
+import com.cubecode.api.scripts.Script;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
@@ -11,11 +12,14 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ScopeView extends View {
     public static NbtCompound structure;
+    public Script script;
+
+    public ScopeView(Script script) {
+        this.script = script;
+    }
 
     @Override
     public void init() {
@@ -24,14 +28,12 @@ public class ScopeView extends View {
     }
 
     public void updateScope() {
-        int selectedScript = TextEditorView.getSelectedScript();
-        if (selectedScript == -1) return;
-        Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(TextEditorView.scripts.get(selectedScript).name));
+        Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(this.script));
     }
 
     @Override
     public String getName() {
-        return String.format(Text.translatable("imgui.cubecode.windows.codeEditor.scope.title").getString() + "##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.scope").getString() + "##%s", uniqueID);
     }
 
     public void render() {

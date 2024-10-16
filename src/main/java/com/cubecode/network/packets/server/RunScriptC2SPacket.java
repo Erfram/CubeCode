@@ -63,7 +63,7 @@ public class RunScriptC2SPacket extends AbstractPacket {
             );
 
             try {
-                new Script(packet.script.name, packet.script.code).run(packet.script.name, properties);
+                packet.script.run(packet.script.name, properties);
             } catch (CubeCodeException cce) {
                 player.sendMessage(MutableText.of(Text.of(cce.getMessage()).getContent()).formatted(Formatting.RED));
                 cce.printStackTrace();

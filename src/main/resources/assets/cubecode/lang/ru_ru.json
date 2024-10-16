@@ -3,40 +3,26 @@
 
   "imgui.cubecode.dashboard.windows.title": "Окна",
   "imgui.cubecode.dashboard.settings.title": "Настройки",
+  "imgui.cubecode.dashboard.debug.title": "Отладка",
+  "imgui.cubecode.dashboard.dev.title": "Dev",
 
-  "imgui.cubecode.windows.codeEditor.title": "Редактор кода",
-  "imgui.cubecode.windows.codeEditor.name": "Редактор кода",
+  "imgui.cubecode.dashboard.saveWindows.title": "Сохранить расположение окон",
 
-  "imgui.cubecode.windows.codeEditor.scripts.title": "Скрипты",
-  "imgui.cubecode.windows.codeEditor.scripts.context.delete.title": "Удалить",
-  "imgui.cubecode.windows.codeEditor.scripts.context.rename.title": "Переименовать",
+  "imgui.cubecode.windows.CubeCodeIDEA.scope": "Область видимости",
+  "imgui.cubecode.windows.CubeCodeIDEA.documentation": "Документация",
+  "imgui.cubecode.windows.CubeCodeIDEA.run_script": "Запустить",
 
-  "imgui.cubecode.windows.codeEditor.file.title": "Файл",
-  "imgui.cubecode.windows.codeEditor.file.run.title": "Запустить",
-  "imgui.cubecode.windows.codeEditor.file.create.title": "Создать",
-  "imgui.cubecode.windows.codeEditor.file.save.title": "Сохранить",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create": "Создать",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Папка",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Скрипт",
 
-  "imgui.cubecode.windows.codeEditor.file.create.name": "Создание скрипта",
-  "imgui.cubecode.windows.codeEditor.file.create.text.name": "Название",
-  "imgui.cubecode.windows.codeEditor.file.create.button.create.title": "Создать",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Вставить",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.cut": "Вырезать",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.copy": "Скопировать",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.delete": "Удалить",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.rename": "Переименовать",
 
-  "imgui.cubecode.windows.codeEditor.file.rename.name": "Переименование скрипта",
-  "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Название",
-  "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Переименовать",
-
-  "imgui.cubecode.windows.codeEditor.tools.title": "Инструменты",
-  "imgui.cubecode.windows.codeEditor.documentation.title": "Документация",
-  "imgui.cubecode.windows.codeEditor.scope.title": "Область видимости",
-
-  "imgui.cubecode.windows.codeEditor.edit.title": "Редактирование",
-  "imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title": "Режим только для чтения",
-  "imgui.cubecode.windows.codeEditor.edit.undo.title": "Отменить",
-  "imgui.cubecode.windows.codeEditor.edit.redo.title": "Повторить",
-  "imgui.cubecode.windows.codeEditor.edit.copy.title": "Скопировать",
-  "imgui.cubecode.windows.codeEditor.edit.cut.title": "Вырезать",
-  "imgui.cubecode.windows.codeEditor.edit.delete.title": "Удалить",
-  "imgui.cubecode.windows.codeEditor.edit.paste.title": "Вставить",
-  "imgui.cubecode.windows.codeEditor.edit.save.title": "Сохранить",
+  "imgui.cubecode.debug.styleEditor.title": "Редактор стилей (не стоит)",
 
   "imgui.cubecode.windows.events.title": "События",
 
@@ -118,5 +104,18 @@
 
   "imgui.cubecode.windows.events.world_tick_end.title": "Мир: при конце тика",
   "imgui.cubecode.windows.events.world_tick_end.description": "Это событие срабатывает, когда мир заканчивает тикать.",
-  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A"
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
+
+  "imgui.cubecode.windows.events.createScript": "Создать",
+  "imgui.cubecode.windows.events.deleteScript": "Удалить",
+  "imgui.cubecode.windows.events.selectionScript": "Выберите скрипт",
+  "imgui.cubecode.windows.events.function": "Функция",
+
+  "imgui.cubecode.windows.settings.appearance": "Внешний вид",
+
+  "imgui.cubecode.windows.settings.appearance.theme": "Тема",
+  "imgui.cubecode.windows.settings.appearance.font": "Шрифт",
+  "imgui.cubecode.windows.settings.appearance.font.tooltip": "После добавления шрифта в конфиг, перезагрузите игру.",
+
+  "imgui.cubecode.windows.settings.general": "Общие"
 }

@@ -5,7 +5,7 @@ import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
 
-import static com.cubecode.CubeCode.scriptManager;
+import static com.cubecode.CubeCode.projectManager;
 
 public class Script {
     public String name;
@@ -19,11 +19,11 @@ public class Script {
     }
 
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
-        scriptManager.updateScriptsFromFiles();
+        projectManager.updateScriptsFromFiles();
 
         try {
             this.evaluate();
-            scriptManager.invokeFunction(context, scope, function, properties.getMap().values().toArray());
+            projectManager.invokeFunction(context, scope, function, properties.getMap().values().toArray());
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
@@ -36,8 +36,8 @@ public class Script {
     public void evaluate() {
         this.context = Context.enter();
         this.scope = new ScriptScope(name, this.context);
-        this.scope.setParentScope(ScriptManager.globalScope);
-        scriptManager.evaluate(this.context, this.scope, code, name);
+        this.scope.setParentScope(ProjectManager.globalScope);
+        projectManager.evaluate(this.context, this.scope, code, name);
     }
 
     public void run(String sourceName, Properties properties) throws CubeCodeException {

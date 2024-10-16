@@ -3,10 +3,8 @@ package com.cubecode.api.events;
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.code.ScriptEvent;
-import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.GsonManager;
-import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.utils.CubeCodeException;
 import com.google.common.reflect.TypeToken;
 import net.minecraft.entity.Entity;
@@ -29,7 +27,13 @@ public class EventManager extends DirectoryManager {
     public LinkedList<String> eventSource = new LinkedList<>();
 
     public EventManager(File eventsDirectory) {
-        super(eventsDirectory);
+        super(new File(eventsDirectory.getParent()));
+
+        try {
+            eventsDirectory.createNewFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         eventSource.add("CubeCode");
     }
@@ -45,6 +49,10 @@ public class EventManager extends DirectoryManager {
         }
 
         event.addScript(eventScript);
+    }
+
+    public void updateEventsFromFile() {
+        GsonManager.writeJSON(this.DIRECTORY, this.events);
     }
 
     public void trigger(String eventName, Entity subject, Entity object, World world, MinecraftServer server) {
@@ -84,7 +92,7 @@ public class EventManager extends DirectoryManager {
 
             newScriptEvent.setValues(scriptEvent.getValues());
 
-            CubeCode.scriptManager.getScript(eventScript.name).run(eventScript.function, eventScript.name);
+            CubeCode.projectManager.getScript(eventScript.name).run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
         } catch (CubeCodeException e) {
             CubeCode.LOGGER.error("Error executing script: {} - {}", eventScript.name, e.getMessage());
             //В консоль
@@ -128,18 +136,8 @@ public class EventManager extends DirectoryManager {
     }
 
     public void register() {
-        File eventsFile = new File(CubeCode.cubeCodeDirectory, "events.json");
-
-        if (!eventsFile.exists()) {
-            try {
-                eventsFile.createNewFile();
-            } catch (IOException e) {
-                CubeCode.LOGGER.error(e.getMessage());
-            }
-        }
-
         Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
-        List<CubeEvent> existingEvents = GsonManager.readJSON(eventsFile, eventListType);
+        List<CubeEvent> existingEvents = GsonManager.readJSON(this.DIRECTORY, eventListType);
 
         if (existingEvents == null) {
             existingEvents = new ArrayList<>();
@@ -174,7 +172,47 @@ public class EventManager extends DirectoryManager {
             this.registerEvent(event);
         }
 
-        GsonManager.writeJSON(eventsFile, existingEvents);
+        GsonManager.writeJSON(this.DIRECTORY, existingEvents);
+    }
+
+    public void updateEvents() {
+        Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
+        List<CubeEvent> existingEvents = GsonManager.readJSON(this.DIRECTORY, eventListType);
+
+        if (existingEvents == null) {
+            existingEvents = new ArrayList<>();
+        }
+
+        this.add(existingEvents, new CubeEvent("server_starting", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("server_started", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("server_tick_start", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("server_tick_end", new ArrayList<>()));
+
+        this.add(existingEvents, new CubeEvent("block_player_break_after", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("block_player_break_before", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("block_player_break_canceled", new ArrayList<>()));
+
+        this.add(existingEvents, new CubeEvent("player_death", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_respawn", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_attack_block", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_attack_entity", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_interact_block", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_interact_entity", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("player_interact_item", new ArrayList<>()));
+
+        this.add(existingEvents, new CubeEvent("entity_hurt", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("entity_before_death", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("entity_after_death", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("entity_killed_by_entity", new ArrayList<>()));
+
+        this.add(existingEvents, new CubeEvent("world_tick_start", new ArrayList<>()));
+        this.add(existingEvents, new CubeEvent("world_tick_end", new ArrayList<>()));
+
+        for (CubeEvent event : existingEvents) {
+            this.registerEvent(event);
+        }
+
+        GsonManager.writeJSON(this.DIRECTORY, existingEvents);
     }
 
     public static List<CubeEvent> nbtListToCubeEvents(NbtList nbtList) {

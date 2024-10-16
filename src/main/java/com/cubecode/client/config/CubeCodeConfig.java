@@ -1,6 +1,7 @@
 package com.cubecode.client.config;
 
 import com.cubecode.api.utils.GsonManager;
+import imgui.flag.ImGuiColorEditFlags;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
@@ -13,12 +14,18 @@ public class CubeCodeConfig {
     public static final Path fontsDir = configDir.resolve("fonts");
     public static final Path themesDir = configDir.resolve("themes");
 
-    private static final Path settings = configDir.resolve("settings.json");
+    public static final Path settings = configDir.resolve("settings.json");
+    public static final Path saveWindows = configDir.resolve("save_windows.json");
 
+    private static SaveWindowsConfig saveWindowsConfig;
     private static SettingsConfig settingsConfig;
 
     public static final String DEFAULT_FONT = "default";
     public static final String DEFAULT_THEME = "Catppuccin Mocha";
+
+    public static class SaveWindowsConfig {
+
+    }
 
     public static class SettingsConfig {
         public General general = new General();
@@ -39,6 +46,7 @@ public class CubeCodeConfig {
             Files.createDirectories(fontsDir);
             Files.createDirectories(themesDir);
             settingsConfig = loadOrCreate(settings, SettingsConfig.class);
+            saveWindowsConfig = loadOrCreate(saveWindows, SaveWindowsConfig.class);
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Failed to load config", e);
         }
@@ -55,8 +63,14 @@ public class CubeCodeConfig {
 
     public static void saveConfig() {
         GsonManager.writeJSON(settings.toFile(), settingsConfig);
+        GsonManager.writeJSON(saveWindows.toFile(), saveWindowsConfig);
     }
+
     public static SettingsConfig getSettingsConfig() {
         return settingsConfig;
+    }
+
+    public static SaveWindowsConfig getSaveWindowsConfig() {
+        return saveWindowsConfig;
     }
 }

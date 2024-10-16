@@ -2,6 +2,7 @@ package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Script;
+import com.cubecode.client.views.idea.utils.node.ScriptNode;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.utils.PacketByteBufUtils;
@@ -13,10 +14,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class SaveScriptC2SPacket extends AbstractPacket {
-    public Script script;
+    public ScriptNode scriptNode;
 
-    public SaveScriptC2SPacket(Script script) {
-        this.script = script;
+    public SaveScriptC2SPacket(ScriptNode scriptNode) {
+        this.scriptNode = scriptNode;
     }
 
     public SaveScriptC2SPacket() {
@@ -25,12 +26,12 @@ public class SaveScriptC2SPacket extends AbstractPacket {
 
     @Override
     public void toBytes(PacketByteBuf buf) {
-        PacketByteBufUtils.writeScript(buf, script);
+        PacketByteBufUtils.writeIdeaNode(buf, scriptNode);
     }
 
     @Override
     public void fromBytes(PacketByteBuf buf) {
-        script = PacketByteBufUtils.readScript(buf);
+        scriptNode = (ScriptNode) PacketByteBufUtils.readIdeaNode(buf);
     }
 
     @Override
@@ -41,7 +42,9 @@ public class SaveScriptC2SPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<SaveScriptC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, SaveScriptC2SPacket packet) {
-            CubeCode.scriptManager.saveScript(packet.script);
+            CubeCode.projectManager.saveScript(packet.scriptNode);
+            CubeCode.projectManager.updateIdeaNodesFromFiles();
+            CubeCode.projectManager.updateScriptsFromFiles();
         }
     }
 }

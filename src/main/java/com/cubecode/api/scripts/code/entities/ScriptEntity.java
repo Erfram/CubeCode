@@ -2,6 +2,7 @@ package com.cubecode.api.scripts.code.entities;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.registry.Registries;
@@ -100,11 +101,7 @@ public class ScriptEntity<T extends Entity> {
     }
 
     public void damage(float damage) {
-        this.damage("generic", damage);
-    }
-
-    public void damage(String damageType, float damage) {
-        this.entity.damage(this.entity.getDamageSources().create(RegistryKey.of(RegistryKeys.DAMAGE_TYPE, new Identifier(damageType))), damage);
+        this.entity.damage(this.entity.getDamageSources().generic(), damage);
     }
 
     public float getDistanceTraveled() {

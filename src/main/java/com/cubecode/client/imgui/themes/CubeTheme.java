@@ -83,7 +83,7 @@ public class CubeTheme {
     public short[] tableRowBgAlt = new short[]{255, 255, 255, 15};
     public short[] textSelectedBg = new short[]{75, 80, 101, 255};
     public short[] dragDropTarget = new short[]{255, 255, 0, 255};
-    public short[] navHighlight = new short[]{66, 150, 250, 255};
+    public short[] navHighlight = new short[]{23, 24, 35, 255};
     public short[] navWindowingHighlight = new short[]{255, 255, 255, 179};
     public short[] navWindowingDimBg = new short[]{204, 204, 204, 51};
     public short[] modalWindowDimBg = new short[]{204, 204, 204, 89};

@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ThemeManager {
     private final List<CubeTheme> themes = new ArrayList<>();
-    public String currentTheme = "Catppuccin Mocha";
+    public CubeTheme currentTheme = this.getTheme("Catppuccin Mocha");
 
     public ThemeManager() {
         themes.add(new CubeTheme("Default"));
@@ -45,7 +45,7 @@ public class ThemeManager {
             throw new RuntimeException(e);
         }
 
-        currentTheme = CubeCodeConfig.getSettingsConfig().general.appearance.theme;
+        currentTheme = this.getTheme(CubeCodeConfig.getSettingsConfig().general.appearance.theme);
     }
 
     public List<String> getThemeNames() {

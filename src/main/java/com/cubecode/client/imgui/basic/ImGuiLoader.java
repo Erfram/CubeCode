@@ -2,6 +2,7 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.themes.CubeTheme;
+import com.cubecode.client.imgui.themes.ThemeManager;
 import imgui.*;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
@@ -11,10 +12,12 @@ import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCurrentContext;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
@@ -43,16 +46,16 @@ public class ImGuiLoader {
         IMGUI_GLFW.newFrame();
         ImGui.newFrame();
 
-        CubeTheme cubeTheme = CubeCodeClient.themeManager.getTheme(CubeCodeClient.themeManager.currentTheme);
+        CubeTheme cubeTheme = CubeCodeClient.themeManager.currentTheme;
 
-        boolean isDefaultTheme = CubeCodeClient.themeManager.currentTheme.equals("Default");
-        boolean isDefaultLightTheme = CubeCodeClient.themeManager.currentTheme.equals("Default light");
-        boolean isDefaultDarkTheme = CubeCodeClient.themeManager.currentTheme.equals("Default dark");
+        boolean isDefaultTheme = CubeCodeClient.themeManager.currentTheme.equals(CubeCodeClient.themeManager.getTheme("Default"));
+        boolean isDefaultLightTheme = CubeCodeClient.themeManager.currentTheme.equals(CubeCodeClient.themeManager.getTheme("Default light"));
+        boolean isDefaultDarkTheme = CubeCodeClient.themeManager.currentTheme.equals(CubeCodeClient.themeManager.getTheme("Default dark"));
 
         if (!isDefaultTheme) {
             if (isDefaultLightTheme) {
                 ImGui.styleColorsLight();
-            } else  if (isDefaultDarkTheme) {
+            } else if (isDefaultDarkTheme) {
                 ImGui.styleColorsDark();
             } else {
                 ImGui.pushStyleVar(ImGuiStyleVar.Alpha, cubeTheme.alpha);
@@ -213,6 +216,13 @@ public class ImGuiLoader {
 
     public static List<View> getViews() {
         return RENDER_STACK.stream().toList();
+    }
+
+    public static <T extends View> List<T> getViews(Class<T> viewClass) {
+        return getViews().stream()
+                .filter(viewClass::isInstance)
+                .map(viewClass::cast)
+                .collect(Collectors.toList());
     }
 
     public static boolean isOpenView(Class<? extends View> viewClass) {

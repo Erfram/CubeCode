@@ -3,41 +3,26 @@
 
   "imgui.cubecode.dashboard.windows.title": "Windows",
   "imgui.cubecode.dashboard.settings.title": "Settings",
+  "imgui.cubecode.dashboard.debug.title": "Debug",
+  "imgui.cubecode.dashboard.dev.title": "Dev",
 
-  "imgui.cubecode.windows.codeEditor.title": "Code Editor",
-  "imgui.cubecode.windows.codeEditor.name": "Code Editor",
+  "imgui.cubecode.dashboard.saveWindows.title": "Save window layout",
 
-  "imgui.cubecode.windows.codeEditor.scripts.title": "Scripts",
-  "imgui.cubecode.windows.codeEditor.scripts.context.delete.title": "Delete",
-  "imgui.cubecode.windows.codeEditor.scripts.context.rename.title": "Rename",
+  "imgui.cubecode.windows.CubeCodeIDEA.scope": "Scope",
+  "imgui.cubecode.windows.CubeCodeIDEA.documentation": "Documentation",
+  "imgui.cubecode.windows.CubeCodeIDEA.run_script": "Run",
 
-  "imgui.cubecode.windows.codeEditor.file.title": "File",
-  "imgui.cubecode.windows.codeEditor.file.run.title": "Run",
-  "imgui.cubecode.windows.codeEditor.file.create.title": "Create",
-  "imgui.cubecode.windows.codeEditor.file.save.title": "Save",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create": "Create",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Folder",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Script",
 
-  "imgui.cubecode.windows.codeEditor.file.create.name": "Create Script",
-  "imgui.cubecode.windows.codeEditor.file.create.text.name": "Name",
-  "imgui.cubecode.windows.codeEditor.file.create.button.create.title": "Create",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Paste",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.cut": "Cut",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.copy": "Copy",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.delete": "Delete",
+  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.rename": "Rename",
 
-  "imgui.cubecode.windows.codeEditor.file.rename.name": "Rename Script",
-  "imgui.cubecode.windows.codeEditor.file.rename.text.name": "Name",
-  "imgui.cubecode.windows.codeEditor.file.rename.button.rename.title": "Rename",
-
-  "imgui.cubecode.windows.codeEditor.tools.title": "Tools",
-
-  "imgui.cubecode.windows.codeEditor.documentation.title": "Documentation",
-  "imgui.cubecode.windows.codeEditor.scope.title": "Scope viewer",
-
-  "imgui.cubecode.windows.codeEditor.edit.title": "Edit",
-  "imgui.cubecode.windows.codeEditor.edit.readOnlyMode.title": "Read-only mode",
-  "imgui.cubecode.windows.codeEditor.edit.undo.title": "Undo",
-  "imgui.cubecode.windows.codeEditor.edit.redo.title": "Redo",
-  "imgui.cubecode.windows.codeEditor.edit.copy.title": "Copy",
-  "imgui.cubecode.windows.codeEditor.edit.cut.title": "Cut",
-  "imgui.cubecode.windows.codeEditor.edit.delete.title": "Delete",
-  "imgui.cubecode.windows.codeEditor.edit.paste.title": "Paste",
-  "imgui.cubecode.windows.codeEditor.edit.save.title": "Save",
+  "imgui.cubecode.debug.styleEditor.title": "Style Editor (not worth it)",
 
   "imgui.cubecode.windows.events.title": "Events",
 
@@ -119,5 +104,18 @@
 
   "imgui.cubecode.windows.events.world_tick_end.title": "World: end ticking",
   "imgui.cubecode.windows.events.world_tick_end.description": "This event comes when the world finishes ticking.",
-  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A"
+  "imgui.cubecode.windows.events.world_tick_end.variables": "N/A",
+
+  "imgui.cubecode.windows.events.createScript": "Create",
+  "imgui.cubecode.windows.events.deleteScript": "Delete",
+  "imgui.cubecode.windows.events.selectionScript": "Select the script",
+  "imgui.cubecode.windows.events.function": "Function",
+
+  "imgui.cubecode.windows.settings.appearance": "Appearance",
+
+  "imgui.cubecode.windows.settings.appearance.theme": "Theme",
+  "imgui.cubecode.windows.settings.appearance.font": "Font",
+  "imgui.cubecode.windows.settings.appearance.font.tooltip": "After adding the font to the config, reload the game.",
+
+  "imgui.cubecode.windows.settings.general": "General"
 }
