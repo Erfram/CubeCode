@@ -16,6 +16,9 @@
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Folder",
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Script",
 
+  "imgui.cubecode.windows.CubeCodeIDEA.createView.create": "Create",
+  "imgui.cubecode.windows.CubeCodeIDEA.createView.rename": "Rename",
+
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Paste",
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.cut": "Cut",
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.copy": "Copy",

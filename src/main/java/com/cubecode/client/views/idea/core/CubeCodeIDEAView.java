@@ -39,6 +39,8 @@ public class CubeCodeIDEAView extends View {
 
     private ToolItem selectedToolItem = ToolItem.PROJECT;
 
+    private boolean isIDEAFocused = false;
+
     public CubeCodeIDEAView(CopyOnWriteArrayList<IdeaNode> nodes) {
         this.nodes = nodes;
 
@@ -152,6 +154,8 @@ public class CubeCodeIDEAView extends View {
 
         CubeImGui.imageButton(Icons.START, Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.run_script").getString(), 16, 16, () -> {
             if (this.selectedNode != null) {
+                this.saveContentScript();
+
                 Dispatcher.sendToServer(new RunScriptC2SPacket(((ScriptNode)this.selectedNode).getScript()));
             }
         });
@@ -261,6 +265,9 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void manageKeybinding() {
+        if (isIDEAFocused)
+            return;
+
         if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL)) {
             if (ImGui.isKeyPressed(GLFW.GLFW_KEY_X)) {
                 this.actionCut();
@@ -408,6 +415,9 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void actionPaste() {
+        if (this.preSelectedNode.getType() == NodeType.SCRIPT)
+            return;
+
         FolderNode folderNode = (FolderNode) this.preSelectedNode;
 
         if (this.saveNode != null) {
@@ -480,6 +490,8 @@ public class CubeCodeIDEAView extends View {
             this.codeEditor.setPalette(ScriptDefinition.getJavaScriptPalette());
 
             this.codeEditor.render("IDEA");
+
+            this.isIDEAFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
         }
     }
 

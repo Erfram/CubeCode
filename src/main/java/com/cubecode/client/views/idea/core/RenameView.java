@@ -54,8 +54,8 @@ public class RenameView extends View {
                                 .id("name")
                                 .build(),
                         Button.builder()
-                                .rxy(0.7f, 0.6f)
-                                .title(Text.translatable("imgui.cubecode.windows.codeEditor.file.rename.button.rename.title").getString())
+                                .rxy(0.5f, 0.6f)
+                                .title(Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.createView.rename").getString())
                                 .callback(() -> {
                                     String name = ((ImString) this.getVariable("name")).get();
 

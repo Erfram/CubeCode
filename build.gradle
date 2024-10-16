@@ -51,3 +51,12 @@ java {
 	sourceCompatibility = Integer.getInteger(java_version)
 	targetCompatibility = Integer.getInteger(java_version)
 }
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	setArchiveClassifier('dev')
+}
+
+artifacts {
+	archives deobfJar
+}
