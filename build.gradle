@@ -1,5 +1,6 @@
 plugins {
 	id 'fabric-loom' version '1.7-SNAPSHOT'
+	id 'maven-publish'
 }
 
 repositories {
@@ -9,6 +10,9 @@ repositories {
 			includeGroup "dev.latvian.mods"
 		}
 	}
+	maven { url 'https://jitpack.io' }
+
+	mavenCentral()
 }
 
 version = mod_version
@@ -28,6 +32,8 @@ dependencies {
 
 	include implementation("io.github.bonede:tree-sitter:0.22.6")
 	include implementation("io.github.bonede:tree-sitter-javascript:0.21.2")
+
+	implementation 'com.github.Erfram:CubeCode:Tag'
 }
 
 processResources {
@@ -48,6 +54,7 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
 	withSourcesJar()
+	withJavadocJar()
 	sourceCompatibility = Integer.getInteger(java_version)
 	targetCompatibility = Integer.getInteger(java_version)
 }
@@ -59,4 +66,12 @@ task deobfJar(type: Jar) {
 
 artifacts {
 	archives deobfJar
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
 }

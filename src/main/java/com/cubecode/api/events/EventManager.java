@@ -2,6 +2,7 @@ package com.cubecode.api.events;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
+import com.cubecode.api.scripts.Script;
 import com.cubecode.api.scripts.code.ScriptEvent;
 import com.cubecode.api.utils.DirectoryManager;
 import com.cubecode.api.utils.GsonManager;
@@ -92,7 +93,11 @@ public class EventManager extends DirectoryManager {
 
             newScriptEvent.setValues(scriptEvent.getValues());
 
-            CubeCode.projectManager.getScript(eventScript.name).run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
+            Script script = CubeCode.projectManager.getScript(eventScript.name);
+
+            if (script != null) {
+                script.run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
+            }
         } catch (CubeCodeException e) {
             CubeCode.LOGGER.error("Error executing script: {} - {}", eventScript.name, e.getMessage());
             //В консоль
