@@ -1,5 +1,6 @@
 package com.cubecode.client.imgui.components;
 
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -57,6 +58,7 @@ public class Window {
 		if (ImGui.begin(this.title, close, this.flags)) {
 			if (!close.get()) {
 				this.onExit.run();
+				CubeCodeClient.windowStateManager.removeSessionWindow(view);
 				ImGuiLoader.removeView(view);
 			} else {
 				CubeImGui.manageDocking(view);

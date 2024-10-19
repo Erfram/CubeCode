@@ -2,6 +2,7 @@ package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.files.FileManager;
+import com.cubecode.api.scripts.code.JavaScriptUtils;
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.api.utils.DirectoryManager;
@@ -40,6 +41,7 @@ public class ProjectManager extends DirectoryManager {
 
         globalScope.set("CubeCode", new ScriptFactory());
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
+        globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
 
         this.updateScriptsFromFiles();
         this.updateIdeaNodesFromFiles();

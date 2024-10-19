@@ -120,6 +120,7 @@ public class ScriptDefinition {
         identifiers.put("WeakMap", "A WeakMap is a collection of key/value pairs whose keys must be objects or non-registered symbols, with values of any arbitrary JavaScript type, and which does not create strong references to its keys. That is, an object's presence as a key in a WeakMap does not prevent the object from being garbage collected. Once an object used as a key has been collected, its corresponding values in any WeakMap become candidates for garbage collection as well — as long as they aren't strongly referred to elsewhere. The only primitive type that can be used as a WeakMap key is symbol — more specifically, non-registered symbols — because non-registered symbols are guaranteed to be unique and cannot be re-created.");
         identifiers.put("JavaAdapter", "Mechanism for implementing Java interfaces and inheritance of Java classes in JavaScript code. Allows you to create JavaScript objects that can be used as Java objects.");
         identifiers.put("Java", "Global object for working with Java classes");
+        identifiers.put("JavaScript", "The global object provides functionality for scripting.");
         identifiers.put("CubeCode", "Utility Global object that is needed to create something (vector, matrix), or it contains utility methods");
 
 //        regex.put(collectRegex(declarations), TextEditorPaletteIndex.Preprocessor); // DECLARATIONS

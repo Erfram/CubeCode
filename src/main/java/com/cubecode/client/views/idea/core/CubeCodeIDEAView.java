@@ -453,25 +453,28 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void actionDelete() {
-        String path = this.preSelectedNode.getPath();
-        String parent = path.substring(0, path.lastIndexOf("/"));
-        for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
-            IdeaNode nodeByPath = NodeUtils.findNodeByPath(view.nodes, parent);
+        if (this.preSelectedNode != null) {
+            String path = this.preSelectedNode.getPath();
+            String parent = path.substring(0, path.lastIndexOf("/"));
 
-            if (nodeByPath != null) {
-                ((FolderNode)nodeByPath).removeChild(this.preSelectedNode);
-            } else {
-                view.nodes.remove(this.preSelectedNode);
+            Dispatcher.sendToServer(new DeleteElementC2SPacket(path, this.preSelectedNode.getType()));
+
+            for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
+                IdeaNode nodeByPath = NodeUtils.findNodeByPath(view.nodes, parent);
+
+                if (nodeByPath != null) {
+                    ((FolderNode)nodeByPath).removeChild(this.preSelectedNode);
+                } else {
+                    view.nodes.remove(this.preSelectedNode);
+                }
+
+                if (view.preSelectedNode == view.selectedNode) {
+                    view.selectedNode = null;
+                }
+
+                view.preSelectedNode = null;
             }
-
-            if (view.preSelectedNode == view.selectedNode) {
-                view.selectedNode = null;
-            }
-
-            view.preSelectedNode = null;
         }
-
-        Dispatcher.sendToServer(new DeleteElementC2SPacket(this.preSelectedNode.getPath(), this.preSelectedNode.getType()));
     }
 
     private void actionRename() {

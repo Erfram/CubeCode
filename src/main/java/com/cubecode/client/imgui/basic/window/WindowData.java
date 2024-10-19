@@ -1,4 +1,4 @@
-package com.cubecode.client.imgui.basic;
+package com.cubecode.client.imgui.basic.window;
 
 public class WindowData {
     private float[] position;

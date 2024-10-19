@@ -1,7 +1,7 @@
 package com.cubecode;
 
 import com.cubecode.client.config.CubeCodeConfig;
-import com.cubecode.client.imgui.basic.WindowStateManager;
+import com.cubecode.client.imgui.basic.window.WindowStateManager;
 import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.content.CubeCodeKeyBindings;
@@ -26,6 +26,5 @@ public class CubeCodeClient implements ClientModInitializer {
         fontManager = new FontManager();
         themeManager = new ThemeManager();
         themeManager.loadThemes();
-        windowStateManager = new WindowStateManager();
     }
 }

@@ -7,6 +7,7 @@ import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
+import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.PacketByteBufUtils;
 import dev.latvian.mods.rhino.Scriptable;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -53,7 +54,11 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestScriptScopeC2SPacket packet) {
             Script script = packet.script;
-            script.evaluate();
+            try {
+                script.evaluate();
+            } catch (CubeCodeException ignored) {
+                player.closeHandledScreen();
+            }
             ArrayList<Scriptable> scopes = new ArrayList<>();
             scopes.add(script.scope);
             Scriptable parentScope = script.scope.getParentScope();

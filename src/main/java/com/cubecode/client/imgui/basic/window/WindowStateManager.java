@@ -1,8 +1,10 @@
-package com.cubecode.client.imgui.basic;
+package com.cubecode.client.imgui.basic.window;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.api.utils.GsonManager;
 import com.cubecode.client.config.CubeCodeConfig;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
+import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.views.DashboardView;
 import com.cubecode.client.views.EventsView;
 import com.cubecode.client.views.SettingsView;
@@ -15,9 +17,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WindowStateManager {
@@ -41,6 +41,10 @@ public class WindowStateManager {
 
     public void addSessionWindow(View view, WindowData windowData) {
         sessionWindows.put(view, windowData);
+    }
+
+    public void removeSessionWindow(View view) {
+        sessionWindows.remove(view);
     }
 
     public Map<Class<? extends View>, Runnable> getWindows() {

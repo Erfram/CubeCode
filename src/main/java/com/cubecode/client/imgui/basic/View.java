@@ -1,6 +1,7 @@
 package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
+import com.cubecode.client.imgui.basic.window.WindowData;
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
 import imgui.ImGui;
 import imgui.ImVec2;

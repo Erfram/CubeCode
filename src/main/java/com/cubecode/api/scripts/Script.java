@@ -27,13 +27,16 @@ public class Script {
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
-            throw new CubeCodeException(errorType + ": " + details + "\n" + "line: " + e.lineNumber() + ", column: " + e.columnNumber(), sourceName);
+            throw new CubeCodeException(errorType + ": " + details + "\n" +
+                    "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
+                    "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", ""), sourceName
+            );
         } catch (Exception e) {
             throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
         }
     }
 
-    public void evaluate() {
+    public void evaluate() throws CubeCodeException {
         this.context = Context.enter();
         this.scope = new ScriptScope(name, this.context);
         this.scope.setParentScope(ProjectManager.globalScope);
