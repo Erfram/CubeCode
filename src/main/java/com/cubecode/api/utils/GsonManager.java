@@ -45,4 +45,8 @@ public class GsonManager {
     public static <T> T readJSON(String json, Class<T> clazz) {
         return GSON.fromJson(json, clazz);
     }
+
+    public static String toJson(Object object) {
+        return GSON.toJson(object);
+    }
 }

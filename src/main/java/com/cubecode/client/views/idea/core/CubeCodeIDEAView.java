@@ -32,8 +32,8 @@ public class CubeCodeIDEAView extends View {
 
     public final CopyOnWriteArrayList<IdeaNode> nodes;
 
-    private IdeaNode preSelectedNode;
-    private IdeaNode selectedNode;
+    public IdeaNode preSelectedNode;
+    public IdeaNode selectedNode;
 
     private IdeaNode saveNode;
 
@@ -49,16 +49,11 @@ public class CubeCodeIDEAView extends View {
 
     public void sortNodes() {
         Comparator<IdeaNode> comparator = (node1, node2) -> {
-            boolean isDir1 = node1.getName().split("/").length > 1;
-            boolean isDir2 = node2.getName().split("/").length > 1;
-
-            boolean isDir3 = !node1.getName().contains(".");
-            boolean isDir4 = !node2.getName().contains(".");
+            boolean isDir1 = node1.getType() == NodeType.FOLDER;
+            boolean isDir2 = node2.getType() == NodeType.FOLDER;
 
             if (isDir1 && !isDir2) return -1;
             if (!isDir1 && isDir2) return 1;
-            if (isDir3 && !isDir4) return -1;
-            if (!isDir3 && isDir4) return 1;
 
             return node1.getName().compareToIgnoreCase(node2.getName());
         };
@@ -296,7 +291,9 @@ public class CubeCodeIDEAView extends View {
             for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
                 ScriptNode scriptNode = (ScriptNode) NodeUtils.findNodeByPath(view.nodes, this.selectedNode.getPath());
 
-                scriptNode.setScript(new Script(scriptNode.getScript().name, this.codeEditor.getText().replaceAll("\\n+$", "")));
+                if (scriptNode != null) {
+                    scriptNode.setScript(new Script(scriptNode.getScript().name, this.codeEditor.getText().replaceAll("\\n+$", "")));
+                }
             }
 
             Dispatcher.sendToServer(new SaveScriptC2SPacket((ScriptNode) this.selectedNode));
@@ -448,11 +445,7 @@ public class CubeCodeIDEAView extends View {
     private void actionCut() {
         this.saveNode = this.preSelectedNode;
 
-        for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
-            view.nodes.remove(this.preSelectedNode);
-        }
-
-        Dispatcher.sendToServer(new DeleteElementC2SPacket(this.preSelectedNode.getPath(), this.preSelectedNode.getType()));
+        actionDelete();
     }
 
     private void actionSave() {
@@ -470,6 +463,12 @@ public class CubeCodeIDEAView extends View {
             } else {
                 view.nodes.remove(this.preSelectedNode);
             }
+
+            if (view.preSelectedNode == view.selectedNode) {
+                view.selectedNode = null;
+            }
+
+            view.preSelectedNode = null;
         }
 
         Dispatcher.sendToServer(new DeleteElementC2SPacket(this.preSelectedNode.getPath(), this.preSelectedNode.getType()));

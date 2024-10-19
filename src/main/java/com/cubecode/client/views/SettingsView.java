@@ -11,6 +11,7 @@ import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.flag.ImGuiSelectableFlags;
+import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -20,10 +21,6 @@ import java.util.*;
 public class SettingsView extends View {
     private final int viewWidth = 960;
     private final int viewHeight = 540;
-
-    private final Map<String, Map<String, Runnable>> settings = new LinkedHashMap<>();
-
-    private int selectedSettingIndex = -1;
 
     private Runnable selectedSetting = () -> {};
 
@@ -37,12 +34,6 @@ public class SettingsView extends View {
 
     @Override
     public void init() {
-        Map<String, Runnable> general = new LinkedHashMap<>();
-
-        general.put(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), this::renderAppearanceContent);
-
-        settings.put(Text.translatable("imgui.cubecode.windows.settings.general").getString(), general);
-
         float posX = (windowWidth - viewWidth) * 0.5f;
         float posY = (windowHeight - viewHeight) * 0.5f;
 
@@ -71,28 +62,17 @@ public class SettingsView extends View {
     }
 
     private void renderSettingsPane() {
-        int globalIndex = 0;
-        for (Map.Entry<String, Map<String, Runnable>> category : settings.entrySet()) {
-            ImGui.spacing();
-            ImGui.spacing();
-
-            CubeImGui.textMutable(Text.translatable(category.getKey()).formatted(Formatting.GRAY));
-
-            ImGui.spacing();
-            ImGui.spacing();
-
-            for (Map.Entry<String, Runnable> setting : category.getValue().entrySet()) {
-                if (ImGui.selectable(" " + setting.getKey(), selectedSettingIndex == globalIndex, ImGuiSelectableFlags.None)) {
-                    selectedSettingIndex = globalIndex;
-                    selectedSetting = setting.getValue();
-                }
-                globalIndex++;
-
-            }
-        }
+        CubeImGui.treeNodeEx(Text.translatable("imgui.cubecode.windows.settings.general").getString(), Icons.FLAG, ImGuiTreeNodeFlags.SpanAvailWidth, () -> {
+            CubeImGui.selectable(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), false, Icons.APPEARANCE, 0, () -> {
+                selectedSetting = this::renderAppearanceContent;
+            });
+        });
     }
 
     private void renderAppearanceContent() {
+        ImGui.image(Icons.THEME.getGlId(), 16, 16);
+        ImGui.sameLine();
+
         ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.theme").getString()+": ");
         ImGui.sameLine();
 
@@ -102,6 +82,9 @@ public class SettingsView extends View {
             CubeCodeClient.themeManager.currentTheme = CubeCodeClient.themeManager.getTheme(th);
         });
 
+        ImGui.image(Icons.LLAMA.getGlId(), 16, 16);
+        ImGui.sameLine();
+
         ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.font").getString()+": ");
         ImGui.sameLine();
 
@@ -110,7 +93,7 @@ public class SettingsView extends View {
             CubeCodeClient.fontManager.currentFontName = fonts.get(((ImInt) this.getVariable("##Fonts" + this.getUniqueID())).get());
         });
 
-        ImGui.sameLine(0, 0);
+        ImGui.sameLine();
         ImGui.image(Icons.INFO.getGlId(), 21, 21);
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();

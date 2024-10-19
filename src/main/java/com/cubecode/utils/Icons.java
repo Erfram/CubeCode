@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 
 public enum Icons {
     APPEARANCE(),
+    THEME(),
     BLOCK(),
     BLOCK_ENTITY(),
     CLIPBOARD(),

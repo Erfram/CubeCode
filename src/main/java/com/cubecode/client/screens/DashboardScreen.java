@@ -11,7 +11,6 @@ import com.cubecode.client.imgui.basic.ImGuiLoader;
 public class DashboardScreen extends Screen {
     public DashboardScreen() {
         super(Text.of("Dashboard"));
-        ImGui.getIO().addConfigFlags(ImGuiConfigFlags.DockingEnable);
         ImGuiLoader.pushView(new DashboardView());
     }
 

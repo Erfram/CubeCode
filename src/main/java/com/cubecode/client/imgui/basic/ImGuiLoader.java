@@ -4,6 +4,7 @@ import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.themes.CubeTheme;
 import com.cubecode.client.imgui.themes.ThemeManager;
 import imgui.*;
+import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiStyleVar;
@@ -26,15 +27,17 @@ public class ImGuiLoader {
     public static final ImGuiImplGlfw IMGUI_GLFW = new ImGuiImplGlfw();
     private static final ImGuiImplGl3 IMGUI_GL3 = new ImGuiImplGl3();
     private static final ConcurrentLinkedQueue<View> RENDER_STACK = new ConcurrentLinkedQueue<>();
-    private static ImFont MAIN_FONT;
 
     public static void onGlfwInit(long handle) {
         ImGui.createContext();
         final ImGuiIO io = ImGui.getIO();
 
-        CubeCodeClient.fontManager.loadFonts();
+        io.addConfigFlags(ImGuiConfigFlags.NavEnableSetMousePos);
+        io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
+        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+        io.addBackendFlags(ImGuiBackendFlags.HasSetMousePos);
 
-        MAIN_FONT = CubeCodeClient.fontManager.fonts.get("default");
+        CubeCodeClient.fontManager.loadFonts();
 
         io.setIniFilename(null);
 

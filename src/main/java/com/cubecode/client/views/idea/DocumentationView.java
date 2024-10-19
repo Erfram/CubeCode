@@ -63,7 +63,7 @@ public class DocumentationView extends View {
 
     @Override
     public String getName() {
-        return String.format(Text.translatable("imgui.cubecode.windows.codeEditor.documentation.title").getString()+"##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.documentation").getString()+"##%s", uniqueID);
     }
 
     @Override

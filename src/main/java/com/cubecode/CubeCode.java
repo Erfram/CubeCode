@@ -30,6 +30,8 @@ public class CubeCode implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.info("CubeCode Loaded!");
+        
         EventHandler.init();
         Dispatcher.register();
     }

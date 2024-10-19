@@ -63,7 +63,6 @@ public class CubeCodeConfig {
 
     public static void saveConfig() {
         GsonManager.writeJSON(settings.toFile(), settingsConfig);
-        GsonManager.writeJSON(saveWindows.toFile(), saveWindowsConfig);
     }
 
     public static SettingsConfig getSettingsConfig() {

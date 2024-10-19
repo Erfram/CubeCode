@@ -10,7 +10,6 @@ repositories {
 			includeGroup "dev.latvian.mods"
 		}
 	}
-	maven { url 'https://jitpack.io' }
 
 	mavenCentral()
 }
@@ -32,8 +31,6 @@ dependencies {
 
 	include implementation("io.github.bonede:tree-sitter:0.22.6")
 	include implementation("io.github.bonede:tree-sitter-javascript:0.21.2")
-
-	implementation 'com.github.Erfram:CubeCode:Tag'
 }
 
 processResources {
@@ -66,12 +63,4 @@ task deobfJar(type: Jar) {
 
 artifacts {
 	archives deobfJar
-}
-
-publishing {
-	publications {
-		maven(MavenPublication) {
-			from components.java
-		}
-	}
 }

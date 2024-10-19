@@ -4,6 +4,10 @@ import com.cubecode.CubeCodeClient;
 import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.basic.View;
+import com.cubecode.client.views.idea.utils.ScriptDefinition;
+import com.cubecode.client.views.idea.utils.node.FolderNode;
+import com.cubecode.client.views.idea.utils.node.IdeaNode;
+import com.cubecode.client.views.idea.utils.node.ScriptNode;
 import com.cubecode.utils.Icons;
 import imgui.ImDrawList;
 import imgui.ImGui;
@@ -11,6 +15,8 @@ import imgui.ImVec2;
 import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiMouseCursor;
+import imgui.flag.ImGuiSelectableFlags;
+import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -398,27 +404,32 @@ public class CubeImGui {
      */
     public static void manageDocking(View view) {
         boolean isDocked = ImGui.isWindowDocked();
+        String uniqueID = view.getUniqueID().toString();
+        String widthKey = "width_" + uniqueID;
+        String heightKey = "height_" + uniqueID;
+        String dockedKey = "docked_" + uniqueID;
 
-        view.putVariable(view.getUniqueID().toString(), false);
-        view.putVariable("width_"+view.getUniqueID().toString(), 0F);
-        view.putVariable("height_"+view.getUniqueID().toString(), 0F);
+        // Получаем текущее состояние и размеры окна
+        boolean wasDocked = view.getVariable(dockedKey) != null ? view.getVariable(dockedKey) : false;
+        float undockedWidth = view.getVariable(widthKey) != null ? view.getVariable(widthKey) : 0F;
+        float undockedHeight = view.getVariable(heightKey) != null ? view.getVariable(heightKey) : 0F;
 
-        boolean wasDocked = view.getVariable(view.getUniqueID().toString());
-
-        float undockedWidth = view.getVariable("width_"+view.getUniqueID().toString());
-        float undockedHeight = view.getVariable("height_"+view.getUniqueID().toString());
-
+        // Если окно было закреплено и теперь откреплено, восстановить размеры и установить позицию окна к курсору
         if (wasDocked && !isDocked) {
             ImGui.setWindowSize(undockedWidth, undockedHeight);
+            ImGui.setWindowPos(ImGui.getMousePosX(), ImGui.getMousePosY());
         }
 
+        // Если окно не закреплено, сохранить его текущие размеры
         if (!isDocked) {
-            view.setVariable("width_"+view.getUniqueID().toString(), ImGui.getWindowWidth());
-            view.setVariable("height_"+view.getUniqueID().toString(), ImGui.getWindowHeight());
+            view.setVariable(widthKey, ImGui.getWindowWidth());
+            view.setVariable(heightKey, ImGui.getWindowHeight());
         }
 
-        view.setVariable(view.getUniqueID().toString(), isDocked);
+        // Обновить статус закрепления
+        view.setVariable(dockedKey, isDocked);
     }
+
 
     public static void imageButton(Icons icon, String tooltip, float sizeX, float sizeY, Runnable imageButtonAction) {
         if (ImGui.imageButton(icon.getGlId(), sizeX, sizeY)) {
@@ -567,5 +578,104 @@ public class CubeImGui {
 
     public static void horizontalSplitter(View view, String splitterId, float availableWidth, float availableHeight) {
         horizontalSplitter(view, splitterId, 4, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
+    }
+
+    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction, Runnable rightClickAction) {
+        boolean treeProject = ImGui.treeNodeEx("##"+treeId, imGuiTreeNodeFlags);
+
+        if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+            rightClickAction.run();
+        }
+
+        ImGui.sameLine(0, 9);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (treeProject) {
+            treeNodeAction.run();
+            ImGui.treePop();
+        }
+    }
+
+    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction) {
+        boolean treeProject = ImGui.treeNodeEx("##"+treeId, imGuiTreeNodeFlags);
+
+        ImGui.sameLine(0, 9);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (treeProject) {
+            treeNodeAction.run();
+            ImGui.treePop();
+        }
+    }
+
+    public static void treeNodeEx(String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction) {
+        boolean treeProject = ImGui.treeNodeEx("##"+label, imGuiTreeNodeFlags);
+
+        ImGui.sameLine(0, 9);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (treeProject) {
+            treeNodeAction.run();
+            ImGui.treePop();
+        }
+    }
+
+    public static void selectable(String selectableId, String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable rightClickAction, Runnable selectableAction) {
+        boolean selectableScript = ImGui.selectable("##"+selectableId, isSelected, imGuiSelectableFlags);
+
+        if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+            rightClickAction.run();
+        }
+
+        ImGui.sameLine(0, 25);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (selectableScript) {
+            selectableAction.run();
+        }
+    }
+
+    public static void selectable(String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable rightClickAction, Runnable selectableAction) {
+        boolean selectableScript = ImGui.selectable("##"+label, isSelected, imGuiSelectableFlags);
+
+        if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+            rightClickAction.run();
+        }
+
+        ImGui.sameLine(0, 25);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (selectableScript) {
+            selectableAction.run();
+        }
+    }
+
+    public static void selectable(String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable selectableAction) {
+        boolean selectableScript = ImGui.selectable("##"+label, isSelected, imGuiSelectableFlags);
+
+        ImGui.sameLine(0, 18);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (selectableScript) {
+            selectableAction.run();
+        }
     }
 }

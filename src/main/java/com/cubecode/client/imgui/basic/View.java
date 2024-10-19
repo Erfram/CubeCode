@@ -1,6 +1,6 @@
 package com.cubecode.client.imgui.basic;
 
-
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -73,6 +73,17 @@ public abstract class View {
     protected final void loop() {
         if (!isInit) {
             this.init();
+
+            WindowData windowData = CubeCodeClient.windowStateManager.getSessionWindowData(this);
+
+            if (windowData != null) {
+                ImGui.setNextWindowPos(windowData.getPosition()[0], windowData.getPosition()[1]);
+                ImGui.setNextWindowSize(windowData.getSize()[0], windowData.getSize()[1]);
+                ImGui.setNextWindowCollapsed(windowData.isCollapsed());
+            } else if (CubeCodeClient.windowStateManager.hasWindow(this.getClass())) {
+                CubeCodeClient.windowStateManager.applyWindowState(this.getClass());
+            }
+
             this.isInit = true;
         }
 
