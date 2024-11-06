@@ -34,7 +34,9 @@ public class DashboardView extends View {
             });
 
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {
-                CubeImGui.menuItem(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> ImGuiLoader.pushView(new SettingsView()));
+                CubeImGui.menuItem(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {
+                    ImGuiLoader.pushView(new SettingsView());
+                });
             });
 
             float windowWidth = ImGui.getWindowWidth();
@@ -55,6 +57,8 @@ public class DashboardView extends View {
 
     @Override
     public void onClose() {
+        CubeCodeClient.windowStateManager.clearSessionWindows();
+
         for (View view : ImGuiLoader.getViews()) {
             if (view instanceof DashboardView)
                 continue;

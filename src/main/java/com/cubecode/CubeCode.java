@@ -19,7 +19,6 @@ public class CubeCode implements ModInitializer {
     public static File factoryDirectory;
     public static File contentDirectory;
 
-    public static FileManager fileManager;
     public static ProjectManager projectManager;
     public static EventManager eventManager;
 

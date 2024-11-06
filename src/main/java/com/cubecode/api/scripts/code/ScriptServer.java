@@ -88,6 +88,6 @@ public class ScriptServer {
                 this
         ));
 
-        CubeCode.projectManager.evalCode(CubeCode.projectManager.getScript(scriptName).code, scriptName, properties);
+        CubeCode.projectManager.evalCode(CubeCode.projectManager.getScript(scriptName).getCode(), scriptName, properties);
     }
 }

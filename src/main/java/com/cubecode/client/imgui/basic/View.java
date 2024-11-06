@@ -3,6 +3,7 @@ package com.cubecode.client.imgui.basic;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.basic.window.WindowData;
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
+import com.cubecode.client.views.TestView;
 import imgui.ImGui;
 import imgui.ImVec2;
 import net.minecraft.client.MinecraftClient;
@@ -75,14 +76,16 @@ public abstract class View {
         if (!isInit) {
             this.init();
 
-            WindowData windowData = CubeCodeClient.windowStateManager.getSessionWindowData(this);
+            if (!(this instanceof TestView)) {
+                WindowData windowData = CubeCodeClient.windowStateManager.getSessionWindowData(this);
 
-            if (windowData != null) {
-                ImGui.setNextWindowPos(windowData.getPosition()[0], windowData.getPosition()[1]);
-                ImGui.setNextWindowSize(windowData.getSize()[0], windowData.getSize()[1]);
-                ImGui.setNextWindowCollapsed(windowData.isCollapsed());
-            } else if (CubeCodeClient.windowStateManager.hasWindow(this.getClass())) {
-                CubeCodeClient.windowStateManager.applyWindowState(this.getClass());
+                if (windowData != null) {
+                    ImGui.setNextWindowPos(windowData.getPosition()[0], windowData.getPosition()[1]);
+                    ImGui.setNextWindowSize(windowData.getSize()[0], windowData.getSize()[1]);
+                    ImGui.setNextWindowCollapsed(windowData.isCollapsed());
+                } else if (CubeCodeClient.windowStateManager.hasWindow(this.getClass())) {
+                    CubeCodeClient.windowStateManager.applyWindowState(this.getClass());
+                }
             }
 
             this.isInit = true;

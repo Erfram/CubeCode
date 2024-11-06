@@ -2,13 +2,14 @@ package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.PacketByteBufUtils;
+import com.cubecode.utils.Script;
 import dev.latvian.mods.rhino.Scriptable;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.nbt.NbtCompound;
@@ -24,13 +25,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RequestScriptScopeC2SPacket extends AbstractPacket {
-    public Script script;
+    public ServerScript script;
 
     public RequestScriptScopeC2SPacket() {
 
     }
 
-    public RequestScriptScopeC2SPacket(Script script) {
+    public RequestScriptScopeC2SPacket(ServerScript script) {
         this.script = script;
     }
 
@@ -53,7 +54,7 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
 
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestScriptScopeC2SPacket packet) {
-            Script script = packet.script;
+            ServerScript script = (ServerScript) packet.script;
             try {
                 script.evaluate();
             } catch (CubeCodeException ignored) {

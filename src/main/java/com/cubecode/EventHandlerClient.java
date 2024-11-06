@@ -2,6 +2,7 @@ package com.cubecode;
 
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.basic.window.WindowStateManager;
+import com.cubecode.client.scripts.ClientProjectManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

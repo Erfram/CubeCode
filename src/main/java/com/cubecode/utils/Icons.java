@@ -13,6 +13,7 @@ public enum Icons {
     BLOCK(),
     BLOCK_ENTITY(),
     CLIPBOARD(),
+    CLIENT(),
     CUBECODE(),
     EMPTY(),
     ENTITY(),

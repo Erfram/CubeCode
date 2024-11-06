@@ -44,6 +44,16 @@ public enum Extension {
         return languageDefinition;
     }
 
+    public static Extension getExtension(String name) {
+        for (Extension extension : Extension.values()) {
+            if (extension.getName().equals(name)) {
+                return extension;
+            }
+        }
+
+        return UNKNOWN;
+    }
+
     public static boolean containsName(String name) {
         if (name == null) {
             return false;

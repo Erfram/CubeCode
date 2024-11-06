@@ -1,6 +1,6 @@
 package com.cubecode.client.views.idea.utils.node;
 
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.views.idea.utils.Extension;
 
 import java.util.ArrayList;
@@ -66,11 +66,11 @@ public class NodeUtils {
         return false;
     }
 
-    public static List<IdeaNode> scriptsToIdeaNodes(List<Script> scripts) {
+    public static List<IdeaNode> scriptsToIdeaNodes(List<ServerScript> scripts) {
         List<IdeaNode> nodes = new ArrayList<>();
 
-        for (Script script : scripts) {
-            String[] pathParts = script.name.split("/");
+        for (ServerScript script : scripts) {
+            String[] pathParts = script.getName().split("/");
             String scriptName = pathParts[pathParts.length - 1];
 
             FolderNode currentFolder = null;
@@ -82,7 +82,7 @@ public class NodeUtils {
                 currentFolder = findOrCreateFolder(currentFolder == null ? nodes : currentFolder.getChildren(), folderName, currentPath.toString());
             }
 
-            script.name = scriptName;
+            script.setName(scriptName);
             ScriptNode scriptNode = new ScriptNode(script, Extension.JAVASCRIPT);
             scriptNode.setPath(currentPath + "/" + scriptName);
 

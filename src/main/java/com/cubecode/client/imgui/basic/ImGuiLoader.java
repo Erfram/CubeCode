@@ -2,7 +2,6 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.themes.CubeTheme;
-import com.cubecode.client.imgui.themes.ThemeManager;
 import imgui.*;
 import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiCol;
@@ -13,10 +12,8 @@ import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
@@ -26,7 +23,10 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 public class ImGuiLoader {
     public static final ImGuiImplGlfw IMGUI_GLFW = new ImGuiImplGlfw();
     private static final ImGuiImplGl3 IMGUI_GL3 = new ImGuiImplGl3();
+
     private static final ConcurrentLinkedQueue<View> RENDER_STACK = new ConcurrentLinkedQueue<>();
+
+    public static final ImGuiFrameBuffer frameBuffer = new ImGuiFrameBuffer();
 
     public static void onGlfwInit(long handle) {
         ImGui.createContext();
@@ -145,7 +145,13 @@ public class ImGuiLoader {
             ImGui.styleColorsClassic();
         }
 
-        ImGui.pushFont(CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName));
+        ImFont font = CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName);
+
+        if (font == null) {
+            font = CubeCodeClient.fontManager.fonts.get("default");
+        }
+
+        ImGui.pushFont(font);
 
         renderViews();
 

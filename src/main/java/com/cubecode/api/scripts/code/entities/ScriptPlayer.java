@@ -1,7 +1,10 @@
 package com.cubecode.api.scripts.code.entities;
 
 import com.cubecode.api.scripts.code.items.ScriptInventory;
-import net.minecraft.entity.player.PlayerEntity;
+import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.RunScriptPacket;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
@@ -18,12 +21,12 @@ import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.ScriptWorld;
 import com.cubecode.api.scripts.code.cubecode.CubeCodeStates;
 
-public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
-    public ScriptPlayer(PlayerEntity entity) {
+public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
+    public ScriptPlayer(ServerPlayerEntity entity) {
         super(entity);
     }
 
-    public PlayerEntity getMinecraftPlayer() {
+    public ServerPlayerEntity getMinecraftPlayer() {
         return this.entity;
     }
 
@@ -37,7 +40,7 @@ public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
 
     @Override
     public void setRotations(float pitch, float yaw, float headYaw) {
-        ((ServerPlayerEntity)this.entity).networkHandler.requestTeleport(
+        this.entity.networkHandler.requestTeleport(
                 this.getPosition().x,
                 this.getPosition().y,
                 this.getPosition().z,
@@ -49,13 +52,13 @@ public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
     @Override
     public void setVelocity(double x, double y, double z) {
         super.setVelocity(x, y, z);
-        ((ServerPlayerEntity)this.entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(this.entity));
+        this.entity.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(this.entity));
     }
 
     @Override
     public void addVelocity(double x, double y, double z) {
         super.addVelocity(x, y, z);
-        ((ServerPlayerEntity)this.entity).networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(this.entity));
+        this.entity.networkHandler.sendPacket(new EntityVelocityUpdateS2CPacket(this.entity));
     }
 
     public void executeCommand(String command) {
@@ -63,27 +66,27 @@ public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
     }
 
     public String getGameMode() {
-        return ((ServerPlayerEntity)this.entity).interactionManager.getGameMode().getName();
+        return this.entity.interactionManager.getGameMode().getName();
     }
 
     public void setGameMode(String gameMode) {
-        ((ServerPlayerEntity)this.entity).changeGameMode(GameMode.byName(gameMode));
+        this.entity.changeGameMode(GameMode.byName(gameMode));
     }
 
     public void setSpawnPoint() {
-        ((ServerPlayerEntity)this.entity).setSpawnPoint(this.entity.getWorld().getRegistryKey(), this.entity.getBlockPos(), 0, true, false);
+        this.entity.setSpawnPoint(this.entity.getWorld().getRegistryKey(), this.entity.getBlockPos(), 0, true, false);
     }
 
     public void setSpawnPoint(int x, int y, int z, float angle) {
-        ((ServerPlayerEntity)this.entity).setSpawnPoint(this.entity.getWorld().getRegistryKey(), new BlockPos(x, y, z), angle, true, false);
+        this.entity.setSpawnPoint(this.entity.getWorld().getRegistryKey(), new BlockPos(x, y, z), angle, true, false);
     }
 
     public void setSpawnPoint(ScriptWorld world, int x, int y, int z, float angle) {
-        ((ServerPlayerEntity)this.entity).setSpawnPoint(world.getMinecraftWorld().getRegistryKey(), new BlockPos(x, y, z), angle, true, false);
+        this.entity.setSpawnPoint(world.getMinecraftWorld().getRegistryKey(), new BlockPos(x, y, z), angle, true, false);
     }
 
     public ScriptVector getSpawnPoint() {
-        BlockPos pos = ((ServerPlayerEntity)this.entity).getSpawnPointPosition();
+        BlockPos pos = this.entity.getSpawnPointPosition();
         return new ScriptVector(pos == null ? this.entity.getWorld().getSpawnPos() : pos);
     }
 
@@ -108,14 +111,18 @@ public class ScriptPlayer extends ScriptEntity<PlayerEntity> {
     }
 
     public void playStaticSound(String soundEvent, String soundCategory, double x, double y, double z, float volume, float pitch) {
-        ((ServerPlayerEntity)this.entity).networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(SoundEvent.of(new Identifier(soundEvent))), SoundCategory.valueOf(soundCategory), x, y, z, volume, pitch, RandomSeed.getSeed()));
+        this.entity.networkHandler.sendPacket(new PlaySoundS2CPacket(RegistryEntry.of(SoundEvent.of(new Identifier(soundEvent))), SoundCategory.valueOf(soundCategory), x, y, z, volume, pitch, RandomSeed.getSeed()));
     }
 
     public void stopStaticSound(String soundId, String soundCategory) {
-        ((ServerPlayerEntity)this.entity).networkHandler.sendPacket(new StopSoundS2CPacket(new Identifier(soundId), SoundCategory.valueOf(soundCategory)));
+        this.entity.networkHandler.sendPacket(new StopSoundS2CPacket(new Identifier(soundId), SoundCategory.valueOf(soundCategory)));
     }
 
     public ScriptInventory getInventory() {
         return new ScriptInventory(this.entity.getInventory());
+    }
+
+    public void sendTo(String script, ScriptNbtCompound nbt) {
+        Dispatcher.sendTo(new RunScriptPacket(script, nbt.getMinecraftNbtCompound()), this.entity);
     }
 }

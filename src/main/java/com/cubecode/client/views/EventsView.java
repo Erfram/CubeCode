@@ -2,13 +2,14 @@ package com.cubecode.client.views;
 
 import com.cubecode.api.events.CubeEvent;
 import com.cubecode.api.events.EventManager;
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.EventsSyncC2SPacket;
+import com.cubecode.utils.Script;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiMouseButton;
@@ -24,21 +25,19 @@ import java.util.List;
 
 public class EventsView extends View {
     List<CubeEvent> events;
-    List<Script> scripts;
+    List<ServerScript> scripts;
     LinkedList<String> scriptNames;
 
     int selectedScript = -1;
     int selectedEvent = -1;
 
-    public EventsView(List<CubeEvent> events, List<Script> scripts) {
+    public EventsView(List<CubeEvent> events, List<ServerScript> scripts) {
         this.events = events;
         this.scripts = scripts;
 
         this.scriptNames = new LinkedList<>();
 
-        this.scripts.forEach(script -> {
-            this.scriptNames.add(script.name);
-        });
+        this.scripts.forEach(script -> this.scriptNames.add(script.getName()));
     }
 
     @Override

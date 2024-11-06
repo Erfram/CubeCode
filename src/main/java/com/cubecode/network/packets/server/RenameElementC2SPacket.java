@@ -44,8 +44,7 @@ public class RenameElementC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RenameElementC2SPacket packet) {
             CubeCode.projectManager.renameFile(packet.path.substring(1), packet.name);
-            CubeCode.projectManager.updateIdeaNodesFromFiles();
-            CubeCode.projectManager.updateScriptsFromFiles();
+            CubeCode.projectManager.refreshSettings();
         }
     }
 }

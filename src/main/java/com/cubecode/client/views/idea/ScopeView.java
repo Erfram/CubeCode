@@ -1,10 +1,11 @@
 package com.cubecode.client.views.idea;
 
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.RequestScriptScopeC2SPacket;
+import com.cubecode.utils.Script;
 import imgui.ImGui;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -15,9 +16,9 @@ import java.util.List;
 
 public class ScopeView extends View {
     public static NbtCompound structure;
-    public Script script;
+    public ServerScript script;
 
-    public ScopeView(Script script) {
+    public ScopeView(ServerScript script) {
         this.script = script;
     }
 

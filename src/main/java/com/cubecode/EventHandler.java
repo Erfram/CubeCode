@@ -4,12 +4,16 @@ import com.cubecode.api.events.CubeEvent;
 import com.cubecode.api.events.EventManager;
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.ProjectManager;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
 import com.cubecode.content.CubeCodeCommand;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.state.PlayerState;
 import com.cubecode.state.ServerState;
+import com.cubecode.utils.Script;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -66,6 +70,10 @@ public class EventHandler {
             );
 
             serverState.events = EventManager.cubeEventsToNbtList(events);
+
+            List<ServerScript> scripts = new ArrayList<>(CubeCode.projectManager.getClientScripts());
+
+            Dispatcher.sendTo(new SynchronizedClientScriptsPacket(scripts), handler.player);
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> CubeCode.eventManager.trigger("server_started", null, null, null, server));

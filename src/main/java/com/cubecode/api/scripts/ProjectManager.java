@@ -5,10 +5,14 @@ import com.cubecode.api.files.FileManager;
 import com.cubecode.api.scripts.code.JavaScriptUtils;
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
-import com.cubecode.api.utils.DirectoryManager;
-import com.cubecode.client.views.idea.utils.Extension;
 import com.cubecode.client.views.idea.utils.node.*;
-import com.cubecode.utils.CubeCodeException;
+import com.cubecode.utils.*;
+import com.cubecode.client.views.idea.utils.Extension;
+import com.cubecode.utils.Script;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
@@ -18,18 +22,25 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class ProjectManager extends DirectoryManager {
     public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
     public static final Context globalContext = Context.enter();
-    static final public ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
+    public static final ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
 
-    public static final String DEFAULT_SCRIPT = "function main(c) {\n    c.server.send(\"Hello World!\", true)\n}";
+    private static File settings;
 
-    private Set<Script> scripts = new HashSet<>();
+    public static final String DEFAULT_SCRIPT = "function server(c) {\n    c.server.send(\"Hello World!\", true)\n}";
+
+    private List<ServerScript> scripts = new ArrayList<>();
+    private List<ServerScript> clientScripts = new ArrayList<>();
     private List<IdeaNode> nodes = new ArrayList<>();
 
     public ProjectManager(File scriptsDirectory) {
@@ -37,16 +48,23 @@ public class ProjectManager extends DirectoryManager {
 
         globalContext.setRemapper(remapper);
         globalContext.setApplicationClassLoader(ProjectManager.class.getClassLoader());
+        globalContext.setMaximumInterpreterStackDepth(500);
         globalScope.setParentScope(globalContext.initStandardObjects());
 
         globalScope.set("CubeCode", new ScriptFactory());
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
         globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
 
-        this.updateScriptsFromFiles();
-        this.updateIdeaNodesFromFiles();
+        settings = this.DIRECTORY.toPath().resolve("settings.json").toFile();
 
-        //this.nodes = NodeUtils.scriptsToIdeaNodes(this.scripts.stream().toList());
+        this.loadSettings();
+        this.loadScriptsAndNodes();
+        this.refreshSettings();
+
+        this.scripts.forEach((script) -> {
+            if (script.getSide() == ScriptSide.CLIENT)
+                this.clientScripts.add(script);
+        });
     }
 
     public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
@@ -82,9 +100,103 @@ public class ProjectManager extends DirectoryManager {
         }
     }
 
-    public void saveScript(ScriptNode scriptNode) {
-        String path = CubeCode.projectManager.getDirectory().toPath().resolve(scriptNode.getPath().substring(1)).toString();
-        FileManager.writeJsonToFile(path, scriptNode.getScript().code);
+    private void loadSettings() {
+        try {
+            if (settings.createNewFile()) {
+                FileManager.writeToFile(settings.getPath(), "{}");
+            } else if (!JsonUtils.isValid(this.readFileToString(settings.getPath()))) {
+                FileManager.writeToFile(settings.getPath(), "{}");
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private void loadScriptsAndNodes() {
+        String settingsContent = this.readFileToString(settings.getPath());
+        JsonObject jsonObject;
+
+        if (JsonUtils.isValid(settingsContent)) {
+            jsonObject = JsonParser.parseString(settingsContent).getAsJsonObject();
+        } else {
+            throw new RuntimeException("Invalid JSON Setting");
+        }
+
+        this.scripts = new ArrayList<>();
+        this.nodes = new ArrayList<>();
+
+        this.scanDirectory(this.getFiles().stream().toList(), this.scripts, this.nodes, jsonObject);
+
+        GsonManager.writeJSON(settings, jsonObject);
+    }
+
+    private void scanDirectory(List<File> files, List<ServerScript> scripts, List<IdeaNode> nodes, JsonObject settingsJson) {
+        files.forEach(file -> {
+            String fileName = file.getName();
+            if (file.isDirectory()) {
+                FolderNode folderNode = new FolderNode(fileName);
+                scanDirectory(Arrays.asList(file.listFiles()), scripts, folderNode.getChildren(), settingsJson);
+                nodes.add(folderNode);
+            } else if (this.isValidScriptFile(file) && !file.getName().equals("settings.json")) {
+                String scriptPath = this.getRelativePath(file);
+                String scriptContent = this.readFileToString(file.getPath());
+                String side = "SERVER";
+
+                Extension extension = Extension.getExtension(this.getFileExtension(file));
+
+                if (!this.isValidSetting(scriptPath)) {
+                    JsonObject setting = new JsonObject();
+                    setting.addProperty("Side", side);
+                    settingsJson.add(scriptPath, setting);
+                } else {
+                    side = settingsJson.getAsJsonObject(scriptPath).get("Side").getAsString();
+                }
+
+                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptSide.valueOf(side.toUpperCase()));
+
+                scripts.add(script);
+                nodes.add(new ScriptNode(fileName, script, extension, "/" + scriptPath));
+            }
+        });
+    }
+
+    public void refreshSettings() {
+        String settingsContent = this.readFileToString(settings.getPath());
+        if (JsonUtils.isValid(settingsContent)) {
+            JsonObject jsonObject = JsonParser.parseString(settingsContent).getAsJsonObject();
+            for (ServerScript script : this.scripts) {
+                if (!this.isValidSetting(script.getName())) {
+                    JsonObject setting = new JsonObject();
+                    setting.addProperty("Side", "server");
+                    jsonObject.add(script.getName(), setting);
+                }
+            }
+
+            GsonManager.writeJSON(settings, jsonObject);
+        } else {
+            throw new RuntimeException("Invalid JSON Setting");
+        }
+    }
+
+    private boolean isValidScriptFile(File file) {
+        String extension = this.getFileExtension(file);
+        return Extension.containsName(extension);
+    }
+
+    private String getFileExtension(File file) {
+        String name = file.getName();
+        int lastIndexOf = name.lastIndexOf(".");
+        return lastIndexOf == -1 ? "" : name.substring(lastIndexOf + 1);
+    }
+
+    private String getRelativePath(File file) {
+        String path = file.getPath();
+        return new File(this.DIRECTORY.getPath()).toURI().relativize(new File(path).toURI()).getPath();
+    }
+
+    public void writeToFile(String path, String content) {
+        FileManager.writeToFile(this.DIRECTORY.toPath().resolve(path).toString(), content);
+
+        this.loadScriptsAndNodes();
     }
 
     public void renameFile(String path, String name) {
@@ -94,6 +206,8 @@ public class ProjectManager extends DirectoryManager {
         File renamedFile = new File(file.getParent(), name);
 
         file.renameTo(renamedFile);
+
+        this.loadScriptsAndNodes();
     }
 
     public void deleteFile(String path, NodeType node) {
@@ -105,28 +219,20 @@ public class ProjectManager extends DirectoryManager {
                 Files.delete(resolve);
             }
 
-            this.nodes.remove(NodeUtils.findNodeByPath(this.nodes, path));
+            this.loadScriptsAndNodes();
         } catch (IOException ignored) {
         }
     }
 
-    public void createScript(String name, String path, String content) {
-        Path scriptsPath = CubeCode.projectManager.getDirectory().toPath();
+    public void createTxtFile(String name, String path, String content) {
+        Path projectPath = CubeCode.projectManager.getDirectory().toPath();
 
-        File scriptFile = scriptsPath.resolve(path.isEmpty() ? "" : path.substring(1)).resolve(name).toFile();
+        File file = projectPath.resolve(path.isEmpty() ? "" : path.substring(1)).resolve(name).toFile();
 
-        try (FileWriter writer = new FileWriter(scriptFile)) {
-            ScriptNode scriptNode = new ScriptNode(new Script(name, content), Extension.JAVASCRIPT);
-
-            if (path.isEmpty()) {
-                this.nodes.add(scriptNode);
-            } else {
-                IdeaNode nodeByPath = NodeUtils.findNodeByPath(this.nodes, path);
-
-                ((FolderNode) nodeByPath).addChild(scriptNode);
-            }
-
+        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             writer.write(content);
+
+            this.loadScriptsAndNodes();
         } catch (IOException ignored) {
         }
     }
@@ -134,15 +240,9 @@ public class ProjectManager extends DirectoryManager {
     public void createFolder(String name, String path) {
         Path scriptsPath = CubeCode.projectManager.getDirectory().toPath();
 
-        if (scriptsPath.resolve(path).resolve(name).toFile().mkdir()) {
-            if (path.isEmpty()) {
-                this.nodes.add(new FolderNode(name));
-            } else {
-                IdeaNode nodeByPath = NodeUtils.findNodeByPath(this.nodes, path);
+        scriptsPath.resolve(path).resolve(name).toFile().mkdir();
 
-                ((FolderNode) nodeByPath).addChild(new FolderNode(name));
-            }
-        }
+        this.loadScriptsAndNodes();
     }
 
     public void createFolderAndScripts(FolderNode folderNode, String parentPath) {
@@ -162,88 +262,50 @@ public class ProjectManager extends DirectoryManager {
                     createFolderAndScripts((FolderNode) child, folderNode.getPath());
                 } else if (child instanceof ScriptNode) {
                     ScriptNode scriptNode = (ScriptNode) child;
-                    createScript(scriptNode.getScript().name, folderNode.getPath(), scriptNode.getScript().code);
+                    this.createTxtFile(scriptNode.getScript().getName(), folderNode.getPath(), scriptNode.getScript().getCode());
                 }
             }
         }
     }
 
-    public void updateScriptFromFile(String scriptName) {
-        this.getFiles().forEach(file -> {
-            if (file.getName().equals(scriptName)) {
-                this.getScript(scriptName).code = this.readFileToString(file.getName());
-            }
-        });
+    public List<ServerScript> getScripts() {
+        return this.scripts;
     }
 
-    public void updateScriptsFromFiles() {
-        Set<Script> newScripts = new HashSet<>();
-        scanDirectory(this.getFiles(), newScripts);
-        this.scripts = newScripts;
-    }
-
-    private void scanDirectory(Collection<File> files, Set<Script> scripts) {
-        for (File file : files) {
-            if (file.isDirectory()) {
-                scanDirectory(Arrays.asList(file.listFiles()), scripts);
-            } else {
-                if (isValidScriptFile(file)) {
-                    String relativePath = getRelativePath(file);
-                    scripts.add(new Script(relativePath, this.readFileToString(file.getPath())));
-                }
-            }
-        }
-    }
-
-    public void updateIdeaNodesFromFiles() {
-        List<IdeaNode> newIdeaNodes = new ArrayList<>();
-        scanDirectory(this.getFiles(), newIdeaNodes);
-        this.nodes = newIdeaNodes;
-    }
-
-    private void scanDirectory(Collection<File> files, List<IdeaNode> ideaNodes) {
-        for (File file : files) {
-            String fileName = file.getName();
-
-            if (file.isDirectory()) {
-                FolderNode folderNode = new FolderNode(fileName);
-                scanDirectory(Arrays.asList(file.listFiles()), folderNode.getChildren());
-                ideaNodes.add(folderNode);
-            } else if (isValidScriptFile(file)) {
-                String relativePath = getRelativePath(file);
-                String scriptContent = readFileToString(file.getPath());
-
-                ideaNodes.add(new ScriptNode(new Script(fileName, scriptContent), Extension.JAVASCRIPT, "/"+relativePath));
-            }
-        }
-    }
-
-    private boolean isValidScriptFile(File file) {
-        String extension = getFileExtension(file);
-        return Extension.containsName(extension);
-    }
-
-    private String getFileExtension(File file) {
-        String name = file.getName();
-        int lastIndexOf = name.lastIndexOf(".");
-        return lastIndexOf == -1 ? "" : name.substring(lastIndexOf + 1);
-    }
-
-    private String getRelativePath(File file) {
-        String path = file.getPath();
-        String base = CubeCode.cubeCodeDirectory.getPath() + "\\project";
-        return new File(base).toURI().relativize(new File(path).toURI()).getPath();
-    }
-
-    public Script getScript(String scriptName) {
-        return this.scripts.stream().filter(script -> script.name.equals(scriptName)).findFirst().orElse(null);
-    }
-
-    public List<Script> getScripts() {
-        return this.scripts.stream().toList();
+    public List<ServerScript> getClientScripts() {
+        return this.clientScripts;
     }
 
     public List<IdeaNode> getNodes() {
         return this.nodes;
+    }
+
+    @Nullable
+    public ServerScript getScript(String name) {
+        for (ServerScript script : this.getScripts()) if (script.getName().equals(name)) {
+            return script;
+        }
+
+        return null;
+    }
+
+    private boolean isValidSetting(String key) {
+        String json = this.readFileToString(settings.getPath());
+        try {
+            JsonElement element = JsonParser.parseString(json);
+            if (element.isJsonObject()) {
+                JsonObject jsonObject = element.getAsJsonObject();
+                if (jsonObject.has(key)) {
+                    JsonObject paramObject = jsonObject.getAsJsonObject(key);
+                    if (paramObject.has("Side")) {
+                        String sideValue = paramObject.get("Side").getAsString();
+                        return "client".equalsIgnoreCase(sideValue) || "server".equalsIgnoreCase(sideValue);
+                    }
+                }
+            }
+        } catch (JsonSyntaxException e) {
+            return false;
+        }
+        return false;
     }
 }

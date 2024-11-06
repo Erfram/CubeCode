@@ -1,7 +1,7 @@
 package com.cubecode.client.imgui.basic.window;
 
 import com.cubecode.CubeCodeClient;
-import com.cubecode.api.utils.GsonManager;
+import com.cubecode.utils.GsonManager;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -16,6 +16,9 @@ import com.cubecode.network.packets.all.IDEARequestedPacket;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.flag.ImGuiDockNodeFlags;
+import imgui.internal.ImGuiDockNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,10 @@ public class WindowStateManager {
 
     public void removeSessionWindow(View view) {
         sessionWindows.remove(view);
+    }
+
+    public void clearSessionWindows() {
+        sessionWindows.clear();
     }
 
     public Map<Class<? extends View>, Runnable> getWindows() {
@@ -84,10 +91,44 @@ public class WindowStateManager {
             properties.add("size", size);
             properties.addProperty("collapsed", view.windowCollapsed);
 
-            windows.add(view.getClass().getName(), properties);
+//            int dockId = ImGui.getID(view.getName());
+//            ImGui.dockSpace(dockId, 0, 0, ImGuiDockNodeFlags.None);
+//            if (dockId != 0) {
+//                ImGuiDockNode node = imgui.internal.ImGui.dockBuilderGetNode(dockId);
+//                if (node != null && node.ptr != 0) {
+//                    JsonObject dockingInfo = new JsonObject();
+//                    dockingInfo.addProperty("isDocked", true);
+//
+//                    ImGuiDockNode parentNode = node.getParentNode();
+//                    if (parentNode != null) {
+//                        dockingInfo.addProperty("parentId", String.valueOf(parentNode.getID()));
+//                        dockingInfo.addProperty("dockDir", getDockDirection(node));
+//                        float ratio = node.getSizeRef().x / (parentNode.getSizeRef().x + parentNode.getSizeRef().y);
+//                        dockingInfo.addProperty("dockRatio", ratio);
+//                    }
+//
+//                    properties.add("docking", dockingInfo);
+//                }
+//            }
+
+            windows.add(view.getClass().getName() + "#" + view.hashCode(), properties);
         }
 
         GsonManager.writeJSON(CubeCodeConfig.saveWindows.toFile(), windows);
+    }
+
+    private String getDockDirection(ImGuiDockNode node) {
+        ImGuiDockNode parent = node.getParentNode();
+        if (parent != null) {
+            ImVec2 nodePos = node.getPos();
+            ImVec2 parentPos = parent.getPos();
+
+            if (nodePos.x < parentPos.x) return "LEFT";
+            if (nodePos.x > parentPos.x) return "RIGHT";
+            if (nodePos.y < parentPos.y) return "UP";
+            if (nodePos.y > parentPos.y) return "DOWN";
+        }
+        return "NONE";
     }
 
     public void loadWindowState() {
@@ -96,7 +137,7 @@ public class WindowStateManager {
         if (jsonObject.entrySet() != null) {
             jsonObject.entrySet().forEach((entry) -> {
                 try {
-                    String view = entry.getKey();
+                    String view = entry.getKey().split("#")[0];
 
                     Runnable viewRunnable = CubeCodeClient.windowStateManager.getWindows().get(Class.forName(view));
 

@@ -1,7 +1,6 @@
 package com.cubecode.client.config;
 
-import com.cubecode.api.utils.GsonManager;
-import imgui.flag.ImGuiColorEditFlags;
+import com.cubecode.utils.GsonManager;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;

@@ -1,10 +1,13 @@
-package com.cubecode.api.utils;
+package com.cubecode.utils;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public abstract class DirectoryManager {
@@ -35,7 +38,7 @@ public abstract class DirectoryManager {
         try {
             List<String> strings = new ArrayList<>();
             for (File file : files) {
-                strings.add(FileUtils.readFileToString(file, Charset.defaultCharset()));
+                strings.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
             }
             return strings;
         } catch (IOException ignored) {
@@ -47,7 +50,7 @@ public abstract class DirectoryManager {
         try {
             List<String> strings = new ArrayList<>();
             for (File file : this.getFiles()) {
-                strings.add(FileUtils.readFileToString(file, Charset.defaultCharset()));
+                strings.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
             }
             return strings;
         } catch (IOException ignored) {
@@ -57,7 +60,7 @@ public abstract class DirectoryManager {
 
     public String readFileToString(String path) {
         try {
-            return FileUtils.readFileToString(new File(path), Charset.defaultCharset());
+            return Files.readString(Path.of(path), StandardCharsets.UTF_8);
         } catch (IOException ignored) {
             return "";
         }

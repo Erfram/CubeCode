@@ -1,11 +1,10 @@
 package com.cubecode.api.scripts.code;
 
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
-import com.cubecode.api.utils.GsonManager;
+import com.cubecode.utils.GsonManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.latvian.mods.rhino.IdScriptableObject;
 import dev.latvian.mods.rhino.ScriptableObject;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NbtCompound;

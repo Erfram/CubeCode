@@ -3,30 +3,38 @@ package com.cubecode.client.imgui;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.gifs.GifManager;
+import com.cubecode.client.imgui.basic.ImGuiFrameBuffer;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.views.idea.utils.ScriptDefinition;
-import com.cubecode.client.views.idea.utils.node.FolderNode;
-import com.cubecode.client.views.idea.utils.node.IdeaNode;
-import com.cubecode.client.views.idea.utils.node.ScriptNode;
+import com.cubecode.client.screens.DashboardScreen;
 import com.cubecode.utils.Icons;
+import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.extension.imguifiledialog.ImGuiFileDialog;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiMouseCursor;
-import imgui.flag.ImGuiSelectableFlags;
-import imgui.flag.ImGuiTreeNodeFlags;
-import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import imgui.type.ImString;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fStack;
+import org.joml.Quaternionf;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CubeImGui {
@@ -677,5 +685,81 @@ public class CubeImGui {
         if (selectableScript) {
             selectableAction.run();
         }
+    }
+
+    public static void renderEntityInInventoryRaw(int entityPosLeft, int entityPosTop, int size, int rotatePlayer,
+                                                  float angleXComponent, float angleYComponent, LivingEntity Player) {
+        MatrixStack posestack = RenderSystem.getModelViewStack();
+        posestack.push();
+        posestack.translate(entityPosLeft, entityPosTop, 1050.0D);
+        posestack.scale(1.0F, 1.0F, -1.0F);
+        RenderSystem.applyModelViewMatrix();
+        MatrixStack posestack1 = new MatrixStack();
+        posestack1.translate(0.0D, 0.0D, 1000.0D);
+        posestack1.scale((float) size, (float) size, (float) size);
+        Quaternionf quaternion = new Quaternionf().rotateZ((float) Math.PI);
+        Quaternionf quaternion1 = new Quaternionf();
+
+        quaternion.mul(quaternion1);
+        posestack1.multiply(quaternion);
+        float f2 = 0;
+        float f3 = 0;
+        float f4 = 0;
+        float f5 = 0;
+        float f6 = 0;
+
+        EntityRenderDispatcher entityrenderdispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
+        quaternion1.conjugate();
+        entityrenderdispatcher.setRotation(quaternion1);
+        entityrenderdispatcher.setRenderShadows(false);
+        VertexConsumerProvider.Immediate entityVertexConsumers = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        RenderSystem.runAsFancy(() -> {
+            entityrenderdispatcher.render(Player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, posestack1,
+                    entityVertexConsumers, 15728880);
+        });
+        entityrenderdispatcher.setRenderShadows(true);
+        posestack.pop();
+        RenderSystem.applyModelViewMatrix();
+    }
+
+    public static void item(ItemStack itemStack, int width, int height) {
+        ImGuiFrameBuffer frameBuffer = ImGuiLoader.frameBuffer;
+
+        frameBuffer.render(width, height, () -> {
+            MatrixStack posestack = RenderSystem.getModelViewStack();
+            posestack.push();
+            //posestack.scale(1.0F, 1.0F, -1.0F);
+            RenderSystem.applyModelViewMatrix();
+
+            RenderSystem.runAsFancy(() -> {
+                DashboardScreen.drawContext.drawItem(itemStack, 0, 0);
+//                MinecraftClient.getInstance().getItemRenderer().renderItem(
+//                        itemStack,
+//                        ModelTransformationMode.GUI,
+//                        false,
+//                        DashboardScreen.drawContext.getMatrices(),
+//                        MinecraftClient.getInstance().getBufferBuilders().getOutlineVertexConsumers(),
+//                        LightmapTextureManager.MAX_LIGHT_COORDINATE,
+//                        OverlayTexture.DEFAULT_UV,
+//                        MinecraftClient.getInstance().getItemRenderer().getModel(itemStack, MinecraftClient.getInstance().world, null, 0)
+//                );
+            });
+
+            posestack.pop();
+
+
+            //renderEntityInInventoryRaw(0, 30, 50, 0, 0, 0, MinecraftClient.getInstance().player);
+//            MinecraftClient.getInstance().getItemRenderer().renderItem(
+//                    itemStack,
+//                    ModelTransformationMode.GUI,
+//                    false,
+//                    DashboardScreen.drawContext.getMatrices(),
+//                    MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers(),
+//                    LightmapTextureManager.MAX_LIGHT_COORDINATE,
+//                    OverlayTexture.DEFAULT_UV,
+//                    MinecraftClient.getInstance().getItemRenderer().getModel(itemStack, MinecraftClient.getInstance().world, null, 0));
+        });
+
+        ImGui.imageButton(frameBuffer.getTexture(), width, height);
     }
 }

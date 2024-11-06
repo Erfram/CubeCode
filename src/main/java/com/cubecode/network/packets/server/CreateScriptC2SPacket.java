@@ -46,8 +46,7 @@ public class CreateScriptC2SPacket extends AbstractPacket {
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, CreateScriptC2SPacket packet) {
             String code = ProjectManager.DEFAULT_SCRIPT;
 
-            CubeCode.projectManager.createScript(packet.scriptName, packet.scriptPath, code);
-            CubeCode.projectManager.updateScriptsFromFiles();
+            CubeCode.projectManager.createTxtFile(packet.scriptName, packet.scriptPath, code);
         }
     }
 }

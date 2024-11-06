@@ -1,13 +1,10 @@
 package com.cubecode.api.files;
 
-import com.cubecode.api.utils.DirectoryManager;
+import com.cubecode.utils.DirectoryManager;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,8 +13,8 @@ public class FileManager extends DirectoryManager {
         super(file);
     }
 
-    public static void writeJsonToFile(String filePath, String json) {
-        try (FileWriter writer = new FileWriter(filePath)) {
+    public static void writeToFile(String filePath, String json) {
+        try (FileWriter writer = new FileWriter(filePath, StandardCharsets.UTF_8)) {
             writer.write(json);
         } catch (IOException e) {
             e.printStackTrace();

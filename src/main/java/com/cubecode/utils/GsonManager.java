@@ -1,4 +1,4 @@
-package com.cubecode.api.utils;
+package com.cubecode.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 
 public class GsonManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -15,19 +16,19 @@ public class GsonManager {
     private GsonManager() {}
 
     public static void writeJSON(File file, Object object) {
-        try (FileWriter writer = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             GSON.toJson(object, writer);
         } catch (IOException ignored) {}
     }
 
     public static void writeJSON(File file, Object object, Type type) {
-        try (FileWriter writer = new FileWriter(file)) {
+        try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             GSON.toJson(object, type, writer);
         } catch (IOException ignored) {}
     }
 
     public static <T> T readJSON(File file, Class<T> clazz) {
-        try (FileReader reader = new FileReader(file)) {
+        try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, clazz);
         } catch (IOException ignored) {
             return null;
@@ -35,7 +36,7 @@ public class GsonManager {
     }
 
     public static <T> T readJSON(File file, Type type) {
-        try (FileReader reader = new FileReader(file)) {
+        try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, type);
         } catch (IOException ignored) {
             return null;

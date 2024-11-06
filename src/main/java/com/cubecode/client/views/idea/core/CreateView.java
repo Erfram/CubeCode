@@ -1,7 +1,7 @@
 package com.cubecode.client.views.idea.core;
 
 import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Button;
@@ -92,7 +92,7 @@ public class CreateView extends View {
 
                                 } else {
                                     ScriptNode scriptNode = new ScriptNode(
-                                            new Script(name, ProjectManager.DEFAULT_SCRIPT),
+                                            new ServerScript(name, ProjectManager.DEFAULT_SCRIPT),
                                             Extension.JAVASCRIPT
                                     );
 

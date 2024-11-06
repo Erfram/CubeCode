@@ -4,17 +4,24 @@ import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.basic.window.WindowStateManager;
 import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.client.imgui.themes.ThemeManager;
+import com.cubecode.client.scripts.ClientProjectManager;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.Dispatcher;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+
+import java.nio.file.Path;
 
 @Environment(EnvType.CLIENT)
 public class CubeCodeClient implements ClientModInitializer {
     public static FontManager fontManager;
     public static ThemeManager themeManager;
     public static WindowStateManager windowStateManager;
+    public static ClientProjectManager clientProjectManager;
+
+    private static Path cubeCodePath;
 
     @Override
     public void onInitializeClient() {
@@ -26,5 +33,9 @@ public class CubeCodeClient implements ClientModInitializer {
         fontManager = new FontManager();
         themeManager = new ThemeManager();
         themeManager.loadThemes();
+
+        cubeCodePath = MinecraftClient.getInstance().runDirectory.toPath().resolve("cubecode");
+
+        clientProjectManager = new ClientProjectManager(cubeCodePath.resolve("project").toFile());
     }
 }

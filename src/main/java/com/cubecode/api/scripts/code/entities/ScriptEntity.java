@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -22,7 +23,7 @@ public class ScriptEntity<T extends Entity> {
 
     public static ScriptEntity create(Entity entity) {
         if (entity instanceof PlayerEntity) {
-            return new ScriptPlayer((PlayerEntity) entity);
+            return new ScriptPlayer((ServerPlayerEntity) entity);
         } else if (entity != null) {
             return new ScriptEntity<Entity>(entity);
         }

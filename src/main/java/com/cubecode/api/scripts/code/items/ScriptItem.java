@@ -10,6 +10,12 @@ public class ScriptItem {
         this.item = item;
     }
 
+    /**
+     * lox
+     * <pre>{@code
+     *      var lox = "lox"
+     * }</pre>
+     */
     public ItemStack getItemStack() {
         return this.item.getDefaultStack();
     }

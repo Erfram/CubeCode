@@ -107,8 +107,14 @@ public class DocumentationView extends View {
                 this.setVariable("##Search" + this.uniqueID, new ImString("", 30));
             }
 
+            String iconName = apiIcons.get(sortedMap.keySet().stream().toList().get(i));
+
+            if (iconName == null) {
+                iconName = "empty";
+            }
+
             ImGui.sameLine(0, 0);
-            Icons icon = Icons.valueOf(apiIcons.get(sortedMap.keySet().stream().toList().get(i)).toUpperCase());
+            Icons icon = Icons.valueOf(iconName.toUpperCase());
 
             ImGui.image(icon.getGlId(), 16, 16);
 

@@ -45,8 +45,7 @@ public class DeleteElementC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, DeleteElementC2SPacket packet) {
             CubeCode.projectManager.deleteFile(packet.path.substring(1), packet.nodeType);
-            CubeCode.projectManager.updateIdeaNodesFromFiles();
-            CubeCode.projectManager.updateScriptsFromFiles();
+            CubeCode.projectManager.refreshSettings();
         }
     }
 }

@@ -6,15 +6,12 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.imgui.fonts.FontManager;
-import com.cubecode.client.imgui.themes.CubeTheme;
-import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
-import imgui.flag.ImGuiSelectableFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 import java.util.*;
 

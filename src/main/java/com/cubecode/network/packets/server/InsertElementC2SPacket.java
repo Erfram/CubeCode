@@ -49,12 +49,9 @@ public class InsertElementC2SPacket extends AbstractPacket {
             switch (packet.ideaNode.getType()) {
                 case FOLDER -> {
                     CubeCode.projectManager.createFolderAndScripts((FolderNode) packet.ideaNode, packet.path);
-
-                    CubeCode.projectManager.updateIdeaNodesFromFiles();
                 }
                 case SCRIPT -> {
-                    CubeCode.projectManager.createScript(packet.ideaNode.getName(), packet.path, ((ScriptNode)packet.ideaNode).getScript().code);
-                    CubeCode.projectManager.updateScriptsFromFiles();
+                    CubeCode.projectManager.createTxtFile(packet.ideaNode.getName(), packet.path, ((ScriptNode)packet.ideaNode).getScript().getCode());
                 }
             }
         }

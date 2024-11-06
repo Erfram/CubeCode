@@ -11,6 +11,11 @@ import com.cubecode.utils.CubeCodeException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <pre>{@code
+ *      c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getId(), false)
+ * }</pre>
+ */
 public class ScriptBlockState {
     public static final BlockState AIR = Blocks.AIR.getDefaultState();
 
@@ -29,38 +34,78 @@ public class ScriptBlockState {
         this.blockState = state;
     }
 
+    /**
+     * Returns the current Minecraft block state
+     *
+     * <pre>{@code
+     *      CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();
+     * }</pre>
+     */
     public BlockState getMinecraftBlockState() {
         return this.blockState;
     }
 
+    /**
+     * Returns the identifier of the block state
+     */
     public String getId() {
         return Registries.BLOCK.getId(this.blockState.getBlock()).toString();
     }
 
+    /**
+     * Checks if this block state is the same as the given state
+     *
+     * <pre>{@code
+     *      CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));
+     * }</pre>
+     */
     public boolean isSame(ScriptBlockState state) {
         return this.equals(state);
     }
 
+
+    /**
+     * Checks if this block state is from the same block as the given state
+     *
+     * <pre>{@code
+     *      CubeCode.createBlockState(\"minecraft:dirt\").isSameBlock(CubeCode.createBlockState(\"minecraft:dirt\"));
+     * }</pre>
+     */
     public boolean isSameBlock(ScriptBlockState state) {
         return this.blockState.getBlock() == state.getMinecraftBlockState().getBlock();
     }
 
+    /**
+     * Checks if the block state is opaque
+     */
     public boolean isOpaque() {
         return this.blockState.isOpaque();
     }
 
+    /**
+     * Checks if the block state represents air
+     */
     public boolean isAir() {
         return this.blockState.isAir();
     }
 
+    /**
+     * Checks if the block state is burnable
+     */
     public boolean isBurnable() {
         return this.blockState.isBurnable();
     }
 
+    /**
+     * Checks if the block state has collision at the given coordinates in the world
+     */
     public boolean hasCollision(ScriptWorld world, int x, int y, int z) {
         return this.blockState.getCollisionShape(world.getMinecraftWorld(), new BlockPos(x, y, z)) != null;
     }
 
+    /**
+     * Returns a list of property names for the block state
+     */
     public List<String> getProperties() {
         List<String> properties = new ArrayList<>();
 
@@ -71,30 +116,51 @@ public class ScriptBlockState {
         return properties;
     }
 
+    /**
+     * Returns the name of the block
+     */
     public String getName() {
         return this.blockState.getBlock().getName().toString();
     }
 
+    /**
+     * Returns the blast resistance of the block
+     */
     public float getBlastResistance() {
         return this.blockState.getBlock().getBlastResistance();
     }
 
+    /**
+     * Returns the slipperiness of the block
+     */
     public float getSlipperiness() {
         return this.blockState.getBlock().getSlipperiness();
     }
 
+    /**
+     * Returns the hardness of the block
+     */
     public float getHardness() {
         return this.blockState.getBlock().getHardness();
     }
 
+    /**
+     * Returns the velocity multiplier of the block
+     */
     public float getVelocityMultiplier() {
         return this.blockState.getBlock().getVelocityMultiplier();
     }
 
+    /**
+     * Returns the jump velocity multiplier of the block
+     */
     public float getJumpVelocityMultiplier() {
         return this.blockState.getBlock().getJumpVelocityMultiplier();
     }
 
+    /**
+     * 	Returns the value of the specified property
+     */
     public Object getProperty(String name) throws CubeCodeException {
         return this.blockState.getProperties().stream()
                 .filter(property -> property.getName().equalsIgnoreCase(name))
@@ -103,6 +169,9 @@ public class ScriptBlockState {
                 .orElseThrow(() -> new CubeCodeException("Unknown property: " + name));
     }
 
+    /**
+     * Sets the value of the specified property
+     */
     public void setProperty(String name, Object value) throws CubeCodeException {
         if (!(value instanceof Comparable)) {
             throw new CubeCodeException("Not a valid property value: " + value);

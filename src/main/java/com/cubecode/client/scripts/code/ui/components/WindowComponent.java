@@ -1,0 +1,67 @@
+package com.cubecode.client.scripts.code.ui.components;
+
+import com.cubecode.client.imgui.CubeImGui;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
+import com.cubecode.client.views.TestView;
+import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
+import imgui.type.ImBoolean;
+import net.minecraft.client.MinecraftClient;
+
+import java.util.Collections;
+import java.util.List;
+
+public class WindowComponent implements Component {
+    TestView view;
+    String title;
+    int flags;
+    Runnable onClick;
+    Runnable onClose;
+
+    private boolean hasRendered = false;
+
+    public WindowComponent(TestView view, String title, Runnable callback) {
+        this.view = view;
+        this.title = title;
+        this.flags = 0;
+        this.onClick = callback;
+        this.onClose = () -> MinecraftClient.getInstance().player.closeScreen();
+    }
+
+    public WindowComponent onClick(Runnable onClick) {
+        this.onClick = onClick;
+        return this;
+    }
+
+    public WindowComponent onClose(Runnable onClose) {
+        this.onClose = onClose;
+        return this;
+    }
+
+    public WindowComponent noDecoration() {
+        this.flags = this.flags | ImGuiWindowFlags.NoDecoration;
+        return this;
+    }
+
+    public void render() {
+        this.view.runnables.add(() -> {
+            this.view.putVariable(this.title + view.getUniqueID(), new ImBoolean(true));
+            ImBoolean close = view.getVariable(this.title + this.view.getUniqueID());
+
+            if (ImGui.begin(this.title, close, this.flags)) {
+                if (!close.get()) {
+                    this.onClose.run();
+                    ImGuiLoader.removeView(this.view);
+                } else {
+                    CubeImGui.manageDocking(this.view);
+
+                    this.onClick.run();
+                }
+                this.view.components.forEach(Component::render);
+            }
+
+            ImGui.end();
+            this.view.components = Collections.unmodifiableList(this.view.components);
+        });
+    }
+}

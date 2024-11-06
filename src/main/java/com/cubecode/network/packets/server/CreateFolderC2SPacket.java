@@ -43,9 +43,7 @@ public class CreateFolderC2SPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<CreateFolderC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, CreateFolderC2SPacket packet) {
-            CubeCode.projectManager.createFolder(packet.folderName, packet.folderPath);
-
-            CubeCode.projectManager.updateIdeaNodesFromFiles();
+            CubeCode.projectManager.createFolder(packet.folderName, packet.folderPath.substring(1));
         }
     }
 }

@@ -2,7 +2,7 @@ package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.events.EventManager;
-import com.cubecode.api.scripts.Script;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.views.EventsView;
 import com.cubecode.network.Dispatcher;
@@ -11,6 +11,7 @@ import com.cubecode.network.basic.ClientPacketHandler;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.state.ServerState;
 import com.cubecode.utils.PacketByteBufUtils;
+import com.cubecode.utils.Script;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -28,28 +29,28 @@ import java.util.List;
 public class EventsRequestedPacket extends AbstractPacket {
     NbtList usedEvents = null;
     NbtList events = null;
-    List<Script> scripts = new ArrayList<>();
+    List<ServerScript> scripts = new ArrayList<>();
 
     public EventsRequestedPacket() {}
 
-    public EventsRequestedPacket(NbtList usedEvents, NbtList events, List<Script> scripts) {
+    public EventsRequestedPacket(NbtList usedEvents, NbtList events, List<ServerScript> scripts) {
         this.usedEvents = usedEvents;
         this.events = events;
-        this.scripts = scripts;
+        this.scripts = new ArrayList<>(scripts);
     }
 
     @Override
     public void toBytes(PacketByteBuf buf) {
-        buf.writeBoolean(usedEvents != null);
-        if (usedEvents != null) {
+        buf.writeBoolean(this.usedEvents != null);
+        if (this.usedEvents != null) {
             buf.writeNbt(usedEvents);
         }
-        buf.writeBoolean(events != null);
-        if (events != null) {
-            buf.writeNbt(events);
+        buf.writeBoolean(this.events != null);
+        if (this.events != null) {
+            buf.writeNbt(this.events);
         }
         buf.writeCollection(
-                scripts,
+                this.scripts,
                 PacketByteBufUtils::writeScript
         );
     }
@@ -57,12 +58,12 @@ public class EventsRequestedPacket extends AbstractPacket {
     @Override
     public void fromBytes(PacketByteBuf buf) {
         if (buf.readBoolean()) {
-            usedEvents = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
+            this.usedEvents = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
         }
         if (buf.readBoolean()) {
-            events = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
+            this.events = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
         }
-        scripts = buf.readList(PacketByteBufUtils::readScript);
+        this.scripts = buf.readList(PacketByteBufUtils::readScript);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class EventsRequestedPacket extends AbstractPacket {
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, EventsRequestedPacket packet) {
             NbtList usedEvents = packet.usedEvents;
             NbtList events = packet.events;
-            List<Script> scripts = packet.scripts;
+            List<ServerScript> scripts = packet.scripts;
 
             ImGuiLoader.pushView(new EventsView(EventManager.nbtListToCubeEvents(events), scripts));
         }
