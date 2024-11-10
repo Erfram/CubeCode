@@ -1,11 +1,15 @@
 package com.cubecode.utils;
 
 import com.cubecode.CubeCode;
+import com.cubecode.client.config.CubeCodeConfig;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Icons {
     APPEARANCE(),

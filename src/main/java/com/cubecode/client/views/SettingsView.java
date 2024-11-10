@@ -10,7 +10,6 @@ import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImInt;
-import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 
 import java.util.*;

@@ -2,33 +2,15 @@ package com.cubecode.client.scripts.code.ui.components;
 
 import imgui.ImGui;
 
-public class ButtonComponent implements Component {
+public class ButtonComponent extends AbstractComponent {
     String label;
-    float width;
-    float height;
     Runnable onClick;
 
     public ButtonComponent(String label) {
         this.label = label;
-        this.width = 100;
-        this.height = 80;
+        this.width = 100f;
+        this.height = 80f;
         this.onClick = () -> {};
-    }
-
-    public ButtonComponent wh(float width, float height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
-
-    public ButtonComponent w(float width) {
-        this.width = width;
-        return this;
-    }
-
-    public ButtonComponent h(float height) {
-        this.height = height;
-        return this;
     }
 
     public ButtonComponent onClick(Runnable onClick) {
@@ -38,7 +20,18 @@ public class ButtonComponent implements Component {
 
     @Override
     public void render() {
-        if (ImGui.button(this.label, this.width, this.height)) {
+        float width = this.width;
+        float height = this.height;
+
+        if (this.rw != null) {
+            width = ImGui.getWindowSizeX() * this.rw;
+        }
+
+        if (this.rh != null) {
+            height = ImGui.getWindowSizeY() * this.rh;
+        }
+
+        if (ImGui.button(this.label, width, height)) {
             this.onClick.run();
         }
     }

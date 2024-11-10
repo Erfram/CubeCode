@@ -14,6 +14,7 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiMouseCursor;
+import imgui.flag.ImGuiStyleVar;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
@@ -38,6 +39,21 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CubeImGui {
+    public static void pushItemHeight(float height) {
+        float frameHeight = height * 0.65f; // Основная высота без паддингов
+
+        ImVec2 itemInnerSpacing = new ImVec2(ImGui.getStyle().getItemInnerSpacing().x, height * 0.1f);
+        ImVec2 itemSpacing = new ImVec2(ImGui.getStyle().getItemSpacing().x, height * 0.1f);
+
+
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemInnerSpacing, itemInnerSpacing.x, itemInnerSpacing.y);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing, itemSpacing.x, itemSpacing.y);
+    }
+
+    public static void popItemHeight() {
+        ImGui.popStyleVar(2);
+    }
+
     public static void gif(String gifPath, float width, float height) {
         gif(gifPath, width, height, 0, () -> {});
     }

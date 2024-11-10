@@ -3,10 +3,11 @@ package com.cubecode.client.scripts.code.ui;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.scripts.code.ui.components.*;
+import com.cubecode.client.scripts.code.ui.components.draw.DrawComponent;
 import com.cubecode.client.views.TestView;
 import imgui.ImGui;
 
-public class ClientCubeCodeUI {
+public class ClientCubeCodeUI implements CubeCodeUIBuilder {
     private final TestView view;
 
     public ClientCubeCodeUI() {
@@ -24,19 +25,25 @@ public class ClientCubeCodeUI {
     public TextComponent text(String text) {
         TextComponent component = new TextComponent(text);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
 
         return component;
     }
 
+    @Override
     public IconComponent icon(String iconId) {
         IconComponent component = new IconComponent(iconId);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
 
         return component;
     }
 
+    @Override
     public CheckboxComponent checkbox(String id, boolean active) {
         CheckboxComponent component = new CheckboxComponent(this.view, id, active);
 
@@ -47,34 +54,46 @@ public class ClientCubeCodeUI {
         return component;
     }
 
+    @Override
     public ButtonComponent button(String label) {
         ButtonComponent component = new ButtonComponent(label);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
         
         return component;
     }
 
+    @Override
     public RadioButtonComponent radioButton(String id, boolean active) {
         RadioButtonComponent component = new RadioButtonComponent(this.view, id, active);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
 
         return component;
     }
 
+    @Override
     public ArrowButtonComponent arrowButton(String id, int dir) {
         ArrowButtonComponent component = new ArrowButtonComponent(id, dir);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
 
         return component;
     }
 
-    public InputTextComponent inputText(String label, String text, int maxlength) {
-        InputTextComponent component = new InputTextComponent(this.view, label, text, maxlength);
+    @Override
+    public InputTextComponent inputText(String label, String text, int maxLength) {
+        InputTextComponent component = new InputTextComponent(this.view, label, text, maxLength);
 
-        this.view.components.add(component);
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
 
         return component;
     }
@@ -85,6 +104,38 @@ public class ClientCubeCodeUI {
 
     public InputTextComponent inputText(String label) {
         return this.inputText(label, "", 99999);
+    }
+
+    @Override
+    public SliderComponent slider(String label, float value, float degreesMin, float degreesMax) {
+        SliderComponent component = new SliderComponent(this.view, label, value, degreesMin, degreesMax);
+
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
+
+        return component;
+    }
+
+    @Override
+    public ChildComponent child(String strId) {
+        ChildComponent component = new ChildComponent(this.view, strId);
+
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
+
+        return component;
+    }
+
+    @Override
+    public DrawComponent draw() {
+        DrawComponent component = new DrawComponent();
+        try {
+            this.view.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
+
+        return component;
     }
 
     public void separator() {

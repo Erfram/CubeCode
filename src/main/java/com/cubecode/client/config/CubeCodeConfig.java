@@ -12,6 +12,7 @@ public class CubeCodeConfig {
     public static final Path settingsDir = configDir.resolve("settings");
     public static final Path fontsDir = configDir.resolve("fonts");
     public static final Path themesDir = configDir.resolve("themes");
+    public static final Path imagesDir = configDir.resolve("images");
 
     public static final Path settings = configDir.resolve("settings.json");
     public static final Path saveWindows = configDir.resolve("save_windows.json");
@@ -44,6 +45,7 @@ public class CubeCodeConfig {
             Files.createDirectories(settingsDir);
             Files.createDirectories(fontsDir);
             Files.createDirectories(themesDir);
+            Files.createDirectories(imagesDir);
             settingsConfig = loadOrCreate(settings, SettingsConfig.class);
             saveWindowsConfig = loadOrCreate(saveWindows, SaveWindowsConfig.class);
         } catch (IOException | InstantiationException | IllegalAccessException e) {

@@ -3,18 +3,16 @@ package com.cubecode.client.scripts.code.ui.components;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
 
-public class IconComponent implements Component {
+public class IconComponent extends AbstractComponent {
     String iconId;
     boolean isClickable;
-    float width;
-    float height;
     Runnable onClick;
 
     public IconComponent(String iconId) {
         this.iconId = iconId;
         this.isClickable = false;
-        this.width = 64;
-        this.height = 64;
+        this.width = 64f;
+        this.height = 64f;
         this.onClick = () -> {};
     }
 
@@ -41,6 +39,9 @@ public class IconComponent implements Component {
 
     @Override
     public void render() {
+        float width = this.rw != null ? this.rw : this.width != null ? this.width : 0;
+        float height = this.rh != null ? this.rh : this.height != null ? this.height : 0;
+
         Icons icon;
         try {
             icon = Icons.valueOf(iconId.toUpperCase());
@@ -49,11 +50,11 @@ public class IconComponent implements Component {
         }
 
         if (this.isClickable) {
-            if (ImGui.imageButton(icon.getGlId(), this.width, this.height)) {
+            if (ImGui.imageButton(icon.getGlId(), width, height)) {
                 this.onClick.run();
             }
         } else {
-            ImGui.image(icon.getGlId(), this.width, this.height);
+            ImGui.image(icon.getGlId(), width, height);
 
             if (ImGui.isItemClicked()) {
                 this.onClick.run();

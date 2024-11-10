@@ -6,7 +6,7 @@ import imgui.type.ImString;
 
 import java.util.function.Consumer;
 
-public class InputTextComponent implements Component {
+public class InputTextComponent extends AbstractComponent {
     TestView view;
     String label;
     String text;
@@ -27,6 +27,11 @@ public class InputTextComponent implements Component {
 
     public InputTextComponent onInput(Consumer<String> callback) {
         this.onInput = callback;
+        return this;
+    }
+
+    public InputTextComponent text(String text) {
+        this.text = text;
         return this;
     }
 

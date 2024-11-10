@@ -2,7 +2,7 @@ package com.cubecode.client.scripts.code.ui.components;
 
 import imgui.ImGui;
 
-public class TextComponent implements Component {
+public class TextComponent extends AbstractComponent {
     String text;
     int r;
     int g;

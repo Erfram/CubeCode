@@ -4,7 +4,7 @@ import com.cubecode.client.imgui.basic.View;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
-public class RadioButtonComponent implements Component {
+public class RadioButtonComponent extends AbstractComponent {
     View view;
     boolean active;
     String id;

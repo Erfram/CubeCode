@@ -4,21 +4,19 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.views.TestView;
 import imgui.ImGui;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.Collections;
-import java.util.List;
 
-public class WindowComponent implements Component {
+public class WindowComponent extends AbstractComponent {
     TestView view;
     String title;
     int flags;
     Runnable onClick;
     Runnable onClose;
-
-    private boolean hasRendered = false;
 
     public WindowComponent(TestView view, String title, Runnable callback) {
         this.view = view;
@@ -26,6 +24,7 @@ public class WindowComponent implements Component {
         this.flags = 0;
         this.onClick = callback;
         this.onClose = () -> MinecraftClient.getInstance().player.closeScreen();
+        this.windowPosFlags = ImGuiCond.Always;
     }
 
     public WindowComponent onClick(Runnable onClick) {
@@ -43,11 +42,35 @@ public class WindowComponent implements Component {
         return this;
     }
 
+    public WindowComponent noMove() {
+        this.flags = this.flags | ImGuiWindowFlags.NoMove;
+        return this;
+    }
+
+    public WindowComponent alwaysAutoResize() {
+        this.flags = this.flags | ImGuiWindowFlags.AlwaysAutoResize;
+        return this;
+    }
+
+    public WindowComponent noDocking() {
+        this.flags = this.flags | ImGuiWindowFlags.NoDocking;
+        return this;
+    }
+
+    public WindowComponent appearingPosition() {
+        this.windowPosFlags = this.windowPosFlags | ImGuiCond.Appearing;
+        return this;
+    }
+
+    @Override
     public void render() {
         this.view.runnables.add(() -> {
             this.view.putVariable(this.title + view.getUniqueID(), new ImBoolean(true));
             ImBoolean close = view.getVariable(this.title + this.view.getUniqueID());
 
+            this.pushTheme();
+            this.pushSize();
+            this.pushPosition();
             if (ImGui.begin(this.title, close, this.flags)) {
                 if (!close.get()) {
                     this.onClose.run();
@@ -57,10 +80,24 @@ public class WindowComponent implements Component {
 
                     this.onClick.run();
                 }
-                this.view.components.forEach(Component::render);
+
+                this.view.components.forEach(component -> {
+                    component.pushTheme();
+                    component.pushPosition();
+                    component.pushSize();
+
+                    component.render();
+
+                    component.popSize();
+                    component.popPosition();
+                    component.popTheme();
+                });
             }
 
             ImGui.end();
+            this.popPosition();
+            this.popSize();
+            this.popTheme();
             this.view.components = Collections.unmodifiableList(this.view.components);
         });
     }

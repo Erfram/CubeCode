@@ -7,6 +7,7 @@ import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.scripts.ClientProperties;
+import com.cubecode.client.scripts.ClientScript;
 import com.cubecode.client.views.idea.utils.Extension;
 import com.cubecode.client.views.idea.utils.ScriptDefinition;
 import com.cubecode.client.views.idea.utils.ToolItem;
@@ -40,7 +41,7 @@ public class CubeCodeIDEAView extends View {
 
     public final CopyOnWriteArrayList<IdeaNode> nodes;
 
-    private Comparator<IdeaNode> comparator = (node1, node2) -> {
+    private final Comparator<IdeaNode> comparator = (node1, node2) -> {
         boolean isDir1 = node1.getType() == NodeType.FOLDER;
         boolean isDir2 = node2.getType() == NodeType.FOLDER;
 
@@ -172,32 +173,12 @@ public class CubeCodeIDEAView extends View {
     public void renderRunScriptButton() {
         ImGui.setCursorPosX(ImGui.getWindowSize().x - 32);
 
-        CubeImGui.imageButton(Icons.START, Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.run_script").getString(), 16, 16, () -> {
-            if (this.selectedNode != null) {
-                if (this.selectedNode.getType() == NodeType.SCRIPT) {
-                    this.saveContentScript();
-                    ScriptNode scriptNode = (ScriptNode) this.selectedNode;
-                    if (scriptNode.getScript().getSide() == ScriptSide.SERVER) {
-                        Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getServerScript()));
-                    } else {
-                        ClientProperties properties = ClientProperties.create(
-                                scriptNode.getScript().getName(),
-                                "client",
-                                MinecraftClient.getInstance().player,
-                                null,
-                                MinecraftClient.getInstance().world);
-
-                        try {
-                            CubeCodeClient.clientProjectManager.getScript(scriptNode.getName()).run(properties);
-                        } catch (CubeCodeException e) {
-                            Text text = Text.of(e.getMessage());
-                            text.getStyle().withColor(Formatting.RED);
-                            MinecraftClient.getInstance().player.sendMessage(text);
-                        }
-                    }
-                }
-            }
-        });
+        CubeImGui.imageButton(
+                Icons.START,
+                Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.run_script").getString(),
+                16, 16,
+                this::actionRunScript
+        );
     }
 
     public void renderLeftBar() {
@@ -333,6 +314,10 @@ public class CubeCodeIDEAView extends View {
         if (ImGui.isKeyPressed(GLFW.GLFW_KEY_DELETE)) {
             this.actionDelete();
         }
+
+        if (ImGui.isKeyPressed(GLFW.GLFW_KEY_F6)) {
+            this.actionRunScript();
+        }
     }
 
     private void saveContentScript() {
@@ -354,6 +339,14 @@ public class CubeCodeIDEAView extends View {
                     clientScripts.add(((ScriptNode) node).getServerScript());
                 }
             }
+
+            List<ClientScript> scripts = new ArrayList<>();
+
+            for (Script script : clientScripts) {
+                scripts.add(new ClientScript(script.getName(), script.getCode()));
+            }
+
+            CubeCodeClient.clientProjectManager.createScripts(scripts);
 
             Dispatcher.sendToServer(new SynchronizedClientScriptsPacket(clientScripts));
         }
@@ -541,6 +534,34 @@ public class CubeCodeIDEAView extends View {
 
     private void actionRename() {
         ImGuiLoader.pushView(new RenameView(this.preSelectedNode));
+    }
+
+    private void actionRunScript() {
+        if (this.selectedNode != null) {
+            if (this.selectedNode.getType() == NodeType.SCRIPT) {
+                this.saveContentScript();
+                ScriptNode scriptNode = (ScriptNode) this.selectedNode;
+                if (scriptNode.getScript().getSide() == ScriptSide.SERVER) {
+                    Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getServerScript()));
+                } else {
+                    ClientProperties properties = ClientProperties.create(
+                            scriptNode.getScript().getName(),
+                            "client",
+                            MinecraftClient.getInstance().player,
+                            null,
+                            MinecraftClient.getInstance().world);
+
+                    try {
+                        CubeCodeClient.clientProjectManager.getScript(scriptNode.getName()).run(properties);
+                    } catch (CubeCodeException e) {
+                        Text text = Text.of(e.getMessage());
+                        List<Text> withStyle = text.getWithStyle(text.getStyle().withColor(Formatting.RED));
+
+                        MinecraftClient.getInstance().player.sendMessage(withStyle.get(0));
+                    }
+                }
+            }
+        }
     }
 
     private void renderEdit() {

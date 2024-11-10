@@ -2,7 +2,7 @@ package com.cubecode.client.scripts.code.ui.components;
 
 import imgui.ImGui;
 
-public class ArrowButtonComponent implements Component {
+public class ArrowButtonComponent extends AbstractComponent {
     String id;
     int dir;
     Runnable onClick;
