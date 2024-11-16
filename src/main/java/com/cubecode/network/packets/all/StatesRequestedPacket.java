@@ -55,7 +55,7 @@ public class StatesRequestedPacket extends AbstractPacket {
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, StatesRequestedPacket packet) {
             NbtCompound nbt = new NbtCompound();
 
-            nbt.put("server", ServerState.getServerState(server).values);
+            nbt.put("Server^", ServerState.getServerState(server).values);
 
             for (String playerName : server.getPlayerNames()) {
                 nbt.put(playerName, ServerState.getPlayerState(server.getPlayerManager().getPlayer(playerName)).getValues());
