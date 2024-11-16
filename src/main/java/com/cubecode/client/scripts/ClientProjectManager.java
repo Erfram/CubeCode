@@ -24,19 +24,17 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-public class ClientProjectManager extends DirectoryManager {
+public class ClientProjectManager {
     public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
     public static final Context globalContext = Context.enter();
     public static final ScriptScope globalScope = new ScriptScope("CubeCode client global scope", globalContext);
 
-    public static final String DEFAULT_SCRIPT = "function client(c) {}";
+    public static final String DEFAULT_SCRIPT = "function client(c) {\n\n}";
 
     private Set<ClientScript> scripts = new HashSet<>();
     private List<IdeaNode> nodes = new ArrayList<>();
 
-    public ClientProjectManager(File directory) {
-        super(directory);
-
+    public ClientProjectManager() {
         globalContext.setRemapper(remapper);
         globalContext.setApplicationClassLoader(ProjectManager.class.getClassLoader());
         globalContext.setMaximumInterpreterStackDepth(500);
@@ -44,10 +42,7 @@ public class ClientProjectManager extends DirectoryManager {
 
         globalScope.set("CubeCode", new ClientScriptFactory());
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
-        globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
-
-        this.updateScriptsFromFiles();
-        this.updateIdeaNodesFromFiles();
+        //globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
     }
 
     public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
@@ -100,53 +95,6 @@ public class ClientProjectManager extends DirectoryManager {
         return this.nodes;
     }
 
-    public void updateIdeaNodesFromFiles() {
-        List<IdeaNode> newIdeaNodes = new ArrayList<>();
-        scanDirectory(this.getFiles(), newIdeaNodes);
-        this.nodes = newIdeaNodes;
-    }
-
-    private void scanDirectory(Collection<File> files, List<IdeaNode> ideaNodes) {
-        for (File file : files) {
-            String fileName = file.getName();
-
-            if (file.isDirectory()) {
-                FolderNode folderNode = new FolderNode(fileName);
-                scanDirectory(Arrays.asList(file.listFiles()), folderNode.getChildren());
-                ideaNodes.add(folderNode);
-            } else if (file.getName().endsWith(".js")) {
-                String relativePath = getRelativePath(file);
-                String scriptContent = readFileToString(file.getPath());
-
-                ideaNodes.add(new ScriptNode(new ServerScript(fileName, scriptContent), null, "/"+relativePath));
-            }
-        }
-    }
-
-    public void updateScriptsFromFiles() {
-        Set<ClientScript> newScripts = new HashSet<>();
-        scanDirectory(this.getFiles(), newScripts);
-        this.scripts = newScripts;
-    }
-
-    private void scanDirectory(Collection<File> files, Set<ClientScript> scripts) {
-        for (File file : files) {
-            if (file.isDirectory()) {
-                scanDirectory(Arrays.asList(file.listFiles()), scripts);
-            } else {
-                if (file.getName().endsWith(".js")) {
-                    String relativePath = getRelativePath(file);
-                    scripts.add(new ClientScript(relativePath, this.readFileToString(file.getPath())));
-                }
-            }
-        }
-    }
-
-    private String getRelativePath(File file) {
-        String path = file.getPath();
-        return new File(this.DIRECTORY.getPath()).toURI().relativize(new File(path).toURI()).getPath();
-    }
-
     private boolean isValidScriptFile(File file) {
         String extension = getFileExtension(file);
         return Extension.containsName(extension);
@@ -159,26 +107,14 @@ public class ClientProjectManager extends DirectoryManager {
     }
 
     public void createScript(ClientScript script) {
-        Path projectPath = this.DIRECTORY.toPath();
-
-        File file = projectPath.resolve(script.name).toFile();
-
-        FileManager.writeToFile(file.getPath(), script.code);
-
-        this.updateScriptsFromFiles();
-        this.updateIdeaNodesFromFiles();
+        this.scripts.add(script);
     }
 
     public void createScripts(List<ClientScript> scripts) {
-        Path projectPath = this.DIRECTORY.toPath();
+        this.scripts.addAll(scripts);
+    }
 
-        for (ClientScript script : scripts) {
-            File file = projectPath.resolve(script.name).toFile();
-
-            FileManager.writeToFile(file.getPath(), script.code);
-        }
-
-        this.updateScriptsFromFiles();
-        this.updateIdeaNodesFromFiles();
+    public void setScripts(List<ClientScript> scripts) {
+        this.scripts = new HashSet<>(scripts);
     }
 }

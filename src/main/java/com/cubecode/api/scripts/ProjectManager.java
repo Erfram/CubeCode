@@ -1,6 +1,7 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
+import com.cubecode.CubeCodeClient;
 import com.cubecode.api.files.FileManager;
 import com.cubecode.api.scripts.code.JavaScriptUtils;
 import com.cubecode.api.scripts.code.JavaUtils;
@@ -13,12 +14,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.sun.jna.platform.win32.Shell32Util;
 import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,6 +41,7 @@ public class ProjectManager extends DirectoryManager {
     private static File settings;
 
     public static final String DEFAULT_SCRIPT = "function server(c) {\n    c.server.send(\"Hello World!\", true)\n}";
+    public static final String DEFAULT_CLIENT_SCRIPT = "function client(c) {\n\n}";
 
     private List<ServerScript> scripts = new ArrayList<>();
     private List<ServerScript> clientScripts = new ArrayList<>();
@@ -222,6 +226,62 @@ public class ProjectManager extends DirectoryManager {
             this.loadScriptsAndNodes();
         } catch (IOException ignored) {
         }
+    }
+
+    public void deleteScriptToSettings(String path) {
+        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
+
+        object.remove(path);
+
+        GsonManager.writeJSON(settings, object);
+    }
+
+    public void addScriptToSettings(ServerScript script) {
+        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
+
+        JsonObject scriptObject = new JsonObject();
+
+        scriptObject.addProperty("Side", script.getSide().toString());
+
+        object.add(script.getName(), scriptObject);
+
+        GsonManager.writeJSON(settings, object);
+    }
+
+    public void renameScriptToSettings(String path, String name) {
+        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
+
+        if (object == null) {
+            CubeCodeClient.LOGGER.error("json settings - null");
+            return;
+        }
+
+        JsonObject oldScript = object.get(path).getAsJsonObject();
+
+        object.remove(path);
+
+        object.add(path.contains("/") ? path.substring(0, path.lastIndexOf("/") + 1) + name : name, oldScript);
+
+        GsonManager.writeJSON(settings, object);
+    }
+
+    public void renameFolderToSettings(String path, String name) {
+        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
+
+        if (object == null) {
+            CubeCodeClient.LOGGER.error("json settings - null");
+            return;
+        }
+
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            if (entry.getKey().startsWith(path)) {
+                object.remove(entry.getKey());
+
+                object.add(path.substring(0, path.lastIndexOf("/") + 1) + name, entry.getValue());
+            }
+        }
+
+        GsonManager.writeJSON(settings, object);
     }
 
     public void createTxtFile(String name, String path, String content) {

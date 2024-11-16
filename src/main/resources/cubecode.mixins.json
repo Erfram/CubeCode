@@ -5,9 +5,7 @@
   "mixins": [
   ],
   "client": [
-    "imgui.ParentElementMixin",
     "imgui.RenderSystemMixin",
-    "imgui.ScreenMixin",
     "imgui.WindowMixin"
   ],
   "server": [

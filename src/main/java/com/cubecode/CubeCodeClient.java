@@ -1,9 +1,11 @@
 package com.cubecode;
 
+import com.cubecode.api.scripts.LoggerManager;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.basic.window.WindowStateManager;
 import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.client.imgui.themes.ThemeManager;
+import com.cubecode.client.scripts.ClientLoggerManager;
 import com.cubecode.client.scripts.ClientProjectManager;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.Dispatcher;
@@ -11,6 +13,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
 
@@ -19,7 +22,10 @@ public class CubeCodeClient implements ClientModInitializer {
     public static FontManager fontManager;
     public static ThemeManager themeManager;
     public static WindowStateManager windowStateManager;
-    public static ClientProjectManager clientProjectManager;
+    public static ClientProjectManager projectManager;
+    public static ClientLoggerManager loggerManager;
+
+    public static Logger LOGGER;
 
     private static Path cubeCodePath;
 
@@ -36,6 +42,7 @@ public class CubeCodeClient implements ClientModInitializer {
 
         cubeCodePath = MinecraftClient.getInstance().runDirectory.toPath().resolve("cubecode");
 
-        clientProjectManager = new ClientProjectManager(cubeCodePath.resolve("project").toFile());
+        projectManager = new ClientProjectManager();
+        loggerManager = new ClientLoggerManager(cubeCodePath.toFile());
     }
 }

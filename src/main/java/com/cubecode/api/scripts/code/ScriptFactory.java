@@ -19,13 +19,30 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
+/**
+ * Docs for factory bruh
+ */
 public class ScriptFactory {
+    /**
+     * Creates new Block State
+     *
+     * <pre>{@code
+     * CubeCode.createBlockState("minecraft:dirt");
+     * }</pre>
+     */
     public ScriptBlockState createBlockState(String blockId) {
         Block block = Registries.BLOCK.get(new Identifier(blockId));
 
         return ScriptBlockState.create(block.getDefaultState());
     }
 
+    /**
+     * Creates a new ScriptNbtCompound from the given NBT string
+     *
+     * <pre>{@code
+     * CubeCode.createCompound("{id:"kruto"}");
+     * }</pre>
+     */
     public ScriptNbtCompound createCompound(String nbt) {
         NbtCompound tag = new NbtCompound();
 
@@ -166,6 +183,13 @@ public class ScriptFactory {
         return modifier;
     }
 
+    /**
+     * Returns the class name of the given object
+     *
+     * <pre>{@code
+     * CubeCode.getClassName(c.getPlayer());
+     * }</pre>
+     */
     public String getClassName(Object value) {
         String classes = value.getClass().toString();
         int beginIndex = classes.lastIndexOf(".") + 1;
@@ -173,6 +197,13 @@ public class ScriptFactory {
         return classes.substring(beginIndex);
     }
 
+    /**
+     * Creates a new ScriptVector with the given x, y, and z coordinates
+     *
+     * <pre>{@code
+     * CubeCode.vector(232, 232, 223);
+     * }</pre>
+     */
     public ScriptVector vector(double x, double y, double z) {
         return new ScriptVector(x, y, z);
     }

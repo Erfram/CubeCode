@@ -60,8 +60,8 @@ public class ServerScript implements Script {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
             throw new CubeCodeException(errorType + ": " + details + "\n" +
-                    "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n"
-                    //"Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", ""), sourceName
+                    "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
+                    "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", ""), sourceName
             );
         } catch (Exception e) {
             throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);

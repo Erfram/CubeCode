@@ -1,6 +1,8 @@
 package com.cubecode.client.scripts.code.entities;
 
 import com.cubecode.api.scripts.code.ScriptVector;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
+import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.screens.TestScreen;
 import com.cubecode.client.scripts.code.ui.ClientCubeCodeUI;
 import net.minecraft.client.MinecraftClient;
@@ -17,6 +19,23 @@ public class ClientScriptPlayer extends ClientScriptEntity<ClientPlayerEntity> {
 
     public void send(String message) {
         this.entity.sendMessage(Text.of(message));
+    }
+
+    public ScriptVector getRotations() {
+        return new ScriptVector(this.entity.getPitch(), this.entity.getYaw(), this.entity.getHeadYaw());
+    }
+
+    public void setRotations(float pitch, float yaw, float headYaw) {
+        this.entity.setPitch(pitch);
+        this.entity.setYaw(yaw);
+        this.entity.setHeadYaw(headYaw);
+    }
+
+    public void setRotations(float pitch, float yaw, float headYaw, float bodyYaw) {
+        this.entity.setPitch(pitch);
+        this.entity.setYaw(yaw);
+        this.entity.setHeadYaw(headYaw);
+        this.entity.setBodyYaw(bodyYaw);
     }
 
     public void playSound(String sound, String soundCategory, float volume, float pitch) {
@@ -40,6 +59,7 @@ public class ClientScriptPlayer extends ClientScriptEntity<ClientPlayerEntity> {
     }
 
     public void closeUI() {
+        ImGuiLoader.removeViews(ImGuiLoader.getViews().toArray(new View[0]));
         MinecraftClient.getInstance().player.closeScreen();
     }
 }

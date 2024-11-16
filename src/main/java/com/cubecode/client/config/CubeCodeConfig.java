@@ -15,13 +15,19 @@ public class CubeCodeConfig {
     public static final Path imagesDir = configDir.resolve("images");
 
     public static final Path settings = configDir.resolve("settings.json");
+    public static final Path ideaSettings = configDir.resolve("idea_settings.json");
     public static final Path saveWindows = configDir.resolve("save_windows.json");
 
     private static SaveWindowsConfig saveWindowsConfig;
     private static SettingsConfig settingsConfig;
+    private static IdeaSettingsConfig ideaSettingsConfig;
 
     public static final String DEFAULT_FONT = "default";
     public static final String DEFAULT_THEME = "Catppuccin Mocha";
+
+    public static final int DEFAULT_TAB_SIZE = 4;
+    public static final boolean DEFAULT_SHOW_WHITESPACES = false;
+    public static final boolean DEFAULT_READ_ONLY = false;
 
     public static class SaveWindowsConfig {
 
@@ -40,6 +46,12 @@ public class CubeCodeConfig {
         }
     }
 
+    public static class IdeaSettingsConfig {
+        public int tabSize = DEFAULT_TAB_SIZE;
+        public boolean showWhitespaces = DEFAULT_SHOW_WHITESPACES;
+        public boolean readOnly = DEFAULT_READ_ONLY;
+    }
+
     public static void loadConfig() {
         try {
             Files.createDirectories(settingsDir);
@@ -47,6 +59,7 @@ public class CubeCodeConfig {
             Files.createDirectories(themesDir);
             Files.createDirectories(imagesDir);
             settingsConfig = loadOrCreate(settings, SettingsConfig.class);
+            ideaSettingsConfig = loadOrCreate(ideaSettings, IdeaSettingsConfig.class);
             saveWindowsConfig = loadOrCreate(saveWindows, SaveWindowsConfig.class);
         } catch (IOException | InstantiationException | IllegalAccessException e) {
             throw new RuntimeException("Failed to load config", e);
@@ -64,6 +77,7 @@ public class CubeCodeConfig {
 
     public static void saveConfig() {
         GsonManager.writeJSON(settings.toFile(), settingsConfig);
+        GsonManager.writeJSON(ideaSettings.toFile(), ideaSettingsConfig);
     }
 
     public static SettingsConfig getSettingsConfig() {
@@ -72,5 +86,8 @@ public class CubeCodeConfig {
 
     public static SaveWindowsConfig getSaveWindowsConfig() {
         return saveWindowsConfig;
+    }
+    public static IdeaSettingsConfig getIdeaSettingsConfig() {
+        return ideaSettingsConfig;
     }
 }

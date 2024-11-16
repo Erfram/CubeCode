@@ -48,7 +48,7 @@ public class NodeUtils {
         return null;
     }
 
-    public static boolean hasNodeByPath(List<IdeaNode> nodes, String nodePath) {
+    public static boolean hasNodeByPathIgnoreCase(List<IdeaNode> nodes, String nodePath) {
         if (nodes == null || nodePath == null) {
             return false;
         }
@@ -58,7 +58,21 @@ public class NodeUtils {
                 return true;
             }
 
-            if (node instanceof FolderNode && hasNodeByPath(((FolderNode) node).getChildren(), nodePath)) {
+            if (node instanceof FolderNode && hasNodeByPathIgnoreCase(((FolderNode) node).getChildren(), nodePath)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean hasNodeByPath(List<IdeaNode> nodes, String nodePath) {
+        if (nodes == null || nodePath == null) {
+            return false;
+        }
+
+        for (IdeaNode node : nodes) {
+            if (node instanceof FolderNode && hasNodeByPathIgnoreCase(((FolderNode) node).getChildren(), nodePath)) {
                 return true;
             }
         }

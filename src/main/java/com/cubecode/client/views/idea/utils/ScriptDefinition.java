@@ -69,11 +69,10 @@ public class ScriptDefinition {
 
         Map<String, Integer> tokenRegex = new HashMap<>();
 
-        tokenRegex.put("L?\\\"(\\\\.|[^\\\"])*\\\"", TextEditorPaletteIndex.String);
-        tokenRegex.put("\\'\\\\?[^\\']\\'", TextEditorPaletteIndex.String);
+        tokenRegex.put("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'", TextEditorPaletteIndex.String);
 
         tokenRegex.put("\\b\\d+(\\.\\d+)?\\b", TextEditorPaletteIndex.Number);
-        tokenRegex.put("[\\[\\]\\{\\}\\!\\%\\^\\&\\*\\(\\)\\-\\+\\=\\~\\|\\<\\>\\?\\/\\;\\,\\.]", TextEditorPaletteIndex.Punctuation);
+        tokenRegex.put("!\\%\\^\\&\\*\\-\\+\\=\\~\\|\\<\\>\\?\\/", TextEditorPaletteIndex.Punctuation);
 
         Map<String, String> identifiers = new HashMap<>();
 
@@ -143,7 +142,7 @@ public class ScriptDefinition {
 
         langDef.setAutoIdentation(false);
 
-        langDef.setName("JavaScript");;
+        langDef.setName("JavaScript");
 
         return langDef;
     }

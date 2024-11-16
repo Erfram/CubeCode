@@ -72,10 +72,10 @@ public class JsonDoclet {
         }
     }
 
-    public static void generateDocs(String... targetPackages) {
+    public static void generateDocs(List<String> targetPackages, List<String> clientTargetPackages) {
         String outputPath = ImGuiLoader.class.getClassLoader().getResource("assets/cubecode/docs.json").getFile();
         System.out.println(outputPath);
-        if (targetPackages == null || targetPackages.length == 0) {
+        if (targetPackages == null || targetPackages.size() == 0) {
             throw new IllegalArgumentException("At least one package must be specified");
         }
 
@@ -196,36 +196,37 @@ public class JsonDoclet {
         return "";
     }
 
-    private static List<Path> findJavaFiles(String... targetPackages) throws IOException {
+    private static List<Path> findJavaFiles(List<String> targetPackages) throws IOException {
         Path projectRoot = Paths.get("").toAbsolutePath();
 
-        return Arrays.stream(targetPackages)
-                .map(pkg -> projectRoot.resolve("src/main/java/" + pkg))
-                .toList();
+        return targetPackages.stream().map(pkg -> projectRoot.resolve("src/main/java/" + pkg)).toList();
     }
 
     public static void main(String[] args) {
 
-        generateDocs(
-                "com/cubecode/api/scripts/code/JavaScriptUtils.java",
-                "com/cubecode/api/scripts/code/JavaUtils.java",
-                "com/cubecode/api/scripts/code/ScriptEvent.java",
-                "com/cubecode/api/scripts/code/ScriptFactory.java",
-                "com/cubecode/api/scripts/code/ScriptRayTrace.java",
-                "com/cubecode/api/scripts/code/ScriptServer.java",
-                "com/cubecode/api/scripts/code/ScriptVector.java",
-                "com/cubecode/api/scripts/code/ScriptWorld.java",
-                "com/cubecode/api/scripts/code/blocks/ScriptBlockEntity.java",
-                "com/cubecode/api/scripts/code/blocks/ScriptBlockState.java",
-                "com/cubecode/api/scripts/code/cubecode/CubeCodeStates.java",
-                "com/cubecode/api/scripts/code/entities/ScriptEntity.java",
-                "com/cubecode/api/scripts/code/entities/ScriptPlayer.java",
-                "com/cubecode/api/scripts/code/items/ScriptInventory.java",
-                "com/cubecode/api/scripts/code/items/ScriptItem.java",
-                "com/cubecode/api/scripts/code/items/ScriptItemStack.java",
-                "com/cubecode/api/scripts/code/nbt/ScriptNbtCompound.java",
-                "com/cubecode/api/scripts/code/nbt/ScriptNbtList.java"
+        generateDocs(List.of(
+                    "com/cubecode/api/scripts/code/JavaScriptUtils.java",
+                    "com/cubecode/api/scripts/code/JavaUtils.java",
+                    "com/cubecode/api/scripts/code/ScriptEvent.java",
+                    "com/cubecode/api/scripts/code/ScriptFactory.java",
+                    "com/cubecode/api/scripts/code/ScriptRayTrace.java",
+                    "com/cubecode/api/scripts/code/ScriptServer.java",
+                    "com/cubecode/api/scripts/code/ScriptVector.java",
+                    "com/cubecode/api/scripts/code/ScriptWorld.java",
+                    "com/cubecode/api/scripts/code/blocks/ScriptBlockEntity.java",
+                    "com/cubecode/api/scripts/code/blocks/ScriptBlockState.java",
+                    "com/cubecode/api/scripts/code/cubecode/CubeCodeStates.java",
+                    "com/cubecode/api/scripts/code/entities/ScriptEntity.java",
+                    "com/cubecode/api/scripts/code/entities/ScriptPlayer.java",
+                    "com/cubecode/api/scripts/code/items/ScriptInventory.java",
+                    "com/cubecode/api/scripts/code/items/ScriptItem.java",
+                    "com/cubecode/api/scripts/code/items/ScriptItemStack.java",
+                    "com/cubecode/api/scripts/code/nbt/ScriptNbtCompound.java",
+                    "com/cubecode/api/scripts/code/nbt/ScriptNbtList.java"
+                ),
+                List.of(
 
+                )
         );
     }
 }

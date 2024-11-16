@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import com.cubecode.client.views.DashboardView;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 
-public class DashboardScreen extends Screen {
+public class DashboardScreen extends ImGuiScreen {
     public static DrawContext drawContext;
 
     public DashboardScreen() {

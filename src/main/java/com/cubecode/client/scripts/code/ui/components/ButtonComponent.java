@@ -18,20 +18,13 @@ public class ButtonComponent extends AbstractComponent {
         return this;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     @Override
     public void render() {
-        float width = this.width;
-        float height = this.height;
-
-        if (this.rw != null) {
-            width = ImGui.getWindowSizeX() * this.rw;
-        }
-
-        if (this.rh != null) {
-            height = ImGui.getWindowSizeY() * this.rh;
-        }
-
-        if (ImGui.button(this.label, width, height)) {
+        if (ImGui.button(this.label, this.getWidth(), this.getHeight())) {
             this.onClick.run();
         }
     }

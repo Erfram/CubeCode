@@ -1,7 +1,9 @@
 package com.cubecode.client.views.idea.core;
 
+import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.api.scripts.ServerScript;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -20,10 +22,7 @@ import com.cubecode.network.packets.server.DeleteElementC2SPacket;
 import com.cubecode.network.packets.server.InsertElementC2SPacket;
 import com.cubecode.network.packets.server.RunScriptC2SPacket;
 import com.cubecode.network.packets.server.SaveScriptC2SPacket;
-import com.cubecode.utils.CubeCodeException;
-import com.cubecode.utils.Icons;
-import com.cubecode.utils.Script;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.*;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.texteditor.TextEditor;
@@ -31,9 +30,12 @@ import imgui.flag.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CubeCodeIDEAView extends View {
@@ -61,10 +63,18 @@ public class CubeCodeIDEAView extends View {
 
     private boolean isIDEAFocused = false;
 
+    private boolean isConfirmDeleteRender = false;
+
+    Map<Character, Character> pairs = new HashMap<>();
+
     public CubeCodeIDEAView(CopyOnWriteArrayList<IdeaNode> nodes) {
         this.nodes = nodes;
 
         this.sortNodes();
+
+        this.pairs.put('(', ')');
+        this.pairs.put('[', ']');
+        this.pairs.put('{', '}');
     }
 
     public void sortNodes() {
@@ -91,8 +101,6 @@ public class CubeCodeIDEAView extends View {
     public void init() {
         super.init();
 
-        this.codeEditor.setShowWhitespaces(false);
-        this.codeEditor.setTabSize(4);
         this.codeEditor.setPalette(this.codeEditor.getDarkPalette());
     }
 
@@ -140,6 +148,7 @@ public class CubeCodeIDEAView extends View {
                     CubeImGui.beginChild("edit", 0, 0, true, this::renderEdit);
 
                     this.manageKeybinding();
+                    this.renderConfirmDelete();
                 })
                 .render(this);
     }
@@ -193,6 +202,10 @@ public class CubeCodeIDEAView extends View {
                     ImGui.colorConvertFloat4ToU32(255, 255, 255, 255)
             );
         }
+
+        CubeImGui.imageButton(Icons.NBT_LIST, "Logger", 16, 16, () -> {
+            ImGuiLoader.pushView(new LoggerView());
+        });
     }
 
     public void renderFileManager() {
@@ -290,33 +303,71 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void manageKeybinding() {
-        if (isIDEAFocused)
-            return;
+        if (this.isIDEAFocused) {
+            if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL)) {
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_D)) {
+                    String currentLine = this.codeEditor.getCurrentLineText();
 
-        if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL)) {
-            if (ImGui.isKeyPressed(GLFW.GLFW_KEY_X)) {
-                this.actionCut();
+                    List<String> textLines = new ArrayList<>(List.of(this.codeEditor.getTextLines()));
+
+                    textLines.add(this.codeEditor.getCursorPositionLine(), currentLine);
+
+                    this.codeEditor.setText(String.join("\n", textLines));
+
+                    this.codeEditor.setCursorPosition(this.codeEditor.getCursorPositionLine()+1, this.codeEditor.getCursorPositionColumn());
+                }
+            }
+        } else {
+            if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL)) {
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_X)) {
+                    this.actionCut();
+                }
+
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_C)) {
+                    this.actionSave();
+                }
+
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_V)) {
+                    this.actionPaste();
+                }
+
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_R)) {
+                    this.actionRename();
+                }
             }
 
-            if (ImGui.isKeyPressed(GLFW.GLFW_KEY_C)) {
-                this.actionSave();
+            if (ImGui.isKeyPressed(GLFW.GLFW_KEY_DELETE)) {
+                this.actionDelete();
             }
-
-            if (ImGui.isKeyPressed(GLFW.GLFW_KEY_V)) {
-                this.actionPaste();
-            }
-
-            if (ImGui.isKeyPressed(GLFW.GLFW_KEY_R)) {
-                this.actionRename();
-            }
-        }
-
-        if (ImGui.isKeyPressed(GLFW.GLFW_KEY_DELETE)) {
-            this.actionDelete();
         }
 
         if (ImGui.isKeyPressed(GLFW.GLFW_KEY_F6)) {
             this.actionRunScript();
+        }
+    }
+
+    private void renderConfirmDelete() {
+        if (this.isConfirmDeleteRender) {
+            ImGui.pushStyleColor(ImGuiCol.Border, ColorUtils.rgbaToImguiColor(255, 255, 255, 255));
+            ImGui.openPopup("confirm_delete");
+
+            if (ImGui.beginPopupModal("confirm_delete", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize)) {
+                ImGui.textColored(255, 207, 72, 255, "Удалить " + this.preSelectedNode.getName() + "?");
+
+                if (ImGui.button("Да")) {
+                    this.deleteFile();
+                }
+
+                ImGui.sameLine();
+
+                if (ImGui.button("Нет")) {
+                    this.isConfirmDeleteRender = false;
+                    ImGui.closeCurrentPopup();
+                }
+
+                ImGui.endPopup();
+            }
+            ImGui.popStyleColor();
         }
     }
 
@@ -334,9 +385,13 @@ public class CubeCodeIDEAView extends View {
 
             List<ServerScript> clientScripts = new ArrayList<>();
 
-            for (IdeaNode node : this.nodes) if (node.getType() == NodeType.SCRIPT) {
-                if (((ScriptNode)node).getScript().getSide() == ScriptSide.CLIENT) {
-                    clientScripts.add(((ScriptNode) node).getServerScript());
+            for (IdeaNode node : this.nodes) {
+                if (node.getType() == NodeType.SCRIPT) {
+                    if (((ScriptNode)node).getScript().getSide() == ScriptSide.CLIENT) {
+                        clientScripts.add(((ScriptNode) node).getServerScript());
+                    }
+                } else {
+                    this.scanFolder((FolderNode) node, clientScripts);
                 }
             }
 
@@ -346,10 +401,22 @@ public class CubeCodeIDEAView extends View {
                 scripts.add(new ClientScript(script.getName(), script.getCode()));
             }
 
-            CubeCodeClient.clientProjectManager.createScripts(scripts);
+            CubeCodeClient.projectManager.setScripts(scripts);
 
             Dispatcher.sendToServer(new SynchronizedClientScriptsPacket(clientScripts));
         }
+    }
+
+    private void scanFolder(FolderNode folderNode, List<ServerScript> serverScripts) {
+        folderNode.getChildren().forEach(node -> {
+            if (node.getType() == NodeType.SCRIPT) {
+                if (((ScriptNode)node).getScript().getSide() == ScriptSide.CLIENT) {
+                    serverScripts.add(((ScriptNode) node).getServerScript());
+                }
+            } else {
+                this.scanFolder((FolderNode) node, serverScripts);
+            }
+        });
     }
 
     private void runContextMenu() {
@@ -432,6 +499,16 @@ public class CubeCodeIDEAView extends View {
                         "Ctrl + R",
                         this::actionRename
                 );
+
+                ImGui.separator();
+
+                CubeImGui.menuItemAndTooltip(
+                        "Открыть в проводнике", Icons.SEARCH,
+                        16, 16,
+                        128, 128, 128, 255,
+                        "",
+                        this::actionOpenExplorer
+                );
             }
 
             ImGui.endPopup();
@@ -450,14 +527,14 @@ public class CubeCodeIDEAView extends View {
         if (this.saveNode != null) {
             String path = "/" + this.saveNode.getName();
             for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
-                if (!NodeUtils.hasNodeByPath(view.nodes, path)) {
+                if (!NodeUtils.hasNodeByPathIgnoreCase(view.nodes, path)) {
                     view.nodes.add(this.saveNode);
 
                     view.sortNodes();
                 }
             }
 
-            if (!NodeUtils.hasNodeByPath(this.nodes, path)) {
+            if (!NodeUtils.hasNodeByPathIgnoreCase(this.nodes, path)) {
                 Dispatcher.sendToServer(new InsertElementC2SPacket(this.saveNode, ""));
             }
         }
@@ -476,7 +553,7 @@ public class CubeCodeIDEAView extends View {
             String path = folderNode.getPath() + "/" + this.saveNode.getName();
             boolean isSendPacket = false;
             for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
-                if (!NodeUtils.hasNodeByPath(view.nodes, path)) {
+                if (!NodeUtils.hasNodeByPathIgnoreCase(view.nodes, path)) {
                     IdeaNode node = this.saveNode.copy();
 
                     node.setPath(path);
@@ -498,9 +575,11 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void actionCut() {
-        this.saveNode = this.preSelectedNode;
+        if (this.preSelectedNode != null) {
+            this.saveNode = this.preSelectedNode;
 
-        actionDelete();
+            this.deleteFile();
+        }
     }
 
     private void actionSave() {
@@ -508,6 +587,49 @@ public class CubeCodeIDEAView extends View {
     }
 
     private void actionDelete() {
+        this.isConfirmDeleteRender = true;
+    }
+
+    private void actionRename() {
+        ImGuiLoader.pushView(new RenameView(this.preSelectedNode));
+    }
+
+    private void actionOpenExplorer() {
+        File file = new File(CubeCode.cubeCodeDirectory, "project" + this.preSelectedNode.getPath().substring(0, this.preSelectedNode.getPath().lastIndexOf("/") + 1));
+
+        if (file.exists()) {
+            Util.getOperatingSystem().open(file);
+        }
+    }
+
+    private void actionRunScript() {
+        if (this.selectedNode != null) {
+            if (this.selectedNode.getType() == NodeType.SCRIPT) {
+                this.saveContentScript();
+                ScriptNode scriptNode = (ScriptNode) this.selectedNode;
+                if (scriptNode.getScript().getSide() == ScriptSide.SERVER) {
+                    Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getServerScript()));
+                } else {
+                    ClientProperties properties = ClientProperties.create(
+                            scriptNode.getScript().getName(),
+                            "client",
+                            MinecraftClient.getInstance().player,
+                            null,
+                            MinecraftClient.getInstance().world);
+
+                    try {
+                        CubeCodeClient.projectManager.getScript(scriptNode.getScript().getName()).run(properties);
+                    } catch (CubeCodeException e) {
+                        Text text = Text.of(e.getMessage()).copy().styled(style -> style.withColor(Formatting.RED));
+
+                        MinecraftClient.getInstance().player.sendMessage(text);
+                    }
+                }
+            }
+        }
+    }
+
+    private void deleteFile() {
         if (this.preSelectedNode != null) {
             String path = this.preSelectedNode.getPath();
             String parent = path.substring(0, path.lastIndexOf("/"));
@@ -532,38 +654,6 @@ public class CubeCodeIDEAView extends View {
         }
     }
 
-    private void actionRename() {
-        ImGuiLoader.pushView(new RenameView(this.preSelectedNode));
-    }
-
-    private void actionRunScript() {
-        if (this.selectedNode != null) {
-            if (this.selectedNode.getType() == NodeType.SCRIPT) {
-                this.saveContentScript();
-                ScriptNode scriptNode = (ScriptNode) this.selectedNode;
-                if (scriptNode.getScript().getSide() == ScriptSide.SERVER) {
-                    Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getServerScript()));
-                } else {
-                    ClientProperties properties = ClientProperties.create(
-                            scriptNode.getScript().getName(),
-                            "client",
-                            MinecraftClient.getInstance().player,
-                            null,
-                            MinecraftClient.getInstance().world);
-
-                    try {
-                        CubeCodeClient.clientProjectManager.getScript(scriptNode.getName()).run(properties);
-                    } catch (CubeCodeException e) {
-                        Text text = Text.of(e.getMessage());
-                        List<Text> withStyle = text.getWithStyle(text.getStyle().withColor(Formatting.RED));
-
-                        MinecraftClient.getInstance().player.sendMessage(withStyle.get(0));
-                    }
-                }
-            }
-        }
-    }
-
     private void renderEdit() {
         if (this.selectedNode == null)
             return;
@@ -571,8 +661,12 @@ public class CubeCodeIDEAView extends View {
         if (this.isTextFile()) {
             ScriptNode scriptNode = (ScriptNode) this.selectedNode;
 
-            this.codeEditor.setLanguageDefinition(scriptNode.getScriptType().getDefinition());
+            this.codeEditor.setLanguageDefinition(ScriptDefinition.javaScript());
             this.codeEditor.setPalette(ScriptDefinition.getJavaScriptPalette());
+
+            this.codeEditor.setShowWhitespaces(CubeCodeConfig.getIdeaSettingsConfig().showWhitespaces);
+            this.codeEditor.setReadOnly(CubeCodeConfig.getIdeaSettingsConfig().readOnly);
+            this.codeEditor.setTabSize(CubeCodeConfig.getIdeaSettingsConfig().tabSize);
 
             this.codeEditor.render("IDEA");
 

@@ -6,6 +6,7 @@ import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.views.idea.utils.JavaScriptDefinition;
+import com.cubecode.client.views.idea.utils.ScriptDefinition;
 import com.cubecode.utils.Documentation;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
@@ -74,10 +75,10 @@ public class DocumentationView extends View {
         ImGui.setNextWindowPos(x, y);
         ImGui.setNextWindowSize(viewWidth, viewHeight);
 
-        CODE_EDITOR.setLanguageDefinition(JavaScriptDefinition.build());
         CODE_EDITOR.setShowWhitespaces(false);
         CODE_EDITOR.setTabSize(4);
-        CODE_EDITOR.setPalette(JavaScriptDefinition.buildPallet());
+        CODE_EDITOR.setLanguageDefinition(ScriptDefinition.javaScript());
+        CODE_EDITOR.setPalette(ScriptDefinition.getJavaScriptPalette());
     }
 
     @Override

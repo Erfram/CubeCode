@@ -72,7 +72,7 @@ public class RenameView extends View {
                                     for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
                                         if (!NodeUtils.hasNodeByPath(view.nodes, copyNode.getPath())) {
                                             if (isSendToServer) {
-                                                Dispatcher.sendToServer(new RenameElementC2SPacket(ideaNode.getPath(), name));
+                                                Dispatcher.sendToServer(new RenameElementC2SPacket(ideaNode.getPath(), name, ideaNode.getType()));
                                             }
 
                                             isSendToServer = false;

@@ -62,6 +62,26 @@ public class WindowComponent extends AbstractComponent {
         return this;
     }
 
+    public WindowComponent noFocusOnAppearing() {
+        this.flags = this.flags | ImGuiWindowFlags.NoFocusOnAppearing;
+        return this;
+    }
+
+    public WindowComponent noNavFocus() {
+        this.flags = this.flags | ImGuiWindowFlags.NoNavFocus;
+        return this;
+    }
+
+    public WindowComponent noBringToFrontOnFocus() {
+        this.flags = this.flags | ImGuiWindowFlags.NoBringToFrontOnFocus;
+        return this;
+    }
+
+    public WindowComponent noResize() {
+        this.flags = this.flags | ImGuiWindowFlags.NoResize;
+        return this;
+    }
+
     @Override
     public void render() {
         this.view.runnables.add(() -> {

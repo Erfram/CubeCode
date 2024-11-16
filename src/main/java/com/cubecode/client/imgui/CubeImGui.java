@@ -12,6 +12,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiMouseButton;
 import imgui.flag.ImGuiMouseCursor;
 import imgui.flag.ImGuiStyleVar;
@@ -692,7 +693,7 @@ public class CubeImGui {
     public static void selectable(String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable selectableAction) {
         boolean selectableScript = ImGui.selectable("##"+label, isSelected, imGuiSelectableFlags);
 
-        ImGui.sameLine(0, 18);
+        ImGui.sameLine(0, 0);
         ImGui.image(icon.getGlId(), 16, 16);
 
         ImGui.sameLine(0, 4);
@@ -777,5 +778,40 @@ public class CubeImGui {
         });
 
         ImGui.imageButton(frameBuffer.getTexture(), width, height);
+    }
+
+    public void splitter(boolean splitVertically, float thickness, float size0, float size1, float minSize0, float minSize1) {
+        ImVec2 backupPos = ImGui.getCursorPos();
+        if (splitVertically) {
+            ImGui.setCursorPosY(backupPos.y + size0);
+        } else {
+            ImGui.setCursorPosX(backupPos.x + size0);
+        }
+
+        ImGui.pushStyleColor(ImGuiCol.Button, 0, 0, 0, 0);
+        ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0, 0, 0, 0);
+        ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.6f, 0.6f, 0.6f, 0.1f);
+        ImGui.button((splitVertically ? "" : "##Splitter"), !splitVertically ? thickness : -1.0f, splitVertically ? thickness : -1.0f);
+        ImGui.popStyleColor(3);
+
+        ImGui.setItemAllowOverlap();
+
+        if (ImGui.isItemActive()) {
+            float mouseDelta = splitVertically ? ImGui.getIO().getMouseDeltaY() : ImGui.getIO().getMouseDeltaX();
+
+            // Minimum pane size
+            if (mouseDelta < minSize0 - size0) {
+                mouseDelta = minSize0 - size0;
+            }
+            if (mouseDelta > size1 - minSize1) {
+                mouseDelta = size1 - minSize1;
+            }
+
+            // Apply resize
+            size0 += mouseDelta;
+            size1 -= mouseDelta;
+        }
+
+        ImGui.setCursorPos(backupPos.x, backupPos.y);
     }
 }

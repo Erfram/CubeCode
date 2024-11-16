@@ -9,6 +9,7 @@ import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import net.minecraft.text.Text;
 
@@ -46,7 +47,7 @@ public class SettingsView extends View {
     public void render() {
         Window.create()
                 .title(getName())
-                .onExit(CubeCodeConfig::saveConfig)
+                .onExit(this::onClose)
                 .callback(() -> {
                     CubeImGui.beginChild("Settings Pane", 200, 0, false, this::renderSettingsPane);
 
@@ -60,7 +61,11 @@ public class SettingsView extends View {
     private void renderSettingsPane() {
         CubeImGui.treeNodeEx(Text.translatable("imgui.cubecode.windows.settings.general").getString(), Icons.FLAG, ImGuiTreeNodeFlags.SpanAvailWidth, () -> {
             CubeImGui.selectable(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), false, Icons.APPEARANCE, 0, () -> {
-                selectedSetting = this::renderAppearanceContent;
+                this.selectedSetting = this::renderAppearanceContent;
+            });
+
+            CubeImGui.selectable("IDEA", false, Icons.SERVER, 0, () -> {
+                this.selectedSetting = this::renderIDEAContent;
             });
         });
     }
@@ -98,8 +103,42 @@ public class SettingsView extends View {
         }
     }
 
+    private void renderIDEAContent() {
+        String tabSizeId = "tabSize_" + this.getUniqueID();
+        String showWhitespacesId = "showWhitespaces_"+this.getUniqueID();
+        String readOnlyId = "readOnly_" + this.getUniqueID();
+
+        this.putVariable(tabSizeId, new int[]{CubeCodeConfig.getIdeaSettingsConfig().tabSize});
+        this.putVariable(showWhitespacesId, new ImBoolean(CubeCodeConfig.getIdeaSettingsConfig().showWhitespaces));
+        this.putVariable(readOnlyId, new ImBoolean(CubeCodeConfig.getIdeaSettingsConfig().readOnly));
+
+        ImGui.sliderInt("tabSize", this.getVariable(tabSizeId), 0, 8);
+        ImGui.checkbox("showWhitespaces", this.getVariable(showWhitespacesId));
+        ImGui.checkbox("readOnly", this.getVariable(readOnlyId));
+    }
+
     @Override
     public void onClose() {
         CubeCodeConfig.saveConfig();
+
+        String tabSizeId = "tabSize_" + this.getUniqueID();
+        String showWhitespacesId = "showWhitespaces_"+this.getUniqueID();
+        String readOnlyId = "readOnly_" + this.getUniqueID();
+
+        int[] tabSize = this.getVariable(tabSizeId);
+        ImBoolean showWhitespaces = this.getVariable(showWhitespacesId);
+        ImBoolean readOnly = this.getVariable(readOnlyId);
+
+        if (tabSize != null) {
+            CubeCodeConfig.getIdeaSettingsConfig().tabSize = tabSize[0];
+        }
+
+        if (showWhitespaces != null) {
+            CubeCodeConfig.getIdeaSettingsConfig().showWhitespaces = showWhitespaces.get();
+        }
+
+        if (readOnly != null) {
+            CubeCodeConfig.getIdeaSettingsConfig().readOnly = readOnly.get();
+        }
     }
 }

@@ -148,7 +148,7 @@ public class ImGuiLoader {
         ImFont font = CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName);
 
         if (font == null) {
-            font = CubeCodeClient.fontManager.fonts.get("default");
+            font = CubeCodeClient.fontManager.fonts.get("minecraft");
         }
 
         ImGui.pushFont(font);

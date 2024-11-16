@@ -8,10 +8,12 @@ import com.cubecode.client.imgui.basic.window.WindowData;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.all.IDEARequestedPacket;
+import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.Icons;
 import imgui.*;
 import imgui.flag.ImGuiDockNodeFlags;
 import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 
 public class DashboardView extends View {
     @Override
@@ -31,6 +33,10 @@ public class DashboardView extends View {
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.windows.events.title").getString(), () -> {
                     Dispatcher.sendToServer(new EventsRequestedPacket());
                 });
+
+                CubeImGui.menuItem("States", () -> {
+                    Dispatcher.sendToServer(new StatesRequestedPacket());
+                });
             });
 
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.settings.title").getString(), () -> {
@@ -49,6 +55,12 @@ public class DashboardView extends View {
 
             CubeImGui.imageButton(Icons.SAVE, Text.translatable("imgui.cubecode.dashboard.saveWindows.title").getString(), 16, 16, () -> {
                 CubeCodeClient.windowStateManager.saveWindowState();
+            });
+
+            ImGui.setCursorPosX(iconPosX - 32);
+
+            CubeImGui.imageButton(Icons.LLAMA, Text.translatable("imgui.cubecode.dashboard.support.title").getString(), 16, 16, () -> {
+                Util.getOperatingSystem().open("https://boosty.to/jenyuyhj");
             });
         });
 

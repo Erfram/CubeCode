@@ -7,6 +7,7 @@
   "imgui.cubecode.dashboard.dev.title": "Dev",
 
   "imgui.cubecode.dashboard.saveWindows.title": "Save window layout",
+  "imgui.cubecode.dashboard.support.title": "Support",
 
   "imgui.cubecode.windows.CubeCodeIDEA.scope": "Scope",
   "imgui.cubecode.windows.CubeCodeIDEA.documentation": "Documentation",
@@ -16,7 +17,6 @@
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Folder",
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Script",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.createView.create": "Create",
   "imgui.cubecode.windows.CubeCodeIDEA.createView.rename": "Rename",
 
   "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Paste",

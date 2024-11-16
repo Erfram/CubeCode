@@ -2,12 +2,9 @@ package com.cubecode.network;
 
 import com.cubecode.network.basic.AbstractDispatcher;
 import com.cubecode.network.basic.AbstractPacket;
-import com.cubecode.network.packets.all.RunScriptPacket;
-import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
+import com.cubecode.network.packets.all.*;
 import com.cubecode.network.packets.server.CreateFolderC2SPacket;
-import com.cubecode.network.packets.server.CreateScriptC2SPacket;
-import com.cubecode.network.packets.all.EventsRequestedPacket;
-import com.cubecode.network.packets.all.IDEARequestedPacket;
+import com.cubecode.network.packets.all.CreateScriptPacket;
 import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
 import com.cubecode.network.packets.server.*;
 import net.fabricmc.api.EnvType;
@@ -26,8 +23,10 @@ public class Dispatcher {
             this.registerPacket(IDEARequestedPacket.class, IDEARequestedPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(RunScriptPacket.class, RunScriptPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ClientHandler.class, EnvType.CLIENT);
 
-            this.registerPacket(CreateScriptC2SPacket.class, CreateScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(CreateFolderC2SPacket.class, CreateFolderC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(DeleteElementC2SPacket.class, DeleteElementC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(InsertElementC2SPacket.class, InsertElementC2SPacket.ServerHandler.class, EnvType.SERVER);
@@ -36,6 +35,7 @@ public class Dispatcher {
             this.registerPacket(SaveScriptC2SPacket.class, SaveScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(EventsSyncC2SPacket.class, EventsSyncC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RequestScriptScopeC2SPacket.class, RequestScriptScopeC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(IDEARequestedPacket.class, IDEARequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RunScriptPacket.class, RunScriptPacket.ServerHandler.class, EnvType.SERVER);

@@ -1,9 +1,11 @@
 package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCodeClient;
-import com.cubecode.api.scripts.Properties;
+import com.cubecode.api.scripts.code.ScriptEvent;
+import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import com.cubecode.client.scripts.ClientProperties;
 import com.cubecode.client.scripts.ClientScript;
+import com.cubecode.client.scripts.code.ClientScriptEvent;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
 import com.cubecode.network.basic.ServerPacketHandler;
@@ -58,10 +60,14 @@ public class RunScriptPacket extends AbstractPacket {
     public static class ClientHandler implements ClientPacketHandler<RunScriptPacket> {
         @Override
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, RunScriptPacket packet) {
-            ClientScript script = CubeCodeClient.clientProjectManager.getScript(packet.scriptName);
+            ClientScript script = CubeCodeClient.projectManager.getScript(packet.scriptName);
 
             if (script != null) {
                 ClientProperties properties = ClientProperties.create(script.name, packet.function, client.player, null, client.world);
+
+                ClientScriptEvent scriptEvent = (ClientScriptEvent) properties.get("Context");
+
+                scriptEvent.setValue("data", new ScriptNbtCompound(packet.nbt));
 
                 try {
                     script.run(properties);

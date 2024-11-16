@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * <pre>{@code
- *      c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getId(), false)
+ * c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getId(), false)
  * }</pre>
  */
 public class ScriptBlockState {
@@ -38,7 +38,7 @@ public class ScriptBlockState {
      * Returns the current Minecraft block state
      *
      * <pre>{@code
-     *      CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();
+     * CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();
      * }</pre>
      */
     public BlockState getMinecraftBlockState() {
@@ -56,7 +56,7 @@ public class ScriptBlockState {
      * Checks if this block state is the same as the given state
      *
      * <pre>{@code
-     *      CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));
+     * CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));
      * }</pre>
      */
     public boolean isSame(ScriptBlockState state) {

@@ -4,26 +4,29 @@ import com.cubecode.api.scripts.ProjectManager;
 import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.imgui.components.Button;
-import com.cubecode.client.imgui.components.InputText;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.views.idea.utils.Extension;
 import com.cubecode.client.views.idea.utils.node.*;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.CreateFolderC2SPacket;
-import com.cubecode.network.packets.server.CreateScriptC2SPacket;
+import com.cubecode.network.packets.all.CreateScriptPacket;
+import com.cubecode.utils.ScriptSide;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.regex.Pattern;
 
 public class CreateView extends View {
     private final int viewWidth = 180;
-    private final int viewHeight = 75;
+    private final int viewHeight = 110;
     private final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
     private final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
+
+    private static final Pattern VALID_FILENAME_PATTERN = Pattern.compile("^[^<>:\"/\\\\|?*\\x00-\\x1F]*$");
 
     private NodeType type;
     private FolderNode folderNode;
@@ -44,84 +47,114 @@ public class CreateView extends View {
 
     @Override
     public String getName() {
-        return String.format("##Create" + "##%s", uniqueID);
+        return String.format("Create File" + "##%s", uniqueID);
     }
+
+    public ScriptSide side = ScriptSide.SERVER;
 
     @Override
     public void render() {
         ImGui.pushStyleColor(ImGuiCol.Border, 255, 255, 255, 255);
         Window.create()
-                .flags(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+                .flags(ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
                 .title(getName())
-            .draw(
-                InputText.builder()
-                    .rxy(0.175f, 0.2f)
-                    .id("name")
-                    .build(),
-                Button.builder()
-                        .rxy(0.5f, 0.6f)
-                        .title(Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.createView.create").getString())
-                        .callback(() -> {
-                            String name = ((ImString) this.getVariable("name")).get();
+                .callback(() -> {
+                    String idInputName = "##name"+this.getUniqueID();
+                    this.putVariable(idInputName, new ImString(255));
 
-                            if (this.type == NodeType.SCRIPT) {
-                                name = name.endsWith(".js") ? name : name + ".js";
+                    if (!ImGui.isWindowFocused()) {
+                        ImGuiLoader.removeView(this);
+                    }
+
+                    ImGui.setCursorPos(ImGui.getWindowWidth() * 0.175f, ImGui.getWindowHeight() * (this.type == NodeType.SCRIPT ? 0.25f : 0.5f));
+                    ImGui.inputText("##name", this.getVariable(idInputName));
+
+                    if (this.type == NodeType.SCRIPT) {
+                        ImGui.separator();
+                        ImGui.spacing();
+
+                        if (ImGui.selectable("Server", this.side == ScriptSide.SERVER)) {
+                            this.side = ScriptSide.SERVER;
+
+                            if (ImGui.isMouseDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+                                this.createScript();
                             }
+                        }
 
-                            for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
-                                if (folderNode != null) {
-                                    if (NodeUtils.hasNodeByPath(view.nodes, folderNode.getPath() + "/" + name))
-                                        return;
-                                } else {
-                                    if (NodeUtils.hasNodeByPath(view.nodes, "/" + name))
-                                        return;
-                                }
+                        if (ImGui.selectable("Client", this.side == ScriptSide.CLIENT)) {
+                            this.side = ScriptSide.CLIENT;
 
-                                if (this.type == NodeType.FOLDER) {
-                                    FolderNode node = new FolderNode(name);
-
-                                    if (folderNode != null) {
-                                        FolderNode findNode = (FolderNode) NodeUtils.findNodeByPath(view.nodes, folderNode.getPath());
-
-                                        findNode.addChild(node);
-                                    } else {
-                                        view.nodes.add(node);
-                                    }
-
-                                    view.sortNodes();
-
-                                } else {
-                                    ScriptNode scriptNode = new ScriptNode(
-                                            new ServerScript(name, ProjectManager.DEFAULT_SCRIPT),
-                                            Extension.JAVASCRIPT
-                                    );
-
-                                    if (folderNode != null) {
-                                        FolderNode findNode = (FolderNode) NodeUtils.findNodeByPath(view.nodes, folderNode.getPath());
-
-                                        findNode.addChild(scriptNode);
-                                    } else {
-                                        view.nodes.add(scriptNode);
-                                    }
-
-                                    view.sortNodes();
-                                }
+                            if (ImGui.isMouseDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+                                this.createScript();
                             }
+                        }
+                    }
 
-                            ImGuiLoader.removeView(this);
-
-                            String path = folderNode == null ? "" : folderNode.getPath();
-
-                            Dispatcher.sendToServer(this.type == NodeType.FOLDER ? new CreateFolderC2SPacket(name, path) : new CreateScriptC2SPacket(name, path));
-                        })
-                        .build()
-            )
-            .callback(() -> {
-                if (!ImGui.isWindowFocused()) {
-                    ImGuiLoader.removeView(this);
-                }
-            })
+                    if (ImGui.isKeyPressed(GLFW.GLFW_KEY_ENTER)) {
+                        this.createScript();
+                    }
+                })
             .render(this);
         ImGui.popStyleColor();
+    }
+
+    private void createScript() {
+        String name = ((ImString) this.getVariable("##name"+this.getUniqueID())).get();
+
+        if (name.isEmpty() || name.length() > 255 || !VALID_FILENAME_PATTERN.matcher(name).matches())
+            return;
+
+        if (this.type == NodeType.SCRIPT) {
+            name = name.endsWith(".js") ? name : name + ".js";
+        }
+
+        for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
+            if (folderNode != null) {
+                if (NodeUtils.hasNodeByPathIgnoreCase(view.nodes, folderNode.getPath() + "/" + name))
+                    return;
+            } else {
+                if (NodeUtils.hasNodeByPathIgnoreCase(view.nodes, "/" + name))
+                    return;
+            }
+
+            if (this.type == NodeType.FOLDER) {
+                FolderNode node = new FolderNode(name);
+
+                if (folderNode != null) {
+                    FolderNode findNode = (FolderNode) NodeUtils.findNodeByPath(view.nodes, folderNode.getPath());
+
+                    findNode.addChild(node);
+                } else {
+                    view.nodes.add(node);
+                }
+
+                view.sortNodes();
+
+            } else {
+                ScriptNode scriptNode = new ScriptNode(
+                        new ServerScript(name,
+                                this.side == ScriptSide.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT,
+                                this.side
+                        ),
+                        Extension.JAVASCRIPT
+                );
+
+                if (folderNode != null) {
+                    FolderNode findNode = (FolderNode) NodeUtils.findNodeByPath(view.nodes, folderNode.getPath());
+
+                    findNode.addChild(scriptNode);
+                } else {
+                    view.nodes.add(scriptNode);
+                }
+
+                view.sortNodes();
+            }
+        }
+
+        ImGuiLoader.removeView(this);
+
+        String path = folderNode == null ? "/" : folderNode.getPath();
+
+        Dispatcher.sendToServer(this.type == NodeType.FOLDER ? new CreateFolderC2SPacket(name, path) : new CreateScriptPacket(name, path, this.side));
     }
 }

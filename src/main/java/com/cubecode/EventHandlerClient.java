@@ -17,6 +17,8 @@ public class EventHandlerClient {
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             CubeCodeClient.windowStateManager = new WindowStateManager();
+
+            CubeCodeClient.projectManager = new ClientProjectManager();
         });
     }
 }

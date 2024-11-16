@@ -18,7 +18,7 @@ import java.util.Map;
 public class FontManager {
     public Map<String, ImFont> fonts = new HashMap<>();
 
-    public String currentFontName = "default";
+    public String currentFontName = "minecraft";
 
     public void loadFonts() {
         ImGuiIO io = ImGui.getIO();
@@ -28,9 +28,9 @@ public class FontManager {
         ImFontConfig fontConfig = new ImFontConfig();
         fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
 
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/default.ttf")) {
+        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/minecraft.ttf")) {
             byte[] bytes = inputStream.readAllBytes();
-            fonts.put("default", fontAtlas.addFontFromMemoryTTF(bytes, 16, new ImFontConfig(), io.getFonts().getGlyphRangesCyrillic()));
+            fonts.put("minecraft", fontAtlas.addFontFromMemoryTTF(bytes, 16, new ImFontConfig(), io.getFonts().getGlyphRangesCyrillic()));
         } catch (Exception exception) {
             CubeCode.LOGGER.error(exception.getMessage());
         }
@@ -74,8 +74,12 @@ public class FontManager {
         List<String> fontNames = new ArrayList<>();
 
         fonts.forEach(font -> {
-            fontNames.add(new File(font.getFilePath()).getName().replace(".ttf", ""));
+            if (!new File(font.getFilePath()).getName().equalsIgnoreCase("minecraft.ttf")) {
+                fontNames.add(new File(font.getFilePath()).getName().replace(".ttf", ""));
+            }
         });
+
+        fontNames.add("minecraft");
 
         return fontNames;
     }

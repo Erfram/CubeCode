@@ -56,7 +56,7 @@ public class SynchronizedClientScriptsPacket extends AbstractPacket {
                 clientScripts.add(new ClientScript(script.getName(), script.getCode()));
             }
 
-            CubeCodeClient.clientProjectManager.createScripts(clientScripts);
+            CubeCodeClient.projectManager.setScripts(clientScripts);
         }
     }
 

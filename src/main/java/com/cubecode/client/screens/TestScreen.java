@@ -7,7 +7,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
-public class TestScreen extends Screen {
+public class TestScreen extends ImGuiScreen {
     boolean isBackground;
     boolean shouldPause;
 

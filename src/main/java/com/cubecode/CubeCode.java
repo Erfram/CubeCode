@@ -1,7 +1,6 @@
 package com.cubecode;
 
 import com.cubecode.api.events.EventManager;
-import com.cubecode.api.files.FileManager;
 import com.cubecode.network.Dispatcher;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
