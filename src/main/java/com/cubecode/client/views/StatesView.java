@@ -2,6 +2,7 @@ package com.cubecode.client.views;
 
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import dev.latvian.mods.rhino.mod.util.NbtType;
 import imgui.ImGui;
 import imgui.flag.*;
 import imgui.type.*;
@@ -59,7 +60,6 @@ public class StatesView extends View {
                 }
 
                 ImGui.popStyleVar(2);
-                ImGui.popItemWidth();
                 ImGui.separator();
 
                 NbtCompound statesCompound = this.nbt.getCompound(this.currentState);
@@ -102,7 +102,9 @@ public class StatesView extends View {
 
                     ImGui.pushStyleVar(ImGuiStyleVar.FrameBorderSize, 1.0f);
                     ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 0.0f);
-                    if (stateValue.getType() == NbtElement.INT_TYPE) {
+
+                    byte stateType = stateValue.getType();
+                    if (stateType == NbtElement.INT_TYPE) {
                         this.putVariable(valueKey, new ImInt(((NbtInt) stateValue).intValue()));
                         ImInt value = this.getVariable(valueKey);
 
@@ -110,23 +112,23 @@ public class StatesView extends View {
                             statesCompound.putInt(newStateKey.get(), value.get());
                         }
                     }
-                    else if (stateValue.getType() == NbtElement.DOUBLE_TYPE) {
+                    else if (stateType == NbtElement.DOUBLE_TYPE) {
                         this.putVariable(valueKey, new ImDouble(((NbtDouble) stateValue).doubleValue()));
                         ImDouble value = this.getVariable(valueKey);
 
-                        if (!ImGui.dragScalar("##" + valueKey, ImGuiDataType.Double, value, 1f) && ImGui.isItemDeactivatedAfterEdit()) {
+                        if (!ImGui.dragScalar("##" + valueKey, ImGuiDataType.Double, value, 0.1f) && ImGui.isItemDeactivatedAfterEdit()) {
                             statesCompound.putDouble(newStateKey.get(), value.doubleValue());
                         }
                     }
-                    else if (stateValue.getType() == NbtElement.FLOAT_TYPE) {
+                    else if (stateType == NbtElement.FLOAT_TYPE) {
                         this.putVariable(valueKey, new ImFloat(((NbtFloat) stateValue).floatValue()));
                         ImFloat value = this.getVariable(valueKey);
 
-                        if (!ImGui.dragScalar("##" + valueKey, ImGuiDataType.Float, value, 1f) && ImGui.isItemDeactivatedAfterEdit()) {
+                        if (!ImGui.dragScalar("##" + valueKey, ImGuiDataType.Float, value, 0.1f) && ImGui.isItemDeactivatedAfterEdit()) {
                             statesCompound.putFloat(newStateKey.get(), value.floatValue());
                         }
                     }
-                    else if (stateValue.getType() == NbtElement.STRING_TYPE) {
+                    else if (stateType == NbtElement.STRING_TYPE) {
                         this.putVariable(valueKey, new ImString(stateValue.asString(), 9999));
                         ImString value = this.getVariable(valueKey);
 
