@@ -5,6 +5,7 @@ import com.cubecode.api.events.EventManager;
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.ProjectManager;
 import com.cubecode.api.scripts.ServerScript;
+import com.cubecode.api.scripts.SettingManager;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
@@ -13,6 +14,7 @@ import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.state.PlayerState;
 import com.cubecode.state.ServerState;
+import com.cubecode.utils.GsonManager;
 import com.cubecode.utils.Script;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
@@ -45,7 +47,9 @@ public class EventHandler {
                 CubeCode.LOGGER.info(String.format("#### Creating a mod directory %s for the world. ####", CubeCode.MOD_ID));
             }
 
+            CubeCode.settingManager = new SettingManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.projectManager = new ProjectManager(new File(CubeCode.cubeCodeDirectory, "project"));
+
             CubeCode.eventManager = new EventManager(new File(CubeCode.cubeCodeDirectory, "events.json"));
 
             CubeCode.eventManager.register();

@@ -1,7 +1,7 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
-import com.cubecode.client.views.idea.utils.node.NodeType;
+import com.cubecode.client.views.ide.utils.node.NodeType;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -51,8 +51,8 @@ public class RenameElementC2SPacket extends AbstractPacket {
             CubeCode.projectManager.renameFile(packet.path.substring(1), packet.name);
 
             switch (packet.type) {
-                case SCRIPT -> CubeCode.projectManager.renameScriptToSettings(packet.path.substring(1), packet.name);
-                case FOLDER -> CubeCode.projectManager.renameFolderToSettings(packet.path.substring(1), packet.name);
+                case SCRIPT -> CubeCode.settingManager.renameScriptName(packet.path.substring(1), packet.name);
+                case FOLDER -> CubeCode.settingManager.renameFolderName(packet.path.substring(1), packet.name);
             }
         }
     }

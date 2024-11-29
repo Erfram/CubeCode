@@ -7,25 +7,38 @@ import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.cubecode.CubeCode.projectManager;
 
 public class ServerScript implements Script {
     private String name;
     private String code;
     private ScriptSide side;
+    private List<String> libraries;
     public Context context;
     public ScriptScope scope;
+
+    public ServerScript(String name, String code, ScriptSide side, List<String> libraries) {
+        this.name = name;
+        this.code = code;
+        this.side = side;
+        this.libraries = libraries;
+    }
 
     public ServerScript(String name, String code, ScriptSide side) {
         this.name = name;
         this.code = code;
         this.side = side;
+        this.libraries = new ArrayList<>();
     }
 
     public ServerScript(String name, String code) {
         this.name = name;
         this.code = code;
         this.side = ScriptSide.SERVER;
+        this.libraries = new ArrayList<>();
     }
 
     public String getName() {
@@ -40,6 +53,11 @@ public class ServerScript implements Script {
         return side;
     }
 
+    @Override
+    public List<String> getLibraries() {
+        return this.libraries;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -52,10 +70,43 @@ public class ServerScript implements Script {
         this.side = side;
     }
 
+    @Override
+    public void setLibraries(List<String> libraries) {
+        this.libraries = libraries;
+    }
+
+    @Override
+    public void addLibraryScript(String scriptName) {
+        this.libraries.add(scriptName);
+    }
+
+    @Override
+    public boolean hasLibraryScript(String scriptName) {
+        int index = this.libraries.indexOf(scriptName);
+
+        if (index != -1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void removeLibraryScript(String scriptName) {
+        this.libraries.remove(scriptName);
+    }
+
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
         try {
+            this.libraries.forEach(library -> {
+                ServerScript script = projectManager.getScript(library);
+                if (script != null) {
+                    this.context.evaluateString(this.scope, script.getCode(), sourceName, 1, null);
+                }
+            });
+
             this.evaluate();
-            projectManager.invokeFunction(context, scope, function, properties.getMap().values().toArray());
+            projectManager.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");

@@ -1,7 +1,4 @@
-package com.cubecode.client.views.idea.utils.node;
-
-import com.cubecode.api.scripts.ServerScript;
-import com.cubecode.client.views.idea.utils.Extension;
+package com.cubecode.client.views.ide.utils.node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +69,7 @@ public class NodeUtils {
         }
 
         for (IdeaNode node : nodes) {
-            if (node instanceof FolderNode && hasNodeByPathIgnoreCase(((FolderNode) node).getChildren(), nodePath)) {
+            if (node instanceof FolderNode && hasNodeByPath(((FolderNode) node).getChildren(), nodePath)) {
                 return true;
             }
         }
@@ -80,47 +77,17 @@ public class NodeUtils {
         return false;
     }
 
-    public static List<IdeaNode> scriptsToIdeaNodes(List<ServerScript> scripts) {
-        List<IdeaNode> nodes = new ArrayList<>();
+    public static List<ScriptNode> getAllNodes(List<IdeaNode> nodes) {
+        List<ScriptNode> allNodes = new ArrayList<>();
 
-        for (ServerScript script : scripts) {
-            String[] pathParts = script.getName().split("/");
-            String scriptName = pathParts[pathParts.length - 1];
-
-            FolderNode currentFolder = null;
-            StringBuilder currentPath = new StringBuilder();
-
-            for (int i = 0; i < pathParts.length - 1; i++) {
-                String folderName = pathParts[i];
-                currentPath.append("/").append(folderName);
-                currentFolder = findOrCreateFolder(currentFolder == null ? nodes : currentFolder.getChildren(), folderName, currentPath.toString());
+        nodes.forEach(node -> {
+            if (node.getType() == NodeType.SCRIPT) {
+                allNodes.add((ScriptNode) node);
+            } else if (node.getType() == NodeType.FOLDER) {
+                allNodes.addAll(getAllNodes(((FolderNode) node).getChildren()));
             }
+        });
 
-            script.setName(scriptName);
-            ScriptNode scriptNode = new ScriptNode(script, Extension.JAVASCRIPT);
-            scriptNode.setPath(currentPath + "/" + scriptName);
-
-            if (currentFolder != null) {
-                currentFolder.addChild(scriptNode);
-            } else {
-                nodes.add(scriptNode);
-            }
-        }
-
-        return nodes;
-    }
-
-    private static FolderNode findOrCreateFolder(List<IdeaNode> nodes, String folderName, String folderPath) {
-        for (IdeaNode node : nodes) {
-            if (node instanceof FolderNode && node.getName().equals(folderName)) {
-                return (FolderNode) node;
-            }
-        }
-
-        FolderNode newFolder = new FolderNode(folderName);
-        newFolder.setPath(folderPath);
-        nodes.add(newFolder);
-
-        return newFolder;
+        return allNodes;
     }
 }

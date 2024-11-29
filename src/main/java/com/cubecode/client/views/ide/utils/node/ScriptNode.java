@@ -1,35 +1,29 @@
-package com.cubecode.client.views.idea.utils.node;
+package com.cubecode.client.views.ide.utils.node;
 
 import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.scripts.ClientScript;
-import com.cubecode.client.views.idea.utils.Extension;
 import com.cubecode.utils.Script;
-import com.cubecode.utils.ScriptSide;
 
 public class ScriptNode implements IdeaNode {
     private String name;
     private Script script;
-    private Extension scriptType;
     private String path;
 
-    public ScriptNode(Script script, Extension scriptType) {
+    public ScriptNode(Script script) {
         this.name = script.getName();
         this.script = script;
-        this.scriptType = scriptType;
         this.path = "/" + script.getName();
     }
 
-    public ScriptNode(Script script, Extension scriptType, String path) {
+    public ScriptNode(Script script, String path) {
         this.name = script.getName();
         this.script = script;
-        this.scriptType = scriptType;
         this.path = path;
     }
 
-    public ScriptNode(String name, Script script, Extension scriptType, String path) {
+    public ScriptNode(String name, Script script, String path) {
         this.name = name;
         this.script = script;
-        this.scriptType = scriptType;
         this.path = path;
     }
 
@@ -42,6 +36,7 @@ public class ScriptNode implements IdeaNode {
     public void setName(String name) {
         this.name = name;
         this.path = this.path.substring(0, this.path.lastIndexOf("/") + 1) + this.name;
+        this.script.setName(this.path.substring(1));
     }
 
     @Override
@@ -61,7 +56,7 @@ public class ScriptNode implements IdeaNode {
 
     @Override
     public IdeaNode copy() {
-        return new ScriptNode(new ServerScript(this.script.getName(), this.script.getCode(), this.script.getSide()), this.scriptType, this.path);
+        return new ScriptNode(new ServerScript(this.script.getName(), this.script.getCode(), this.script.getSide()), this.path);
     }
 
     public Script getScript() {
@@ -78,13 +73,5 @@ public class ScriptNode implements IdeaNode {
 
     public void setScript(ServerScript script) {
         this.script = script;
-    }
-
-    public Extension getScriptType() {
-        return scriptType;
-    }
-
-    public void setScriptType(Extension type) {
-        this.scriptType = type;
     }
 }

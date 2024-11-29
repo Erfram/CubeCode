@@ -8,22 +8,25 @@
 
   "imgui.cubecode.dashboard.saveWindows.title": "Save window layout",
   "imgui.cubecode.dashboard.support.title": "Support",
+  "imgui.cubecode.dashboard.discord.title": "Discord",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.scope": "Scope",
-  "imgui.cubecode.windows.CubeCodeIDEA.documentation": "Documentation",
-  "imgui.cubecode.windows.CubeCodeIDEA.run_script": "Run",
+  "imgui.cubecode.windows.CubeCodeIDE.scope": "Scope",
+  "imgui.cubecode.windows.CubeCodeIDE.documentation": "Documentation",
+  "imgui.cubecode.windows.CubeCodeIDE.run_script": "Run",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create": "Create",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Folder",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Script",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create": "Create",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create.folder": "Folder",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create.script": "Script",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.createView.rename": "Rename",
+  "imgui.cubecode.windows.CubeCodeIDE.createView.rename": "Rename",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Paste",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.cut": "Cut",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.copy": "Copy",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.delete": "Delete",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.rename": "Rename",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.paste": "Paste",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.cut": "Cut",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.copy": "Copy",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.delete": "Delete",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.rename": "Rename",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.changeType": "Change type",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.openInExplorer": "Open in explorer",
 
   "imgui.cubecode.debug.styleEditor.title": "Style Editor (not worth it)",
 

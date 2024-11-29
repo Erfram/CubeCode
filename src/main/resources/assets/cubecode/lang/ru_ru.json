@@ -8,23 +8,25 @@
 
   "imgui.cubecode.dashboard.saveWindows.title": "Сохранить расположение окон",
   "imgui.cubecode.dashboard.support.title": "Поддержка",
+  "imgui.cubecode.dashboard.discord.title": "Дискорд",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.scope": "Область видимости",
-  "imgui.cubecode.windows.CubeCodeIDEA.documentation": "Документация",
-  "imgui.cubecode.windows.CubeCodeIDEA.run_script": "Запустить",
+  "imgui.cubecode.windows.CubeCodeIDE.scope": "Область видимости",
+  "imgui.cubecode.windows.CubeCodeIDE.documentation": "Документация",
+  "imgui.cubecode.windows.CubeCodeIDE.run_script": "Запустить",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create": "Создать",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.folder": "Папка",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.create.script": "Скрипт",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create": "Создать",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create.folder": "Папка",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.create.script": "Скрипт",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.createView.create": "Создать",
-  "imgui.cubecode.windows.CubeCodeIDEA.createView.rename": "Переименовать",
+  "imgui.cubecode.windows.CubeCodeIDE.createView.rename": "Переименовать",
 
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.paste": "Вставить",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.cut": "Вырезать",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.copy": "Скопировать",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.delete": "Удалить",
-  "imgui.cubecode.windows.CubeCodeIDEA.context_menu.rename": "Переименовать",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.paste": "Вставить",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.cut": "Вырезать",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.copy": "Скопировать",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.delete": "Удалить",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.rename": "Переименовать",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.changeType": "Изменить тип",
+  "imgui.cubecode.windows.CubeCodeIDE.context_menu.openInExplorer": "Открыть в проводнике",
 
   "imgui.cubecode.debug.styleEditor.title": "Редактор стилей (не стоит)",
 

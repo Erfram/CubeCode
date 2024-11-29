@@ -4,6 +4,7 @@ import com.cubecode.api.scripts.code.items.ScriptInventory;
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.RunScriptPacket;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
@@ -236,7 +237,61 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
         return new ScriptInventory(this.entity.getInventory());
     }
 
-    public void sendTo(String script, ScriptNbtCompound nbt) {
-        Dispatcher.sendTo(new RunScriptPacket(script, nbt.getMinecraftNbtCompound()), this.entity);
+    /**
+     * Runs a client script.
+     *
+     * Example:
+     * <pre>{@code
+     * //Server Script: a.js | Client Script: b.js
+     *
+     * // a.js
+     * function server(c) {
+     * 	c.getPlayer().sendTo("b.js")
+     * }
+     *
+     * // b.js
+     * function client(c) {
+     * 	c.player.send("Hello Client!")
+     * }
+     * }</pre>
+     */
+    public void sendTo(String scriptName) {
+        Dispatcher.sendTo(new RunScriptPacket(scriptName, new NbtCompound()), this.entity);
+    }
+
+    /**
+     * Runs a client script. You can pass nbt to use it in some way on the client side
+     *
+     * Example:
+     * <pre>{@code
+     * //Server Script: a.js | Client Script: b.js
+     *
+     * // a.js
+     * function server(c) {
+     * 	c.getPlayer().sendTo(
+     * 		"b.js",
+     * 		CubeCode.createCompound("{\"a\":\"b\"}")
+     * 	)
+     * }
+     *
+     * // b.js
+     * function client(c) {
+     *  var data = c.getValue("data") //ScriptNbtCompound
+     * 	c.player.send("Hello Client!")
+     * 	c.player.send("Data: " + data.getString("a"))
+     * }
+     *
+     * }</pre>
+     */
+    public void sendTo(String scriptName, ScriptNbtCompound nbt) {
+        Dispatcher.sendTo(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()), this.entity);
+    }
+
+    public void sendTo(String script, String function) {
+        Dispatcher.sendTo(new RunScriptPacket(script, function, new NbtCompound()), this.entity);
+    }
+
+    public void sendTo(String script, String function, ScriptNbtCompound nbt) {
+        Dispatcher.sendTo(new RunScriptPacket(script, function, nbt.getMinecraftNbtCompound()), this.entity);
     }
 }

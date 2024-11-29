@@ -1,6 +1,9 @@
 package com.cubecode.network.packets.all;
 
+import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
+import com.cubecode.api.scripts.Properties;
+import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.api.scripts.code.ScriptEvent;
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import com.cubecode.client.scripts.ClientProperties;
@@ -63,7 +66,7 @@ public class RunScriptPacket extends AbstractPacket {
             ClientScript script = CubeCodeClient.projectManager.getScript(packet.scriptName);
 
             if (script != null) {
-                ClientProperties properties = ClientProperties.create(script.name, packet.function, client.player, null, client.world);
+                ClientProperties properties = ClientProperties.create(script.getName(), packet.function, client.player, null, client.world);
 
                 ClientScriptEvent scriptEvent = (ClientScriptEvent) properties.get("Context");
 
@@ -72,7 +75,7 @@ public class RunScriptPacket extends AbstractPacket {
                 try {
                     script.run(properties);
                 } catch(CubeCodeException e){
-                    client.player.sendMessage(Text.of(e.getMessage()));
+                    client.player.sendMessage(Text.of("§c" + e.getMessage()));
                 }
             }
         }
@@ -81,7 +84,22 @@ public class RunScriptPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<RunScriptPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RunScriptPacket packet) {
+            ServerScript script = CubeCode.projectManager.getScript(packet.scriptName);
 
+            if (script != null) {
+                Properties properties = Properties.create(script.getName(), packet.function, player, null, player.getWorld(), server);
+
+                ScriptEvent scriptEvent = (ScriptEvent) properties.get("Context");
+
+                scriptEvent.setValue("data", new ScriptNbtCompound(packet.nbt));
+
+                try {
+                    script.run(packet.scriptName, properties);
+                } catch (CubeCodeException cce) {
+                    player.sendMessage(Text.of("§c" + cce.getMessage()));
+                    cce.printStackTrace();
+                }
+            }
         }
     }
 }

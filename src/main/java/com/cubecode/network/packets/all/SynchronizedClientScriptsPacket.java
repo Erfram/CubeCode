@@ -39,7 +39,7 @@ public class SynchronizedClientScriptsPacket extends AbstractPacket {
 
     @Override
     public void fromBytes(PacketByteBuf buf) {
-        this.scripts = buf.readCollection((size) -> new ArrayList<>(), PacketByteBufUtils::readScript);
+        this.scripts = buf.readCollection(ArrayList::new, PacketByteBufUtils::readScript);
     }
 
     @Override
@@ -53,7 +53,10 @@ public class SynchronizedClientScriptsPacket extends AbstractPacket {
             List<ClientScript> clientScripts = new ArrayList<>();
 
             for (Script script : packet.scripts) {
-                clientScripts.add(new ClientScript(script.getName(), script.getCode()));
+                ClientScript clientScript = new ClientScript(script.getName(), script.getCode());
+                clientScript.setLibraries(script.getLibraries());
+
+                clientScripts.add(clientScript);
             }
 
             CubeCodeClient.projectManager.setScripts(clientScripts);

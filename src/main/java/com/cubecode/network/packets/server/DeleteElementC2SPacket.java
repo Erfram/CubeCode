@@ -1,7 +1,7 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
-import com.cubecode.client.views.idea.utils.node.NodeType;
+import com.cubecode.client.views.ide.utils.node.NodeType;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -45,7 +45,7 @@ public class DeleteElementC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, DeleteElementC2SPacket packet) {
             CubeCode.projectManager.deleteFile(packet.path.substring(1), packet.nodeType);
-            CubeCode.projectManager.deleteScriptToSettings(packet.path.substring(1));
+            CubeCode.settingManager.deleteScript(packet.path.substring(1));
         }
     }
 }

@@ -12,19 +12,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.ImDrawList;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiMouseButton;
-import imgui.flag.ImGuiMouseCursor;
-import imgui.flag.ImGuiStyleVar;
+import imgui.flag.*;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -32,8 +25,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import org.joml.Matrix4f;
-import org.joml.Matrix4fStack;
 import org.joml.Quaternionf;
 
 import java.util.Optional;
@@ -210,6 +201,14 @@ public class CubeImGui {
         ImGui.sameLine();
 
         menuItemAndTooltip(id, r, g, b, a, text, menuItemAction);
+    }
+
+    public static void menuItemAndTooltip(Text id, Icons icon, float sizeX, float sizeY, int r, int g, int b, int a, String text, Runnable menuItemAction) {
+        ImGui.image(icon.getGlId(), sizeX, sizeY);
+
+        ImGui.sameLine();
+
+        menuItemAndTooltip(id.getString(), r, g, b, a, text, menuItemAction);
     }
 
     public static void menu(String id, Icons icon, float sizeX, float sizeY, Runnable menuItemAction) {
@@ -701,6 +700,21 @@ public class CubeImGui {
 
         if (selectableScript) {
             selectableAction.run();
+        }
+    }
+
+    public static void treeNode(String label, Icons icon, int imguiTreeNodeFlags, Runnable render) {
+        boolean tree = ImGui.treeNodeEx("##"+label, imguiTreeNodeFlags);
+
+        ImGui.sameLine(0, 4);
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine(0, 4);
+        ImGui.text(label);
+
+        if (tree) {
+            render.run();
+            ImGui.treePop();
         }
     }
 

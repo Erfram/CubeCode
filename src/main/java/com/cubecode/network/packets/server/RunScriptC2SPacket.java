@@ -48,8 +48,8 @@ public class RunScriptC2SPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RunScriptC2SPacket packet) {
             Properties properties = Properties.create(
-                    null,
-                    null,
+                    packet.script.getName(),
+                    "main",
                     player,
                     null,
                     player.getWorld(),
@@ -59,7 +59,7 @@ public class RunScriptC2SPacket extends AbstractPacket {
             try {
                 packet.script.run(packet.script.getName(), properties);
             } catch (CubeCodeException cce) {
-                player.sendMessage(MutableText.of(Text.of(cce.getMessage()).getContent()).formatted(Formatting.RED));
+                player.sendMessage(Text.of("§c" + cce.getMessage()));
                 cce.printStackTrace();
             }
         }

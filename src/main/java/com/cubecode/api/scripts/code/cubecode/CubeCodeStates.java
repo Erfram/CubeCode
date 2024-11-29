@@ -1,5 +1,6 @@
 package com.cubecode.api.scripts.code.cubecode;
 
+import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
@@ -128,8 +129,8 @@ public class CubeCodeStates {
      * c.getPlayer().getStates().putNbt("example", CubeCode.createCompound("{}"));
      * }</pre>
      */
-    public void putNbt(String key, NbtCompound value) {
-        this.values.put(key, value);
+    public void putNbt(String key, ScriptNbtCompound value) {
+        this.values.put(key, value.getMinecraftNbtCompound());
 
         this.saveStates();
     }

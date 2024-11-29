@@ -58,7 +58,7 @@ public class ThemeManager {
     }
 
     public CubeTheme getTheme(String name) {
-        CubeTheme cubeTheme = new CubeTheme("default");
+        CubeTheme cubeTheme = new CubeTheme("Default");
         for (CubeTheme theme : themes) {
             if (theme.name.equals(name)) {
                 cubeTheme = theme;

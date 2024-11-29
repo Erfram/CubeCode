@@ -1,0 +1,3004 @@
+{
+  "chapters": {
+    "ScriptBlockEntity": {
+      "description": "Can't to get",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftTileEntity",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "BlockEntity"
+        },
+        {
+          "name": "getWorld",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptWorld"
+        },
+        {
+          "name": "getType",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getPosition",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "markDirty",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "getBlock",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptBlockState"
+        },
+        {
+          "name": "getNbtCompound",
+          "description": "",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptNbtCompound"
+        },
+        {
+          "name": "setNbtCompound",
+          "description": "",
+          "script": "",
+          "arguments": [
+            {
+              "name": "nbtCompound",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "void"
+        }
+      ]
+    },
+    "ScriptBlockState": {
+      "description": "",
+      "script": "c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getBlockId(), false)",
+      "methods": [
+        {
+          "name": "getMinecraftBlockState",
+          "description": "Returns the current Minecraft block state",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();",
+          "arguments": [],
+          "returnType": "BlockState"
+        },
+        {
+          "name": "getId",
+          "description": "Returns the identifier of the block state",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getId();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "isSame",
+          "description": "Checks if this block state is the same as the given state",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));",
+          "arguments": [
+            {
+              "name": "state",
+              "type": "ScriptBlockState"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isSameBlock",
+          "description": "Checks if this block state is from the same block as the given state",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isSameBlock(CubeCode.createBlockState(\"minecraft:dirt\"));",
+          "arguments": [
+            {
+              "name": "state",
+              "type": "ScriptBlockState"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isOpaque",
+          "description": "Checks if the block state is opaque",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isOpaque();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isAir",
+          "description": "Checks if the block state represents air",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isAir();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isBurnable",
+          "description": "Checks if the block state is burnable",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").isBurnable();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "hasCollision",
+          "description": "Checks if the block state has collision at the given coordinates in the world",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").hasCollision(c.getWorld(), 344, 34, 994);",
+          "arguments": [
+            {
+              "name": "world",
+              "type": "ScriptWorld"
+            },
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getProperties",
+          "description": "Returns a list of property names for the block state",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getProperties();",
+          "arguments": [],
+          "returnType": "List<String>"
+        },
+        {
+          "name": "getName",
+          "description": "Returns the name of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getName();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getBlastResistance",
+          "description": "Returns the blast resistance of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getBlastResistance();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getSlipperiness",
+          "description": "Returns the slipperiness of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getSlipperiness();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getHardness",
+          "description": "Returns the hardness of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getHardness();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getVelocityMultiplier",
+          "description": "Returns the velocity multiplier of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getVelocityMultiplier();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getJumpVelocityMultiplier",
+          "description": "Returns the jump velocity multiplier of the block",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getJumpVelocityMultiplier();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getProperty",
+          "description": "Returns the value of the specified property",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").getProperty(\"name\");",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            }
+          ],
+          "returnType": "Object"
+        },
+        {
+          "name": "setProperty",
+          "description": "Sets the value of the specified property",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\").setProperty(\"name\", \"LIRAY\");",
+          "arguments": [
+            {
+              "name": "name",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "Object"
+            }
+          ],
+          "returnType": "void"
+        }
+      ]
+    },
+    "ScriptEntity": {
+      "description": "Docs for entity bruh",
+      "script": "function main(c) {\n    let player = c.getPlayer(); \n\n    player.setPosition(224, 56, 87); \n    player.setRotations(90, 180, 0); \n    c.getServer().send(\"Player \" + player.getName() + \" has changed his location.\", false);\n}",
+      "methods": [
+        {
+          "name": "getMinecraftEntity",
+          "description": "Allows you to use minecraft mappings on an entity.",
+          "script": "//You can use yarn mappings\n//All mappings search site https://linkie.shedaniel.dev/\nc.getServer().send(c.getPlayer().getMinecraftEntity().getType(), false);",
+          "arguments": [],
+          "returnType": "Entity"
+        },
+        {
+          "name": "setPosition",
+          "description": "Sets the entity's position in the world",
+          "script": "c.getPlayer().setPosition(485, 43, 43);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getPosition",
+          "description": "Returns the entity's current position",
+          "script": "c.getPlayer().getPosition();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "setRotations",
+          "description": "Sets the entity's rotation angles",
+          "script": "c.getPlayer().setRotations(90, 90, 0);",
+          "arguments": [
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "headYaw",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setRotations",
+          "description": "Sets the entity's rotation angles including body yaw",
+          "script": "c.getPlayer().setRotations(90, 90, 0, 0);",
+          "arguments": [
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "headYaw",
+              "type": "float"
+            },
+            {
+              "name": "bodyYaw",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getRotations",
+          "description": "Returns the entity's current rotation angles",
+          "script": "c.getPlayer().getRotations();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "getBodyYaw",
+          "description": "Returns the entity's current body yaw angle",
+          "script": "c.getPlayer().getBodyYaw();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "addVelocity",
+          "description": "Adds to the entity's current velocity",
+          "script": "c.getPlayer().addVelocity(0, 1, 0);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setVelocity",
+          "description": "Sets the entity's velocity",
+          "script": "c.getPlayer().setVelocity(0, 1, 0);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getVelocity",
+          "description": "Returns the entity's current velocity",
+          "script": "c.getPlayer().getVelocity();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "getWorld",
+          "description": "Returns the world the entity is in",
+          "script": "c.getPlayer().getWorld();",
+          "arguments": [],
+          "returnType": "ScriptWorld"
+        },
+        {
+          "name": "getDimension",
+          "description": "Returns the dimension the entity is in",
+          "script": "c.getPlayer().getDimension();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "swingHand",
+          "description": "Makes the entity swing the specified hand",
+          "script": "c.getPlayer().swingHand(\"main\");",
+          "arguments": [
+            {
+              "name": "hand",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "damage",
+          "description": "Applies damage to the entity",
+          "script": "c.getPlayer().damage(10);",
+          "arguments": [
+            {
+              "name": "damage",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "damage",
+          "description": "Applies damage of a specific type to the entity",
+          "script": "c.getPlayer().damage(\"mob\", 10);",
+          "arguments": [
+            {
+              "name": "damageType",
+              "type": "String"
+            },
+            {
+              "name": "damage",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getDistanceTraveled",
+          "description": "Returns the total distance the entity has traveled",
+          "script": "c.getPlayer().getDistanceTraveled();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getId",
+          "description": "Returns the entity's unique identifier",
+          "script": "c.getPlayer().getId();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getName",
+          "description": "Returns the entity's name",
+          "script": "c.getPlayer().getName();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getFacing",
+          "description": "Returns the direction the entity is facing",
+          "script": "c.getPlayer().getFacing();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getWidth",
+          "description": "Returns the entity's width",
+          "script": "c.getPlayer().getWidth();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getHeight",
+          "description": "Returns the entity's height",
+          "script": "c.getPlayer().getHeight();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "isPlayer",
+          "description": "Checks if the entity is a player",
+          "script": "c.getPlayer().isPlayer();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "setGlowing",
+          "description": "Sets whether the entity is glowing",
+          "script": "c.getPlayer().setGlowing(true);",
+          "arguments": [
+            {
+              "name": "isGlowing",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isGlowing",
+          "description": "Checks if the entity is glowing",
+          "script": "c.getPlayer().isGlowing();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getMovementSpeed",
+          "description": "Returns the entity's movement speed",
+          "script": "c.getPlayer().getMovementSpeed();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "setMovementSpeed",
+          "description": "Sets the entity's movement speed",
+          "script": "c.getPlayer().setMovementSpeed(3);",
+          "arguments": [
+            {
+              "name": "movementSpeed",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getRotationVector",
+          "description": "Returns the entity's rotation as a vector",
+          "script": "c.getPlayer().getRotationVector();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "getHealth",
+          "description": "Returns the entity's current health",
+          "script": "c.getPlayer().getHealth();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getMaxHealth",
+          "description": "Returns the entity's maximum health",
+          "script": "c.getPlayer().getMaxHealth();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "getArmor",
+          "description": "Returns the entity's armor value",
+          "script": "c.getPlayer().getArmor();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "setSneaking",
+          "description": "Sets whether the entity is sneaking",
+          "script": "c.getPlayer().setSneaking(true);",
+          "arguments": [
+            {
+              "name": "sneaking",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isSneaking",
+          "description": "Checks if the entity is sneaking",
+          "script": "c.getPlayer().isSneaking();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "setSprinting",
+          "description": "Sets whether the entity is sprinting",
+          "script": "c.getPlayer().setSprinting(true);",
+          "arguments": [
+            {
+              "name": "sprinting",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isSprinting",
+          "description": "Checks if the entity is sprinting",
+          "script": "c.getPlayer().isSprinting();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isTouchingWater",
+          "description": "Checks if the entity is touching water",
+          "script": "c.getPlayer().isTouchingWater();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isInLava",
+          "description": "Checks if the entity is in lava",
+          "script": "c.getPlayer().isInLava();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isBurning",
+          "description": "Checks if the entity is on fire",
+          "script": "c.getPlayer().isBurning();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "setBurning",
+          "description": "Sets the entity on fire for the specified number of ticks",
+          "script": "c.getPlayer().setBurning(20);",
+          "arguments": [
+            {
+              "name": "ticks",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isOnGround",
+          "description": "Checks if the entity is on the ground",
+          "script": "c.getPlayer().isOnGround();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "kill",
+          "description": "Kills the entity",
+          "script": "c.getPlayer().kill();",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "getEyeHeight",
+          "description": "Returns the height of the entity's eyes above its feet",
+          "script": "c.getPlayer().getEyeHeight();",
+          "arguments": [],
+          "returnType": "double"
+        },
+        {
+          "name": "getEyePos",
+          "description": "Returns the position of the entity's eyes",
+          "script": "c.getPlayer().getEyePos();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "rayTraceBlock",
+          "description": "Performs a ray trace for blocks from the entity's eyes",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let rayTrace = player.rayTraceBlock(10, false);\n\n    c.getServer().send(rayTrace.getBlockSide(), false);\n}",
+          "arguments": [
+            {
+              "name": "maxDistance",
+              "type": "double"
+            },
+            {
+              "name": "includesFluids",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "ScriptRayTrace"
+        },
+        {
+          "name": "rayTraceEntity",
+          "description": "Performs a ray trace for entities from the entity's eyes",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let rayTrace = player.rayTraceEntity(10);\n\n    c.getServer().send(rayTrace.getEntity().setVelocity(0, 1, 0), false);\n}",
+          "arguments": [
+            {
+              "name": "maxDistance",
+              "type": "double"
+            }
+          ],
+          "returnType": "ScriptRayTrace"
+        },
+        {
+          "name": "getUUID",
+          "description": "Returns the entity's UUID",
+          "script": "c.getPlayer().getUUID();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getType",
+          "description": "Returns the entity's type",
+          "script": "c.getPlayer().getType();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getMainItemStack",
+          "description": "Returns the item stack in the entity's main hand",
+          "script": "c.getPlayer().getMainItemStack();",
+          "arguments": [],
+          "returnType": "ScriptItemStack"
+        },
+        {
+          "name": "getOffItemStack",
+          "description": "Returns the item stack in the entity's off hand",
+          "script": "c.getPlayer().getOffItemStack();",
+          "arguments": [],
+          "returnType": "ScriptItemStack"
+        },
+        {
+          "name": "getLook",
+          "description": "Returns the direction the entity is looking as a vector",
+          "script": "function main(c) {\n    let player = c.getPlayer();\n    let look = player.getLook(); \n\n    player.setVelocity(look.x, look.y, look.z);\n}",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        }
+      ]
+    },
+    "ScriptPlayer": {
+      "description": "Tab with methods that can be used on players.",
+      "script": "function main(c) {\n    let player = c.getPlayer();\n    let states = player.getStates();\n\n    states.putString(\"example\", \"Minecraft\");\n    player.send(states.getString(\"example\"));\n}",
+      "methods": [
+        {
+          "name": "getMinecraftPlayer",
+          "description": "Returns the Minecraft player entity associated with this script player",
+          "script": "c.getPlayer().getMinecraftPlayer();",
+          "arguments": [],
+          "returnType": "PlayerEntity"
+        },
+        {
+          "name": "getStates",
+          "description": "Returns the CubeCode states for this player",
+          "script": "c.getPlayer().getStates();",
+          "arguments": [],
+          "returnType": "CubeCodeStates"
+        },
+        {
+          "name": "send",
+          "description": "Sends a message to the player",
+          "script": "c.getPlayer().send(\"Kukold\");",
+          "arguments": [
+            {
+              "name": "message",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setRotations",
+          "description": "Sets the player's rotation angles",
+          "script": "c.getPlayer().setRotations(90, 90, 0);",
+          "arguments": [
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "headYaw",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setVelocity",
+          "description": "Sets the player's velocity",
+          "script": "c.getPlayer().setVelocity(0, 1, 0);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addVelocity",
+          "description": "Adds to the player's current velocity",
+          "script": "c.getPlayer().addVelocity(0, 1, 0);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "executeCommand",
+          "description": "Executes a command as the player",
+          "script": "c.getPlayer().executeCommand(\"say @s never using this method!\");",
+          "arguments": [
+            {
+              "name": "command",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getGameMode",
+          "description": "Returns the player's current game mode",
+          "script": "c.getPlayer().getGameMode();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "setGameMode",
+          "description": "Sets the player's game mode",
+          "script": "c.getPlayer().setGameMode(1);",
+          "arguments": [
+            {
+              "name": "gameMode",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setSpawnPoint",
+          "description": "Sets the player's spawn point to their current location",
+          "script": "c.getPlayer().setSpawnPoint();",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "setSpawnPoint",
+          "description": "Sets the player's spawn point to the specified coordinates and angle",
+          "script": "c.getPlayer().setSpawnPoint(2232, 23, 232, 90);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            },
+            {
+              "name": "angle",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setSpawnPoint",
+          "description": "Sets the player's spawn point in the specified world, coordinates, and angle",
+          "script": "c.getPlayer().setSpawnPoint(c.getWorld(), 2232, 23, 232, 90);",
+          "arguments": [
+            {
+              "name": "world",
+              "type": "ScriptWorld"
+            },
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            },
+            {
+              "name": "angle",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getSpawnPoint",
+          "description": "Returns the player's current spawn point",
+          "script": "c.getPlayer().getSpawnPoint();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "isFlying",
+          "description": "Checks if the player is currently flying",
+          "script": "c.getPlayer().isFlying();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "setFlySpeed",
+          "description": "Sets the player's flying speed",
+          "script": "c.getPlayer().setFlySpeed(2);",
+          "arguments": [
+            {
+              "name": "flySpeed",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getWalkSpeed",
+          "description": "Returns the player's current walking speed",
+          "script": "c.getPlayer().getWalkSpeed();",
+          "arguments": [],
+          "returnType": "float"
+        },
+        {
+          "name": "setWalkSpeed",
+          "description": "Sets the player's walking speed",
+          "script": "c.getPlayer().setWalkSpeed();",
+          "arguments": [
+            {
+              "name": "walkSpeed",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "resetWalkSpeed",
+          "description": "Resets the player's walking speed to the default value",
+          "script": "c.getPlayer().resetWalkSpeed();",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "playStaticSound",
+          "description": "Plays a static sound for the player at the specified location",
+          "script": "c.getPlayer().playStaticSound(\"block.anvil.break\", \"master\", 784, 89, 884, 1, 1);",
+          "arguments": [
+            {
+              "name": "soundEvent",
+              "type": "String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "stopStaticSound",
+          "description": "Stops a static sound for the player",
+          "script": "c.getPlayer().stopStaticSound();",
+          "arguments": [
+            {
+              "name": "soundId",
+              "type": "String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getInventory",
+          "description": "Returns player inventory",
+          "script": "c.getPlayer().getInventory();",
+          "arguments": [],
+          "returnType": "ScriptInventory"
+        }
+      ]
+    },
+    "ScriptInventory": {
+      "description": "",
+      "script": "c.getPlayer().getInventory().clear();",
+      "methods": [
+        {
+          "name": "getMinecraftInventory",
+          "description": "Returns the Minecraft inventory associated with this script inventory",
+          "script": "c.getPlayer().getInventory().getMinecraftInventory();",
+          "arguments": [],
+          "returnType": "Inventory"
+        },
+        {
+          "name": "isEmpty",
+          "description": "Checks if the inventory is empty",
+          "script": "c.getPlayer().getInventory().isEmpty();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "size",
+          "description": "Returns the size of the inventory",
+          "script": "c.getPlayer().getInventory().size();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "getStack",
+          "description": "Returns the item stack at the specified index in the inventory",
+          "script": "c.getPlayer().getInventory().getStack(0);",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptItemStack"
+        },
+        {
+          "name": "removeStack",
+          "description": "Removes and returns the item stack at the specified index in the inventory",
+          "script": "c.getPlayer().getInventory().removeStack();",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptItemStack"
+        },
+        {
+          "name": "setStack",
+          "description": "Sets the item stack at the specified index in the inventory",
+          "script": "c.getPlayer().getInventory().setStack(0, c.getPlayer().getMainItemStack());",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "stack",
+              "type": "ScriptItemStack"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "clear",
+          "description": "Clears all items from the inventory",
+          "script": "c.getPlayer().getInventory().clear();",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "getName",
+          "description": "Returns the name of the inventory",
+          "script": "c.getPlayer().getInventory().getName();",
+          "arguments": [],
+          "returnType": "String"
+        }
+      ]
+    },
+    "ScriptItem": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getItemStack",
+          "description": "Returns the Minecraft ItemStack associated with this script item stack",
+          "script": "c.getPlayer().getMainItemStack().getItem().getItemStack();",
+          "arguments": [],
+          "returnType": "ItemStack"
+        },
+        {
+          "name": "getMinecraftItem",
+          "description": "Returns the Minecraft Item associated with this script item",
+          "script": "c.getPlayer().getMainItemStack().getItem().getMinecraftItem();",
+          "arguments": [],
+          "returnType": "Item"
+        }
+      ]
+    },
+    "ScriptItemStack": {
+      "description": "",
+      "script": "c.getPlayer().send(c.getPlayer().getMainItemStack().getId());",
+      "methods": [
+        {
+          "name": "getMinecraftItemStack",
+          "description": "Returns the Minecraft ItemStack associated with this script item stack",
+          "script": "c.getPlayer().getMainItemStack().getMinecraftItemStack();",
+          "arguments": [],
+          "returnType": "ItemStack"
+        },
+        {
+          "name": "isEmpty",
+          "description": "Checks if the item stack is empty",
+          "script": "c.getPlayer().getMainItemStack().isEmpty();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "copy",
+          "description": "Creates and returns a copy of this item stack",
+          "script": "c.getPlayer().getMainItemStack().copy();",
+          "arguments": [],
+          "returnType": "ScriptItemStack"
+        },
+        {
+          "name": "getItem",
+          "description": "Returns the ScriptItem associated with this item stack",
+          "script": "c.getPlayer().getMainItemStack().getItem();",
+          "arguments": [],
+          "returnType": "ScriptItem"
+        },
+        {
+          "name": "getMaxCount",
+          "description": "Returns the maximum stack size for this item",
+          "script": "c.getPlayer().getMainItemStack().getMaxCount();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "getCount",
+          "description": "Returns the current count of items in this stack",
+          "script": "c.getPlayer().getMainItemStack().getCount();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "setCount",
+          "description": "Sets the count of items in this stack",
+          "script": "c.getPlayer().getMainItemStack().setCount(0);",
+          "arguments": [
+            {
+              "name": "count",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addEnchantment",
+          "description": "Adds an enchantment to the item stack",
+          "script": "c.getPlayer().getMainItemStack().addEnchantment(\"mending\", 0);",
+          "arguments": [
+            {
+              "name": "enchantment",
+              "type": "String"
+            },
+            {
+              "name": "level",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getEnchantments",
+          "description": "Returns the list of enchantments on the item stack",
+          "script": "c.getPlayer().getMainItemStack().getEnchantments();",
+          "arguments": [],
+          "returnType": "ScriptNbtList"
+        },
+        {
+          "name": "isEnchantable",
+          "description": "Checks if the item stack can be enchanted",
+          "script": "c.getPlayer().getMainItemStack().isEnchantable();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getId",
+          "description": "Returns the identifier of the item",
+          "script": "c.getPlayer().getMainItemStack().getId();",
+          "arguments": [],
+          "returnType": "String"
+        }
+      ]
+    },
+    "ScriptNbtCompound": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftNbtCompound",
+          "description": "Returns the Minecraft NbtCompound associated with this script NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getMinecraftNbtCompound();",
+          "arguments": [],
+          "returnType": "NbtCompound"
+        },
+        {
+          "name": "isCompound",
+          "description": "Checks if this NBT is a compound",
+          "script": "CubeCode.createCompound(\"{}\").isCompound();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isList",
+          "description": "Checks if this NBT is a list",
+          "script": "CubeCode.createCompound(\"{}\").isList();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "stringify",
+          "description": "Returns a string representation of this NBT",
+          "script": "CubeCode.createCompound(\"{}\").stringify();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "isEmpty",
+          "description": "Checks if this NBT compound is empty",
+          "script": "CubeCode.createCompound(\"{}\").isEmpty();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "size",
+          "description": "Returns the number of elements in this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").size();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "copy",
+          "description": "Creates and returns a copy of this NBT",
+          "script": "CubeCode.createCompound(\"{}\").copy();",
+          "arguments": [],
+          "returnType": "Nbt"
+        },
+        {
+          "name": "combine",
+          "description": "Combines this NBT with another NBT",
+          "script": "CubeCode.createCompound(\"{}\").combine(CubeCode.createCompound(\"{id:\"minecraft:stone\"}\"));",
+          "arguments": [
+            {
+              "name": "nbt",
+              "type": "Nbt"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isSame",
+          "description": "Checks if this NBT is the same as another NBT",
+          "script": "CubeCode.createCompound(\"{}\").isSame(CubeCode.createCompound(\"{}\"));",
+          "arguments": [
+            {
+              "name": "nbt",
+              "type": "Nbt"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "has",
+          "description": "Checks if this NBT compound contains a key",
+          "script": "CubeCode.createCompound(\"{}\").has(\"id\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "remove",
+          "description": "Removes a key from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").remove(\"id\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "keys",
+          "description": "Returns a set of all keys in this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").keys();",
+          "arguments": [],
+          "returnType": "Set<String>"
+        },
+        {
+          "name": "getByte",
+          "description": "Gets a byte value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{Count:64b}\").getByte(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "byte"
+        },
+        {
+          "name": "putByte",
+          "description": "Puts a byte value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putByte(\"Count\", 5);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "byte"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getShort",
+          "description": "Gets a short value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{Count:666}\").getShort(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "short"
+        },
+        {
+          "name": "putShort",
+          "description": "Puts a short value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putShort(\"Count\", 1);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "short"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getInt",
+          "description": "Gets an int value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "int"
+        },
+        {
+          "name": "putInt",
+          "description": "Puts an int value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putInt(\"Count\", 1);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getLong",
+          "description": "Gets a long value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getLong(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "long"
+        },
+        {
+          "name": "putLong",
+          "description": "Puts a long value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putLong(\"Count\", 1);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "long"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getFloat",
+          "description": "Gets a float value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getFloat(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "float"
+        },
+        {
+          "name": "putFloat",
+          "description": "Puts a float value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putFloat(\"Count\", 1);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getDouble",
+          "description": "Gets a double value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"Count\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "double"
+        },
+        {
+          "name": "putDouble",
+          "description": "Puts a double value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putDouble(\"Count\", 1);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getString",
+          "description": "Gets a string value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getString(\"Id\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "String"
+        },
+        {
+          "name": "putString",
+          "description": "Puts a string value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").putString(\"Id\", \"minecraft\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getBoolean",
+          "description": "Gets a boolean value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getInt(\"HasFunctional\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "putBoolean",
+          "description": "Puts a boolean value into this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").setCompound(\"HasFunctional\", true);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getCompound",
+          "description": "Gets a compound NBT from this NBT compound",
+          "script": "CubeCode.createCompound(\"{tag:{}}\").getCompound(\"tag\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptNbtCompound"
+        },
+        {
+          "name": "setCompound",
+          "description": "Sets a compound NBT in this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").setCompound(\"tag\", CubeCode.createCompound(\"tag:[42]\"));",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getList",
+          "description": "Gets a list NBT from this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").getList(\"tag\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptNbtList"
+        },
+        {
+          "name": "setList",
+          "description": "Sets a list NBT in this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").setList(\"tag\", CubeCode.createCompound(\"id:[42]\").getList(\"id\"));",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "ScriptNbtList"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "get",
+          "description": "Gets a value from this NBT compound",
+          "script": "CubeCode.createCompound(\"{tag:{Name:\"i use arch btw\"}}\").get(\"tag\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "Object"
+        },
+        {
+          "name": "equals",
+          "description": "Checks if this NBT compound is equal to another NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").equals(CubeCode.createCompound(\"{}\"));",
+          "arguments": [
+            {
+              "name": "compound",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "addCompound",
+          "description": "Adds a new empty compound to this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").addCompound(\"tag\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "dumpJSON",
+          "description": "Returns a JSON string representation of this NBT compound",
+          "script": "CubeCode.createCompound(\"{}\").dumpJSON();",
+          "arguments": [],
+          "returnType": "String"
+        }
+      ]
+    },
+    "ScriptNbtList": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftNbtList",
+          "description": "Returns the Minecraft NbtList associated with this script NBT list",
+          "script": "",
+          "arguments": [],
+          "returnType": "NbtList"
+        },
+        {
+          "name": "isCompound",
+          "description": "Checks if this NBT is a compound",
+          "script": "",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isList",
+          "description": "Checks if this NBT is a list",
+          "script": "",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "stringify",
+          "description": "Returns a string representation of this NBT list",
+          "script": "",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "isEmpty",
+          "description": "Checks if this NBT list is empty",
+          "script": "",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "size",
+          "description": "Returns the number of elements in this NBT list",
+          "script": "",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "copy",
+          "description": "Creates and returns a copy of this NBT",
+          "script": "",
+          "arguments": [],
+          "returnType": "Nbt"
+        },
+        {
+          "name": "combine",
+          "description": "Combines this NBT with another NBT",
+          "script": "",
+          "arguments": [
+            {
+              "name": "nbt",
+              "type": "Nbt"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isSame",
+          "description": "Checks if this NBT is the same as another NBT",
+          "script": "",
+          "arguments": [
+            {
+              "name": "nbt",
+              "type": "Nbt"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "has",
+          "description": "Checks if this NBT list contains an element at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "remove",
+          "description": "Removes an element at the specified index from this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getByte",
+          "description": "Gets a byte value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "byte"
+        },
+        {
+          "name": "setByte",
+          "description": "Sets a byte value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "byte"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addByte",
+          "description": "Adds a byte value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "byte"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getShort",
+          "description": "Gets a short value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "short"
+        },
+        {
+          "name": "setShort",
+          "description": "Sets a short value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "short"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addShort",
+          "description": "Adds a short value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "short"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getInt",
+          "description": "Gets an int value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "int"
+        },
+        {
+          "name": "setInt",
+          "description": "Sets an int value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addInt",
+          "description": "Adds an int value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getFloat",
+          "description": "Gets a float value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "float"
+        },
+        {
+          "name": "setFloat",
+          "description": "Sets a float value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addFloat",
+          "description": "Adds a float value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getDouble",
+          "description": "Gets a double value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "double"
+        },
+        {
+          "name": "setDouble",
+          "description": "Sets a double value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addDouble",
+          "description": "Adds a double value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getString",
+          "description": "Gets a string value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "String"
+        },
+        {
+          "name": "setString",
+          "description": "Sets a string value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addString",
+          "description": "Adds a string value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getBoolean",
+          "description": "Gets a boolean value from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "setBoolean",
+          "description": "Sets a boolean value in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addBoolean",
+          "description": "Adds a boolean value to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getCompound",
+          "description": "Gets a compound NBT from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptNbtCompound"
+        },
+        {
+          "name": "setCompound",
+          "description": "Sets a compound NBT in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addCompound",
+          "description": "Adds a compound NBT to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "ScriptNbtCompound"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getList",
+          "description": "Gets a list NBT from this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptNbtList"
+        },
+        {
+          "name": "setList",
+          "description": "Sets a list NBT in this NBT list at the specified index",
+          "script": "",
+          "arguments": [
+            {
+              "name": "index",
+              "type": "int"
+            },
+            {
+              "name": "value",
+              "type": "ScriptNbtList"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "addList",
+          "description": "Adds a list NBT to this NBT list",
+          "script": "",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "ScriptNbtList"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "toArray",
+          "description": "Converts this NBT list to an array of objects",
+          "script": "",
+          "arguments": [],
+          "returnType": "Object[]"
+        }
+      ]
+    },
+    "ScriptEvent": {
+      "description": "Docs for event bruh",
+      "script": "c.getPlayer().send(c.getPlayer().getName());",
+      "methods": [
+        {
+          "name": "getFunction",
+          "description": "Returns the function associated with this event",
+          "script": "c.getFunction();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getSubject",
+          "description": "Returns the subject entity of this event",
+          "script": "c.getSubject();",
+          "arguments": [],
+          "returnType": "ScriptEntity"
+        },
+        {
+          "name": "getObject",
+          "description": "Returns the object entity of this event",
+          "script": "c.getObject();",
+          "arguments": [],
+          "returnType": "ScriptEntity"
+        },
+        {
+          "name": "getWorld",
+          "description": "Returns the world in which this event occurred",
+          "script": "c.getWorld();",
+          "arguments": [],
+          "returnType": "ScriptWorld"
+        },
+        {
+          "name": "getServer",
+          "description": "Returns the server associated with this event",
+          "script": "c.getServer();",
+          "arguments": [],
+          "returnType": "ScriptServer"
+        },
+        {
+          "name": "getPlayer",
+          "description": "Returns the player associated with this event",
+          "script": "c.getPlayer();",
+          "arguments": [],
+          "returnType": "ScriptPlayer"
+        },
+        {
+          "name": "getValues",
+          "description": "Returns a map of all values associated with this event",
+          "script": "c.getValues();",
+          "arguments": [],
+          "returnType": "Map<String, Object>"
+        },
+        {
+          "name": "getValue",
+          "description": "Returns the value associated with the specified key",
+          "script": "c.getValue(\"id\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "Object"
+        },
+        {
+          "name": "setValue",
+          "description": "Sets a value for the specified key",
+          "script": "c.setValue(\"id\", \"dyamo\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "Object"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "cancel",
+          "description": "Cancels this event",
+          "script": "c.cancel();",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "setCanceled",
+          "description": "Sets the canceled state of this event",
+          "script": "c.setCanceled(true);",
+          "arguments": [
+            {
+              "name": "canceled",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isCanceled",
+          "description": "Checks if this event is canceled",
+          "script": "c.isCanceled();",
+          "arguments": [],
+          "returnType": "boolean"
+        }
+      ]
+    },
+    "ScriptFactory": {
+      "description": "Docs for factory bruh",
+      "script": "CubeCode.createBlockState(\"minecraft:dirt\");",
+      "methods": [
+        {
+          "name": "createCompound",
+          "description": "Creates a new ScriptNbtCompound from the given NBT string",
+          "script": "CubeCode.createCompound(\"{id:\"kruto\"}\");",
+          "arguments": [
+            {
+              "name": "nbt",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptNbtCompound"
+        },
+        {
+          "name": "getClassName",
+          "description": "Returns the class name of the given object",
+          "script": "CubeCode.getClassName(c.getPlayer());",
+          "arguments": [
+            {
+              "name": "value",
+              "type": "Object"
+            }
+          ],
+          "returnType": "String"
+        },
+        {
+          "name": "vector",
+          "description": "Creates a new ScriptVector with the given x, y, and z coordinates",
+          "script": "CubeCode.vector(232, 232, 223);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "createBlockState",
+          "description": "Creates new Block State",
+          "script": "CubeCode.createBlockState(\"minecraft:dirt\");",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptBlockState"
+        }
+      ]
+    },
+    "ScriptRayTrace": {
+      "description": "Docs for rayTrace bruh",
+      "script": "let rayTrace = c.getPlayer().rayTraceBlock(5, false);\n\nc.getPlayer().send(rayTrace.getBlock().getBlockId();",
+      "methods": [
+        {
+          "name": "isBlock",
+          "description": "Checks if the ray trace hit a block",
+          "script": "c.getPlayer().rayTraceBlock(5, false).isBlock();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isEntity",
+          "description": "Checks if the ray trace hit an entity",
+          "script": "c.getPlayer().rayTraceEntity(5).isEntity();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMissed",
+          "description": "Checks if the ray trace missed and hit nothing",
+          "script": "c.getPlayer().rayTraceBlock(5, false).isMissed();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getEntity",
+          "description": "Returns the entity hit by the ray trace, if any",
+          "script": "c.getPlayer().rayTraceEntity(5).getEntity();",
+          "arguments": [],
+          "returnType": "ScriptEntity"
+        },
+        {
+          "name": "getBlock",
+          "description": "Returns the position of the block hit by the ray trace, if any",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getBlock();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "getBlockSide",
+          "description": "Returns the side of the block that was hit by the ray trace",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getBlockSide();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "getHitPosition",
+          "description": "Returns the exact position where the ray trace hit",
+          "script": "c.getPlayer().rayTraceBlock(5, false).getHitPosition();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        }
+      ]
+    },
+    "ScriptServer": {
+      "description": "Tab with methods that can be used on server.",
+      "script": "let players = c.getServer().getAllPlayers();\n\nplayers.forEach(function(player) {\n    player.send(player.getName());\n});",
+      "methods": [
+        {
+          "name": "getAllPlayers",
+          "description": "Returns a list of all players on the server",
+          "script": "let allPlayers = c.getServer().getAllPlayers();\n\nc.getPlayer().send(allPlayers[Math.floor(Math.random() * allPlayers.length)].getName());",
+          "arguments": [],
+          "returnType": "List<ScriptPlayer>"
+        },
+        {
+          "name": "getWorld",
+          "description": "Returns the world with the specified name",
+          "script": "c.getServer().getWorld(\"overworld\");",
+          "arguments": [
+            {
+              "name": "worldName",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptWorld"
+        },
+        {
+          "name": "getMaxPlayerCount",
+          "description": "Returns the maximum number of players allowed on the server",
+          "script": "c.getServer().getMaxPlayerCount();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "isSingleplayer",
+          "description": "Checks if the server is running in singleplayer mode",
+          "script": "c.getServer().isSingleplayer();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isDedicated",
+          "description": "Checks if the server is a dedicated server",
+          "script": "c.getServer().isDedicated();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isHardcore",
+          "description": "Checks if the server is running in hardcore mode",
+          "script": "c.getServer().isHardcore();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isOnlineMode",
+          "description": "Checks if the server is running in online mode",
+          "script": "c.getServer().isOnlineMode();",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getTicks",
+          "description": "Returns the current number of ticks of the server",
+          "script": "c.getServer().getTicks();",
+          "arguments": [],
+          "returnType": "int"
+        },
+        {
+          "name": "send",
+          "description": "Sends a message to all players on the server",
+          "script": "c.getServer().send(\"Beta\", false);",
+          "arguments": [
+            {
+              "name": "message",
+              "type": "String"
+            },
+            {
+              "name": "overlay",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getPlayer",
+          "description": "Returns the player with the specified nickname",
+          "script": "c.getServer().getPlayer(\"Llama\");",
+          "arguments": [
+            {
+              "name": "nickName",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptPlayer"
+        },
+        {
+          "name": "getStates",
+          "description": "Returns the CubeCode states for the server",
+          "script": "c.getServer().getStates();",
+          "arguments": [],
+          "returnType": "CubeCodeStates"
+        },
+        {
+          "name": "executeScript",
+          "description": "Executes a script with the specified name",
+          "script": "c.getServer().executeScript(\"docs.js\");\n\n//docs.js\nServer.send(\"CubeCode\", false);",
+          "arguments": [
+            {
+              "name": "scriptName",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        }
+      ]
+    },
+    "ScriptVector": {
+      "description": "Docs for vectors bruh",
+      "script": "let vector = CubeCode.vector(21, 45, 232);\n\nc.getPlayer().send(\"Vector's length is \" + vector.length().toString());",
+      "methods": [
+        {
+          "name": "add",
+          "description": "Adds another vector to this vector",
+          "script": "CubeCode.vector(434, 34, 443).add(CubeCode.vector(22, 232, 232));",
+          "arguments": [
+            {
+              "name": "other",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "subtract",
+          "description": "Subtracts another vector from this vector",
+          "script": "CubeCode.vector(434, 34, 443).subtract(CubeCode.vector(22, 232, 232));",
+          "arguments": [
+            {
+              "name": "other",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "multiply",
+          "description": "Multiplies this vector by a scalar value",
+          "script": "CubeCode.vector(434, 34, 443).multiply(2);",
+          "arguments": [
+            {
+              "name": "scalar",
+              "type": "double"
+            }
+          ],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "length",
+          "description": "Calculates the length of this vector",
+          "script": "CubeCode.vector(434, 34, 443).length();",
+          "arguments": [],
+          "returnType": "double"
+        },
+        {
+          "name": "normalize",
+          "description": "Returns a normalized version of this vector",
+          "script": "CubeCode.vector(434, 34, 443).normalize();",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "toBlockPos",
+          "description": "Converts this vector to a BlockPos object",
+          "script": "CubeCode.vector(434, 34, 443).toBlockPos();",
+          "arguments": [],
+          "returnType": "BlockPos"
+        },
+        {
+          "name": "toVec3d",
+          "description": "Converts this vector to a Vec3d object",
+          "script": "CubeCode.vector(434, 34, 443).toVec3d();",
+          "arguments": [],
+          "returnType": "Vec3d"
+        },
+        {
+          "name": "toString",
+          "description": "Returns a string representation of this vector",
+          "script": "CubeCode.vector(434, 34, 443).toString();",
+          "arguments": [],
+          "returnType": "String"
+        },
+        {
+          "name": "toArrayString",
+          "description": "Returns a string representation of this vector as an array",
+          "script": "CubeCode.vector(434, 34, 443).toArrayString();",
+          "arguments": [],
+          "returnType": "String"
+        }
+      ]
+    },
+    "ScriptWorld": {
+      "description": "Tab with methods that can be used on world.",
+      "script": "let block = c.getWorld().getBlock(213, 24, 232);\n\nc.getWorld().setBlock(block, 232, 55, 563);",
+      "methods": [
+        {
+          "name": "getMinecraftWorld",
+          "description": "Returns the Minecraft World object associated with this script world",
+          "script": "//You can use yarn mappings\n//All mappings search site https://linkie.shedaniel.dev/\nc.getWorld().getMinecraftWorld().getWorldChunk(CubeCode.vector(232, 232, 223).toBlockPos());",
+          "arguments": [],
+          "returnType": "World"
+        },
+        {
+          "name": "getBlock",
+          "description": "Returns the block state at the specified coordinates",
+          "script": "c.getWorld().getBlock(213, 234, 232);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptBlockState"
+        },
+        {
+          "name": "getBlock",
+          "description": "Returns the block state at the specified vector position",
+          "script": "c.getWorld().getBlock(CubeCode.vector(213, 234, 232));",
+          "arguments": [
+            {
+              "name": "vector",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "ScriptBlockState"
+        },
+        {
+          "name": "setBlock",
+          "description": "Sets the block at the specified coordinates to the given block state",
+          "script": "c.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), 223, 223, 223);",
+          "arguments": [
+            {
+              "name": "scriptBlockState",
+              "type": "ScriptBlockState"
+            },
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setBlock",
+          "description": "Sets the block at the specified vector position to the given block state",
+          "script": "c.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), CubeCode.vector(223, 223, 223));",
+          "arguments": [
+            {
+              "name": "scriptBlockState",
+              "type": "ScriptBlockState"
+            },
+            {
+              "name": "vector",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getServer",
+          "description": "Returns the server associated with this world",
+          "script": "c.getWorld().getServer();",
+          "arguments": [],
+          "returnType": "ScriptServer"
+        },
+        {
+          "name": "getEntities",
+          "description": "Returns a list of entities that match the given selector",
+          "script": "let entities = c.getWorld().getEntities(\"@e[type=minecraft:cow]\");\n\nentities.forEach(entity => entity.setVelocity(0, 1, 0));",
+          "arguments": [
+            {
+              "name": "selector",
+              "type": "String"
+            }
+          ],
+          "returnType": "List<ScriptEntity>"
+        },
+        {
+          "name": "getEntity",
+          "description": "Returns the entity with the specified UUID",
+          "script": "c.getWorld().getEntity(\"5c5d80c8-7583-47f9-bb0e-de13fc816ad5\");",
+          "arguments": [
+            {
+              "name": "uuid",
+              "type": "String"
+            }
+          ],
+          "returnType": "ScriptEntity"
+        },
+        {
+          "name": "spawnEntity",
+          "description": "Spawns an entity of the specified type at the given coordinates",
+          "script": "c.getWorld().spawnEntity(\"minecraft:cow\", 232, 20, 232);",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "playSound",
+          "description": "Plays a sound at the specified location with custom parameters",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\", 1, 1, true);",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "soundEvent",
+              "type": "String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "String"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "useDistance",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "playSound",
+          "description": "Plays a sound at the specified location with default parameters",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\");",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "double"
+            },
+            {
+              "name": "y",
+              "type": "double"
+            },
+            {
+              "name": "z",
+              "type": "double"
+            },
+            {
+              "name": "soundEvent",
+              "type": "String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getEntities",
+          "description": "Returns a list of entities within the specified bounding box",
+          "script": "c.getWorld().getEntities(\"@e[type=minecraft:cow]\", 211, 213, 123, 311, 210, 120).forEach(function(entity) {\n    entity.setVelocity(0, 1, 0);\n});",
+          "arguments": [
+            {
+              "name": "entity",
+              "type": "ScriptEntity"
+            },
+            {
+              "name": "x1",
+              "type": "double"
+            },
+            {
+              "name": "y1",
+              "type": "double"
+            },
+            {
+              "name": "z1",
+              "type": "double"
+            },
+            {
+              "name": "x2",
+              "type": "double"
+            },
+            {
+              "name": "y2",
+              "type": "double"
+            },
+            {
+              "name": "z2",
+              "type": "double"
+            }
+          ],
+          "returnType": "List<ScriptEntity>"
+        },
+        {
+          "name": "getEntities",
+          "description": "Returns a list of entities within the bounding box defined by two vectors",
+          "script": "c.getWorld().getEntities(\n     \"@e[type=minecraft:cow]\", \n     CubeCode.vector(211, 213, 123), \n     CubeCode.vector(311, 210, 120)\n).forEach(function(entity) {\n    entity.setVelocity(0, 1, 0);\n});",
+          "arguments": [
+            {
+              "name": "entity",
+              "type": "ScriptEntity"
+            },
+            {
+              "name": "vector1",
+              "type": "ScriptVector"
+            },
+            {
+              "name": "vector2",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "List<ScriptEntity>"
+        }
+      ]
+    },
+    "CubeCodeStates": {
+      "description": "Docs for states bruh",
+      "script": "function main(c) {\n    let states = c.getPlayer().getStates();\n    let array = [1337, \"TheBendy\"];\n\n    states.putString(\"example\", JSON.stringify(array));  // \"[1337,\\\"TheBendy\\\"]\"\n    array == JSON.parse(states.getString(\"example\")); // true\n}",
+      "methods": [
+        {
+          "name": "getKeys",
+          "description": "Returns a list of all state keys",
+          "script": "let keys = c.getPlayer().getStates().getKeys();\n\nc.getPlayer().send(keys[\"example\"]); //1337",
+          "arguments": [],
+          "returnType": "List"
+        },
+        {
+          "name": "putString",
+          "description": "Adds a string value for the specified key",
+          "script": "c.getPlayer().getStates().putString(\"example\", \"Name\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putInt",
+          "description": "Adds an integer value for the specified key",
+          "script": "c.getPlayer().getStates().putInt(\"example\", 2204);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putDouble",
+          "description": "Adds a double value for the specified key",
+          "script": "c.getPlayer().getStates().putDouble(\"example\", 100.8974);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "double"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putFloat",
+          "description": "Adds a float value for the specified key",
+          "script": "c.getPlayer().getStates().putFloat(\"example\", 100.89);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putBoolean",
+          "description": "Adds a boolean value for the specified key",
+          "script": "СЃ.getPlayer().getStates().putBoolean(\"example\", true);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putByte",
+          "description": "Adds a byte value for the specified key",
+          "script": "СЃ.getPlayer().getStates().putByte(\"example\", 128);",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "byte"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "putNbt",
+          "description": "Adds an NbtCompound object for the specified key",
+          "script": "СЃ.getPlayer().getStates().putNbt(\"example\", CubeCode.createCompound(\"{}\"));",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "NbtCompound"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getString",
+          "description": "Returns the string value for the specified key",
+          "script": "c.getPlayer().getStates().getString(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "String"
+        },
+        {
+          "name": "getInt",
+          "description": "Returns the integer value for the specified key",
+          "script": "c.getPlayer().getStates().getInt(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "int"
+        },
+        {
+          "name": "getDouble",
+          "description": "Returns the double value for the specified key",
+          "script": "c.getPlayer().getStates().getDouble(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "double"
+        },
+        {
+          "name": "getFloat",
+          "description": "Returns the float value for the specified key",
+          "script": "c.getPlayer().getStates().getFloat(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "float"
+        },
+        {
+          "name": "getBoolean",
+          "description": "Returns the boolean value for the specified key",
+          "script": "c.getPlayer().getStates().getBoolean(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getByte",
+          "description": "Returns the byte value for the specified key",
+          "script": "c.getPlayer().getStates().getByte(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "byte"
+        },
+        {
+          "name": "getNbt",
+          "description": "Returns the NbtCompound object for the specified key",
+          "script": "c.getPlayer().getStates().getNbt(\"example\");",
+          "arguments": [
+            {
+              "name": "key",
+              "type": "String"
+            }
+          ],
+          "returnType": "NbtCompound"
+        }
+      ]
+    }
+  }
+}

@@ -1,27 +1,18 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
-import com.cubecode.CubeCodeClient;
 import com.cubecode.api.files.FileManager;
-import com.cubecode.api.scripts.code.JavaScriptUtils;
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
-import com.cubecode.client.views.idea.utils.node.*;
+import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.utils.*;
-import com.cubecode.client.views.idea.utils.Extension;
-import com.cubecode.utils.Script;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.sun.jna.platform.win32.Shell32Util;
+import com.google.gson.*;
 import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -57,7 +48,6 @@ public class ProjectManager extends DirectoryManager {
 
         globalScope.set("CubeCode", new ScriptFactory());
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
-        globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
 
         settings = this.DIRECTORY.toPath().resolve("settings.json").toFile();
 
@@ -131,6 +121,8 @@ public class ProjectManager extends DirectoryManager {
         this.scanDirectory(this.getFiles().stream().toList(), this.scripts, this.nodes, jsonObject);
 
         GsonManager.writeJSON(settings, jsonObject);
+
+        CubeCode.settingManager.setSettings(CubeCode.settingManager.jsonToSettings(jsonObject));
     }
 
     private void scanDirectory(List<File> files, List<ServerScript> scripts, List<IdeaNode> nodes, JsonObject settingsJson) {
@@ -138,27 +130,30 @@ public class ProjectManager extends DirectoryManager {
             String fileName = file.getName();
             if (file.isDirectory()) {
                 FolderNode folderNode = new FolderNode(fileName);
-                scanDirectory(Arrays.asList(file.listFiles()), scripts, folderNode.getChildren(), settingsJson);
+                this.scanDirectory(Arrays.asList(file.listFiles()), scripts, folderNode.getChildren(), settingsJson);
                 nodes.add(folderNode);
-            } else if (this.isValidScriptFile(file) && !file.getName().equals("settings.json")) {
+            } else if (!file.getName().equals("settings.json")) {
                 String scriptPath = this.getRelativePath(file);
                 String scriptContent = this.readFileToString(file.getPath());
                 String side = "SERVER";
-
-                Extension extension = Extension.getExtension(this.getFileExtension(file));
+                List<String> libraries = new ArrayList<>();
 
                 if (!this.isValidSetting(scriptPath)) {
                     JsonObject setting = new JsonObject();
                     setting.addProperty("Side", side);
+                    setting.add("Libraries", new JsonArray());
                     settingsJson.add(scriptPath, setting);
                 } else {
                     side = settingsJson.getAsJsonObject(scriptPath).get("Side").getAsString();
+                    settingsJson.getAsJsonObject(scriptPath).get("Libraries").getAsJsonArray().forEach(jsonElement -> {
+                        libraries.add(jsonElement.getAsString());
+                    });
                 }
 
-                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptSide.valueOf(side.toUpperCase()));
+                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptSide.valueOf(side.toUpperCase()), libraries);
 
                 scripts.add(script);
-                nodes.add(new ScriptNode(fileName, script, extension, "/" + scriptPath));
+                nodes.add(new ScriptNode(fileName, script, "/" + scriptPath));
             }
         });
     }
@@ -166,24 +161,21 @@ public class ProjectManager extends DirectoryManager {
     public void refreshSettings() {
         String settingsContent = this.readFileToString(settings.getPath());
         if (JsonUtils.isValid(settingsContent)) {
-            JsonObject jsonObject = JsonParser.parseString(settingsContent).getAsJsonObject();
+            JsonObject jsonSetting = JsonParser.parseString(settingsContent).getAsJsonObject();
             for (ServerScript script : this.scripts) {
                 if (!this.isValidSetting(script.getName())) {
-                    JsonObject setting = new JsonObject();
-                    setting.addProperty("Side", "server");
-                    jsonObject.add(script.getName(), setting);
+                    JsonObject jsonScriptSetting = new JsonObject();
+                    jsonScriptSetting.addProperty("Side", ScriptSide.SERVER.name());
+                    jsonScriptSetting.add("Libraries", new JsonArray());
+
+                    jsonSetting.add(script.getName(), jsonScriptSetting);
                 }
             }
 
-            GsonManager.writeJSON(settings, jsonObject);
+            GsonManager.writeJSON(settings, jsonSetting);
         } else {
             throw new RuntimeException("Invalid JSON Setting");
         }
-    }
-
-    private boolean isValidScriptFile(File file) {
-        String extension = this.getFileExtension(file);
-        return Extension.containsName(extension);
     }
 
     private String getFileExtension(File file) {
@@ -226,62 +218,6 @@ public class ProjectManager extends DirectoryManager {
             this.loadScriptsAndNodes();
         } catch (IOException ignored) {
         }
-    }
-
-    public void deleteScriptToSettings(String path) {
-        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
-
-        object.remove(path);
-
-        GsonManager.writeJSON(settings, object);
-    }
-
-    public void addScriptToSettings(ServerScript script) {
-        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
-
-        JsonObject scriptObject = new JsonObject();
-
-        scriptObject.addProperty("Side", script.getSide().toString());
-
-        object.add(script.getName(), scriptObject);
-
-        GsonManager.writeJSON(settings, object);
-    }
-
-    public void renameScriptToSettings(String path, String name) {
-        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
-
-        if (object == null) {
-            CubeCodeClient.LOGGER.error("json settings - null");
-            return;
-        }
-
-        JsonObject oldScript = object.get(path).getAsJsonObject();
-
-        object.remove(path);
-
-        object.add(path.contains("/") ? path.substring(0, path.lastIndexOf("/") + 1) + name : name, oldScript);
-
-        GsonManager.writeJSON(settings, object);
-    }
-
-    public void renameFolderToSettings(String path, String name) {
-        JsonObject object = GsonManager.readJSON(settings, JsonObject.class);
-
-        if (object == null) {
-            CubeCodeClient.LOGGER.error("json settings - null");
-            return;
-        }
-
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            if (entry.getKey().startsWith(path)) {
-                object.remove(entry.getKey());
-
-                object.add(path.substring(0, path.lastIndexOf("/") + 1) + name, entry.getValue());
-            }
-        }
-
-        GsonManager.writeJSON(settings, object);
     }
 
     public void createTxtFile(String name, String path, String content) {
@@ -349,6 +285,22 @@ public class ProjectManager extends DirectoryManager {
         return null;
     }
 
+    public void addLibraryScript(String name, String library) {
+        ServerScript script = this.getScript(name);
+
+        if(script != null) {
+            script.addLibraryScript(library);
+        }
+    }
+
+    public void removeLibraryScript(String name, String library) {
+        ServerScript script = this.getScript(name);
+
+        if(script != null) {
+            script.removeLibraryScript(library);
+        }
+    }
+
     private boolean isValidSetting(String key) {
         String json = this.readFileToString(settings.getPath());
         try {
@@ -357,10 +309,18 @@ public class ProjectManager extends DirectoryManager {
                 JsonObject jsonObject = element.getAsJsonObject();
                 if (jsonObject.has(key)) {
                     JsonObject paramObject = jsonObject.getAsJsonObject(key);
+                    boolean isSide = false;
+                    boolean isLibraries = false;
+
                     if (paramObject.has("Side")) {
                         String sideValue = paramObject.get("Side").getAsString();
-                        return "client".equalsIgnoreCase(sideValue) || "server".equalsIgnoreCase(sideValue);
+                        isSide = "client".equalsIgnoreCase(sideValue) || "server".equalsIgnoreCase(sideValue);
                     }
+                    if (paramObject.has("Libraries")) {
+                        isLibraries = paramObject.get("Libraries").isJsonArray();
+                    }
+
+                    return isSide && isLibraries;
                 }
             }
         } catch (JsonSyntaxException e) {

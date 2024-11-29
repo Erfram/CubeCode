@@ -1,4 +1,4 @@
-package com.cubecode.client.views.idea.utils.node;
+package com.cubecode.client.views.ide.utils.node;
 
 public enum NodeType {
     FOLDER,

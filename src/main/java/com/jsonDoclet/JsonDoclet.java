@@ -20,11 +20,18 @@ import java.util.*;
 
 public class JsonDoclet {
     static class Documentation {
-        @SerializedName("chapters")
-        private Map<String, ClassInfo> chapters = new HashMap<>();
+        @SerializedName("Server")
+        private Map<String, ClassInfo> serverChapters = new HashMap<>();
 
-        public void addClass(String className, ClassInfo classInfo) {
-            chapters.put(className, classInfo);
+        @SerializedName("Client")
+        private Map<String, ClassInfo> clientChapters = new HashMap<>();
+
+        public void addServerClass(String className, ClassInfo classInfo) {
+            serverChapters.put(className, classInfo);
+        }
+
+        public void addClientClass(String className, ClassInfo classInfo) {
+            clientChapters.put(className, classInfo);
         }
     }
 
@@ -60,6 +67,10 @@ public class JsonDoclet {
         public void addArgument(ArgumentInfo argumentInfo) {
             arguments.add(argumentInfo);
         }
+
+        public boolean hasDescription() {
+            return description != null && !description.trim().isEmpty();
+        }
     }
 
     static class ArgumentInfo {
@@ -72,77 +83,31 @@ public class JsonDoclet {
         }
     }
 
-    public static void generateDocs(List<String> targetPackages, List<String> clientTargetPackages) {
+    public static void generateDocs(List<String> serverTargetPackages, List<String> clientTargetPackages) {
         String outputPath = ImGuiLoader.class.getClassLoader().getResource("assets/cubecode/docs.json").getFile();
         System.out.println(outputPath);
-        if (targetPackages == null || targetPackages.size() == 0) {
-            throw new IllegalArgumentException("At least one package must be specified");
+        if ((serverTargetPackages == null || serverTargetPackages.isEmpty()) &&
+                (clientTargetPackages == null || clientTargetPackages.isEmpty())) {
+            throw new IllegalArgumentException("At least one package must be specified for either server or client");
         }
 
         try {
             Documentation documentation = new Documentation();
             JavaParser javaParser = new JavaParser();
 
-            List<Path> javaFiles = findJavaFiles(targetPackages);
-
-            for (Path javaFile : javaFiles) {
-                try {
-                    CompilationUnit cu = javaParser.parse(javaFile).getResult().orElse(null);
-                    if (cu == null) continue;
-
-                    cu.findAll(ClassOrInterfaceDeclaration.class).forEach(classDecl -> {
-                        Optional<Javadoc> classJavadoc = classDecl.getJavadoc();
-                        String classDescription = extractDescription(classJavadoc);
-                        String classScript = extractScript(classJavadoc);
-
-                        ClassInfo classInfo = new ClassInfo(classDescription, classScript);
-
-                        classDecl.getMethods().forEach(method -> {
-                            Optional<Javadoc> methodJavadoc = method.getJavadoc();
-                            String methodDescription = extractDescription(methodJavadoc);
-                            String methodScript = extractScript(methodJavadoc);
-                            String returnType = method.getType().asString();
-
-                            MethodInfo methodInfo = new MethodInfo(
-                                    method.getNameAsString(),
-                                    methodDescription,
-                                    methodScript,
-                                    returnType
-                            );
-
-                            for (Parameter param : method.getParameters()) {
-                                String paramDescription = method.getJavadoc()
-                                        .map(javadoc -> javadoc.getBlockTags().stream()
-                                                .filter(tag -> tag.getTagName().equals("param"))
-                                                .filter(tag -> tag.getName().isPresent())
-                                                .filter(tag -> tag.getName().get().equals(param.getNameAsString()))
-                                                .map(JavadocBlockTag::getContent)
-                                                .map(Object::toString)
-                                                .findFirst()
-                                                .orElse(""))
-                                        .orElse("");
-
-                                ArgumentInfo argumentInfo = new ArgumentInfo(
-                                        param.getNameAsString(),
-                                        param.getType().asString()
-                                );
-                                methodInfo.addArgument(argumentInfo);
-                            }
-
-                            if (method.getModifiers().size() == 1 && method.getModifiers().get(0).toString().equals("public ")) {
-                                classInfo.addMethod(methodInfo);
-                            }
-                        });
-
-                        documentation.addClass(classDecl.getNameAsString(), classInfo);
-                    });
-                } catch (IOException e) {
-                    System.err.println("Error processing file: " + javaFile);
-                    e.printStackTrace();
-                }
+            // Process server packages
+            if (serverTargetPackages != null && !serverTargetPackages.isEmpty()) {
+                List<Path> serverJavaFiles = findJavaFiles(serverTargetPackages);
+                processJavaFiles(javaParser, serverJavaFiles, documentation, true);
             }
 
-            // Записываем результат в JSON файл
+            // Process client packages
+            if (clientTargetPackages != null && !clientTargetPackages.isEmpty()) {
+                List<Path> clientJavaFiles = findJavaFiles(clientTargetPackages);
+                processJavaFiles(javaParser, clientJavaFiles, documentation, false);
+            }
+
+            // Write to JSON file
             Gson gson = new GsonBuilder()
                     .setPrettyPrinting()
                     .create();
@@ -153,6 +118,81 @@ public class JsonDoclet {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void processJavaFiles(JavaParser javaParser, List<Path> javaFiles, Documentation documentation, boolean isServer) throws IOException {
+        for (Path javaFile : javaFiles) {
+            try {
+                CompilationUnit cu = javaParser.parse(javaFile).getResult().orElse(null);
+                if (cu == null) continue;
+
+                cu.findAll(ClassOrInterfaceDeclaration.class).forEach(classDecl -> {
+                    Optional<Javadoc> classJavadoc = classDecl.getJavadoc();
+                    String classDescription = extractDescription(classJavadoc);
+                    String classScript = extractScript(classJavadoc);
+
+                    ClassInfo classInfo = new ClassInfo(classDescription, classScript);
+
+                    classDecl.getMethods().forEach(method -> {
+                        Optional<Javadoc> methodJavadoc = method.getJavadoc();
+                        String methodDescription = extractDescription(methodJavadoc);
+
+                        // Пропускаем метод, если у него нет описания
+                        if (methodDescription.trim().isEmpty()) {
+                            return; // continue для forEach
+                        }
+
+                        String methodScript = extractScript(methodJavadoc);
+                        String returnType = method.getType().asString();
+
+                        MethodInfo methodInfo = new MethodInfo(
+                                method.getNameAsString(),
+                                methodDescription,
+                                methodScript,
+                                returnType
+                        );
+
+                        for (Parameter param : method.getParameters()) {
+                            String paramDescription = method.getJavadoc()
+                                    .map(javadoc -> javadoc.getBlockTags().stream()
+                                            .filter(tag -> tag.getTagName().equals("param"))
+                                            .filter(tag -> tag.getName().isPresent())
+                                            .filter(tag -> tag.getName().get().equals(param.getNameAsString()))
+                                            .map(JavadocBlockTag::getContent)
+                                            .map(Object::toString)
+                                            .findFirst()
+                                            .orElse(""))
+                                    .orElse("");
+
+                            ArgumentInfo argumentInfo = new ArgumentInfo(
+                                    param.getNameAsString(),
+                                    param.getType().asString()
+                            );
+                            methodInfo.addArgument(argumentInfo);
+                        }
+
+                        // Добавляем метод только если он публичный и имеет описание
+                        if (method.getModifiers().size() == 1 &&
+                                method.getModifiers().get(0).toString().equals("public ") &&
+                                methodInfo.hasDescription()) {
+                            classInfo.addMethod(methodInfo);
+                        }
+                    });
+
+                    // Добавляем класс только если у него есть методы
+                    if (!classInfo.methods.isEmpty()) {
+                        if (isServer) {
+                            documentation.addServerClass(classDecl.getNameAsString(), classInfo);
+                        } else {
+                            documentation.addClientClass(classDecl.getNameAsString(), classInfo);
+                        }
+                    }
+                });
+            } catch (IOException e) {
+                System.err.println("Error processing file: " + javaFile);
+                e.printStackTrace();
+            }
         }
     }
 
@@ -198,34 +238,49 @@ public class JsonDoclet {
 
     private static List<Path> findJavaFiles(List<String> targetPackages) throws IOException {
         Path projectRoot = Paths.get("").toAbsolutePath();
-
-        return targetPackages.stream().map(pkg -> projectRoot.resolve("src/main/java/" + pkg)).toList();
+        return targetPackages.stream()
+                .map(pkg -> projectRoot.resolve("src/main/java/" + pkg))
+                .toList();
     }
 
     public static void main(String[] args) {
-
-        generateDocs(List.of(
-                    "com/cubecode/api/scripts/code/JavaScriptUtils.java",
-                    "com/cubecode/api/scripts/code/JavaUtils.java",
-                    "com/cubecode/api/scripts/code/ScriptEvent.java",
-                    "com/cubecode/api/scripts/code/ScriptFactory.java",
-                    "com/cubecode/api/scripts/code/ScriptRayTrace.java",
-                    "com/cubecode/api/scripts/code/ScriptServer.java",
-                    "com/cubecode/api/scripts/code/ScriptVector.java",
-                    "com/cubecode/api/scripts/code/ScriptWorld.java",
-                    "com/cubecode/api/scripts/code/blocks/ScriptBlockEntity.java",
-                    "com/cubecode/api/scripts/code/blocks/ScriptBlockState.java",
-                    "com/cubecode/api/scripts/code/cubecode/CubeCodeStates.java",
-                    "com/cubecode/api/scripts/code/entities/ScriptEntity.java",
-                    "com/cubecode/api/scripts/code/entities/ScriptPlayer.java",
-                    "com/cubecode/api/scripts/code/items/ScriptInventory.java",
-                    "com/cubecode/api/scripts/code/items/ScriptItem.java",
-                    "com/cubecode/api/scripts/code/items/ScriptItemStack.java",
-                    "com/cubecode/api/scripts/code/nbt/ScriptNbtCompound.java",
-                    "com/cubecode/api/scripts/code/nbt/ScriptNbtList.java"
+        generateDocs(
+                List.of(
+                        "com/cubecode/api/scripts/code/JavaScriptUtils.java",
+                        "com/cubecode/api/scripts/code/JavaUtils.java",
+                        "com/cubecode/api/scripts/code/ScriptEvent.java",
+                        "com/cubecode/api/scripts/code/ScriptFactory.java",
+                        "com/cubecode/api/scripts/code/ScriptRayTrace.java",
+                        "com/cubecode/api/scripts/code/ScriptServer.java",
+                        "com/cubecode/api/scripts/code/ScriptVector.java",
+                        "com/cubecode/api/scripts/code/ScriptWorld.java",
+                        "com/cubecode/api/scripts/code/blocks/ScriptBlockEntity.java",
+                        "com/cubecode/api/scripts/code/blocks/ScriptBlockState.java",
+                        "com/cubecode/api/scripts/code/cubecode/CubeCodeStates.java",
+                        "com/cubecode/api/scripts/code/entities/ScriptEntity.java",
+                        "com/cubecode/api/scripts/code/entities/ScriptPlayer.java",
+                        "com/cubecode/api/scripts/code/items/ScriptInventory.java",
+                        "com/cubecode/api/scripts/code/items/ScriptItem.java",
+                        "com/cubecode/api/scripts/code/items/ScriptItemStack.java",
+                        "com/cubecode/api/scripts/code/nbt/ScriptNbtCompound.java",
+                        "com/cubecode/api/scripts/code/nbt/ScriptNbtList.java"
                 ),
                 List.of(
-
+                        "com/cubecode/client/scripts/code/entities/ClientScriptEntity.java",
+                        "com/cubecode/client/scripts/code/entities/ClientScriptPlayer.java",
+                        "com/cubecode/client/scripts/code/ui/ClientCubeCodeUI.java",
+                        "com/cubecode/client/scripts/code/ui/components/AbstractComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/ArrowButtonComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/ButtonComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/CheckboxComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/ChildComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/IconComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/InputTextComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/RadioButtonComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/SliderComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/TextComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/WindowComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/draw/DrawComponent.java"
                 )
         );
     }

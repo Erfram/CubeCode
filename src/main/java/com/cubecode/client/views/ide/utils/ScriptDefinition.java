@@ -1,4 +1,4 @@
-package com.cubecode.client.views.idea.utils;
+package com.cubecode.client.views.ide.utils;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.utils.ColorUtils;
@@ -6,7 +6,6 @@ import imgui.extension.texteditor.TextEditorLanguageDefinition;
 import imgui.extension.texteditor.flag.TextEditorPaletteIndex;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class ScriptDefinition {
     public static TextEditorLanguageDefinition typeScript() {

@@ -1,7 +1,7 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
-import com.cubecode.client.views.idea.utils.node.ScriptNode;
+import com.cubecode.client.views.ide.utils.node.ScriptNode;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.utils.PacketByteBufUtils;

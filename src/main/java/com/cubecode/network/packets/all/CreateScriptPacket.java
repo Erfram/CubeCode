@@ -66,7 +66,7 @@ public class CreateScriptPacket extends AbstractPacket {
             String code = packet.scriptSide == ScriptSide.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT;
 
             CubeCode.projectManager.createTxtFile(packet.scriptName, packet.scriptPath, code);
-            CubeCode.projectManager.addScriptToSettings(new ServerScript(packet.scriptName, code, packet.scriptSide));
+            CubeCode.settingManager.addScript(packet.scriptName, packet.scriptSide);
 
             if (packet.scriptSide == ScriptSide.CLIENT) {
                 Dispatcher.sendToAll(new CreateScriptPacket(packet.scriptName, packet.scriptPath), server);

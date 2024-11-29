@@ -1,6 +1,8 @@
 package com.cubecode.client.imgui.basic.window;
 
 import com.cubecode.CubeCodeClient;
+import com.cubecode.client.views.ide.DocumentationView;
+import com.cubecode.utils.Documentation;
 import com.cubecode.utils.GsonManager;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
@@ -8,16 +10,14 @@ import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.views.DashboardView;
 import com.cubecode.client.views.EventsView;
 import com.cubecode.client.views.SettingsView;
-import com.cubecode.client.views.idea.DocumentationView;
-import com.cubecode.client.views.idea.core.CubeCodeIDEAView;
+import com.cubecode.client.views.ide.core.CubeCodeIDEView;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
-import com.cubecode.network.packets.all.IDEARequestedPacket;
+import com.cubecode.network.packets.all.IDERequestedPacket;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiDockNodeFlags;
 import imgui.internal.ImGuiDockNode;
 
 import java.util.HashMap;
@@ -28,10 +28,10 @@ public class WindowStateManager {
     private Map<View, WindowData> sessionWindows = new HashMap<>();
 
     public WindowStateManager() {
-        windows.put(CubeCodeIDEAView.class, () -> Dispatcher.sendToServer(new IDEARequestedPacket()));
+        windows.put(CubeCodeIDEView.class, () -> Dispatcher.sendToServer(new IDERequestedPacket()));
         windows.put(EventsView.class, () -> Dispatcher.sendToServer(new EventsRequestedPacket()));
         windows.put(SettingsView.class, () -> ImGuiLoader.pushView(new SettingsView()));
-        windows.put(DocumentationView.class, () -> ImGuiLoader.pushView(new DocumentationView()));
+        windows.put(DocumentationView.class, () -> ImGuiLoader.pushView(new DocumentationView(Documentation.parseDocs())));
     }
 
     public Map<View, WindowData> getSessionWindows() {
@@ -134,7 +134,7 @@ public class WindowStateManager {
     public void loadWindowState() {
         JsonObject jsonObject = GsonManager.readJSON(CubeCodeConfig.saveWindows.toFile(), JsonObject.class);
 
-        if (jsonObject.entrySet() != null) {
+        if (jsonObject != null) {
             jsonObject.entrySet().forEach((entry) -> {
                 try {
                     String view = entry.getKey().split("#")[0];

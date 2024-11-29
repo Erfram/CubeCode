@@ -1,12 +1,11 @@
-package com.cubecode.client.views.idea.core;
+package com.cubecode.client.views.ide.core;
 
 import com.cubecode.api.scripts.ProjectManager;
 import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.client.views.idea.utils.Extension;
-import com.cubecode.client.views.idea.utils.node.*;
+import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.CreateFolderC2SPacket;
 import com.cubecode.network.packets.all.CreateScriptPacket;
@@ -108,7 +107,7 @@ public class CreateView extends View {
             name = name.endsWith(".js") ? name : name + ".js";
         }
 
-        for (CubeCodeIDEAView view : ImGuiLoader.getViews(CubeCodeIDEAView.class)) {
+        for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
             if (folderNode != null) {
                 if (NodeUtils.hasNodeByPathIgnoreCase(view.nodes, folderNode.getPath() + "/" + name))
                     return;
@@ -132,11 +131,10 @@ public class CreateView extends View {
 
             } else {
                 ScriptNode scriptNode = new ScriptNode(
-                        new ServerScript(name,
-                                this.side == ScriptSide.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT,
-                                this.side
-                        ),
-                        Extension.JAVASCRIPT
+                    new ServerScript(name,
+                        this.side == ScriptSide.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT,
+                        this.side
+                    )
                 );
 
                 if (folderNode != null) {

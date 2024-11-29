@@ -1,27 +1,17 @@
 package com.cubecode.client.scripts;
 
-import com.cubecode.api.files.FileManager;
 import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.api.scripts.ScriptScope;
-import com.cubecode.api.scripts.code.JavaScriptUtils;
 import com.cubecode.api.scripts.code.JavaUtils;
-import com.cubecode.client.scripts.code.ClientScriptFactory;
-import com.cubecode.client.views.idea.utils.Extension;
-import com.cubecode.client.views.idea.utils.node.FolderNode;
-import com.cubecode.client.views.idea.utils.node.IdeaNode;
-import com.cubecode.client.views.idea.utils.node.ScriptNode;
+import com.cubecode.api.scripts.code.ScriptFactory;
+import com.cubecode.client.views.ide.utils.node.IdeaNode;
 import com.cubecode.utils.CubeCodeException;
-import com.cubecode.utils.DirectoryManager;
+import com.cubecode.utils.ScriptSide;
 import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 
 public class ClientProjectManager {
@@ -40,9 +30,8 @@ public class ClientProjectManager {
         globalContext.setMaximumInterpreterStackDepth(500);
         globalScope.setParentScope(globalContext.initStandardObjects());
 
-        globalScope.set("CubeCode", new ClientScriptFactory());
+        globalScope.set("CubeCode", new ScriptFactory());
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
-        //globalScope.set("JavaScript", new JavaScriptUtils(globalContext, globalScope, this.getDirectory()));
     }
 
     public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
@@ -80,7 +69,7 @@ public class ClientProjectManager {
 
     @Nullable
     public ClientScript getScript(String scriptName) {
-        for (ClientScript script : this.scripts) if (script.name.equals(scriptName)) {
+        for (ClientScript script : this.scripts) if (script.getName().equals(scriptName)) {
             return script;
         }
 
@@ -95,17 +84,6 @@ public class ClientProjectManager {
         return this.nodes;
     }
 
-    private boolean isValidScriptFile(File file) {
-        String extension = getFileExtension(file);
-        return Extension.containsName(extension);
-    }
-
-    private String getFileExtension(File file) {
-        String name = file.getName();
-        int lastIndexOf = name.lastIndexOf(".");
-        return lastIndexOf == -1 ? "" : name.substring(lastIndexOf + 1);
-    }
-
     public void createScript(ClientScript script) {
         this.scripts.add(script);
     }
@@ -116,5 +94,28 @@ public class ClientProjectManager {
 
     public void setScripts(List<ClientScript> scripts) {
         this.scripts = new HashSet<>(scripts);
+    }
+
+    public void setScriptSide(String name, ScriptSide side) {
+        ClientScript script = this.getScript(name);
+        if (script != null) {
+            script.setSide(side);
+        }
+    }
+
+    public void addLibraryScript(String name, String library) {
+        ClientScript script = this.getScript(name);
+
+        if(script != null) {
+            script.addLibraryScript(library);
+        }
+    }
+
+    public void removeLibraryScript(String name, String library) {
+        ClientScript script = this.getScript(name);
+
+        if(script != null) {
+            script.removeLibraryScript(library);
+        }
     }
 }

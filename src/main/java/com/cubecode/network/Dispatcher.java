@@ -20,7 +20,7 @@ public class Dispatcher {
         public void register() {
             this.registerPacket(FillScriptScopeS2CPacket.class, FillScriptScopeS2CPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(SynchronizedClientScriptsPacket.class, SynchronizedClientScriptsPacket.ClientHandler.class, EnvType.CLIENT);
-            this.registerPacket(IDEARequestedPacket.class, IDEARequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(IDERequestedPacket.class, IDERequestedPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(RunScriptPacket.class, RunScriptPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ClientHandler.class, EnvType.CLIENT);
@@ -37,9 +37,12 @@ public class Dispatcher {
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RequestScriptScopeC2SPacket.class, RequestScriptScopeC2SPacket.ServerHandler.class, EnvType.SERVER);
-            this.registerPacket(IDEARequestedPacket.class, IDEARequestedPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(IDERequestedPacket.class, IDERequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(RunScriptPacket.class, RunScriptPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(SynchronizedClientScriptsPacket.class, SynchronizedClientScriptsPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(ChangeSideScriptC2SPacket.class, ChangeSideScriptC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(AddLibraryC2SPacket.class, AddLibraryC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(RemoveLibraryC2SPacket.class, RemoveLibraryC2SPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 

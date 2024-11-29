@@ -1,5 +1,6 @@
 package com.cubecode.client.scripts.code.ui.components;
 
+import com.cubecode.CubeCode;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -7,7 +8,15 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
+import net.minecraft.util.Identifier;
 
+/**
+ * AbstractComponent serves as a base class for creating and manipulating UI components
+ * in a graphical user interface framework. It provides a fluent interface for setting
+ * various properties of the component, including position, size, colors, transparency,
+ * padding, and rounding. This class allows for a high degree of customization and
+ * flexibility when designing UI elements.
+ */
 public abstract class AbstractComponent {
     Float x = null;
     Float y = null;
@@ -24,8 +33,6 @@ public abstract class AbstractComponent {
 
     Float rw = null;
     Float rh = null;
-
-    Window window = MinecraftClient.getInstance().getWindow();
 
     public int windowPosFlags = ImGuiCond.None;
 
@@ -115,12 +122,19 @@ public abstract class AbstractComponent {
 
     }
 
+    /**
+     * Sets the X coordinate of the component.
+     */
     public AbstractComponent x(float x) {
         this.x = x;
 
         return this;
     }
 
+    /**
+     * Sets the X relative of the component.
+     * If the Y relative (ry) is not set, it defaults to 0.
+     */
     public AbstractComponent rx(float rx) {
         this.rx = rx;
         this.ry = this.ry == null ? 0 : this.ry;
@@ -128,12 +142,19 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the Y coordinate of the component.
+     */
     public AbstractComponent y(float y) {
         this.y = y;
 
         return this;
     }
 
+    /**
+     * Sets the Y relative of the component.
+     * If the X relative (rx) is not set, it defaults to 0.
+     */
     public AbstractComponent ry(float ry) {
         this.rx = this.rx == null ? 0 : this.rx;
         this.ry = ry;
@@ -141,6 +162,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets both the X and Y coordinates of the component.
+     */
     public AbstractComponent xy(float x, float y) {
         this.x = x;
         this.y = y;
@@ -148,6 +172,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets both the X and Y relative of the component.
+     */
     public AbstractComponent rxy(float rx, float ry) {
         this.rx = rx;
         this.ry = ry;
@@ -155,18 +182,27 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Resets the X coordinate of the component.
+     */
     public AbstractComponent resetX() {
         this.x = null;
 
         return this;
     }
 
+    /**
+     * Resets the Y coordinate of the component.
+     */
     public AbstractComponent resetY() {
         this.y = null;
 
         return this;
     }
 
+    /**
+     * Resets both the X and Y coordinates, as well as the relative X and relative Y.
+     */
     public AbstractComponent resetPosition() {
         this.x = null;
         this.y = null;
@@ -176,30 +212,41 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the width of the component.
+     */
     public AbstractComponent w(float width) {
         this.width = width;
-
         return this;
     }
 
+    /**
+     * Resets the width of the component.
+     */
     public AbstractComponent resetWidth() {
         this.width = null;
-
         return this;
     }
 
+    /**
+     * Sets the height of the component.
+     */
     public AbstractComponent h(float height) {
         this.height = height;
-
         return this;
     }
 
+    /**
+     * Resets the height of the component.
+     */
     public AbstractComponent resetHeight() {
         this.height = null;
-
         return this;
     }
 
+    /**
+     * Sets both the width and height of the component.
+     */
     public AbstractComponent wh(float width, float height) {
         this.width = width;
         this.height = height;
@@ -207,13 +254,34 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the relative width and height.
+     */
     public AbstractComponent rwh(float rw, float rh) {
         this.rw = rw;
         this.rh = rh;
-
         return this;
     }
 
+    /**
+     * Sets the relative width of the component.
+     */
+    public AbstractComponent rw(float rw) {
+        this.rw = rw;
+        return this;
+    }
+
+    /**
+     * Sets the relative height of the component.
+     */
+    public AbstractComponent rh(float rh) {
+        this.rh = rh;
+        return this;
+    }
+
+    /**
+     * Resets the relative width and height of the component to null.
+     */
     public AbstractComponent resetSize() {
         this.width = null;
         this.height = null;
@@ -221,6 +289,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the text.
+     */
     public AbstractComponent colorText(short r, short g, short b, short a) {
         this.text[0] = r;
         this.text[1] = g;
@@ -230,6 +301,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the text in a disabled state.
+     */
     public AbstractComponent colorTextDisabled(short r, short g, short b, short a) {
         this.textDisabled[0] = r;
         this.textDisabled[1] = g;
@@ -238,6 +312,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the window.
+     */
     public AbstractComponent colorWindowBg(short r, short g, short b, short a) {
         this.windowBg[0] = r;
         this.windowBg[1] = g;
@@ -246,6 +323,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the child component.
+     */
     public AbstractComponent colorChildBg(short r, short g, short b, short a) {
         this.childBg[0] = r;
         this.childBg[1] = g;
@@ -254,6 +334,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the popup window.
+     */
     public AbstractComponent colorPopupBg(short r, short g, short b, short a) {
         this.popupBg[0] = r;
         this.popupBg[1] = g;
@@ -262,6 +345,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the border color.
+     */
     public AbstractComponent colorBorder(short r, short g, short b, short a) {
         this.border[0] = r;
         this.border[1] = g;
@@ -270,6 +356,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the border shadow.
+     */
     public AbstractComponent colorBorderShadow(short r, short g, short b, short a) {
         this.borderShadow[0] = r;
         this.borderShadow[1] = g;
@@ -278,6 +367,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the frame.
+     */
     public AbstractComponent colorFrameBg(short r, short g, short b, short a) {
         this.frameBg[0] = r;
         this.frameBg[1] = g;
@@ -286,6 +378,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the frame when hovered.
+     */
     public AbstractComponent colorFrameBgHovered(short r, short g, short b, short a) {
         this.frameBgHovered[0] = r;
         this.frameBgHovered[1] = g;
@@ -294,6 +389,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the frame when it is active (e.g., being clicked or focused).
+     */
     public AbstractComponent colorFrameBgActive(short r, short g, short b, short a) {
         this.frameBgActive[0] = r;
         this.frameBgActive[1] = g;
@@ -302,6 +400,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the title bar.
+     */
     public AbstractComponent colorTitleBg(short r, short g, short b, short a) {
         this.titleBg[0] = r;
         this.titleBg[1] = g;
@@ -310,6 +411,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the title bar when it is active.
+     */
     public AbstractComponent colorTitleBgActive(short r, short g, short b, short a) {
         this.titleBgActive[0] = r;
         this.titleBgActive[1] = g;
@@ -318,6 +422,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the title bar when it is collapsed.
+     */
     public AbstractComponent colorTitleBgCollapsed(short r, short g, short b, short a) {
         this.titleBgCollapsed[0] = r;
         this.titleBgCollapsed[1] = g;
@@ -326,6 +433,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the menu bar.
+     */
     public AbstractComponent colorMenuBarBg(short r, short g, short b, short a) {
         this.menuBarBg[0] = r;
         this.menuBarBg[1] = g;
@@ -334,6 +444,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the background color of the scrollbar.
+     */
     public AbstractComponent colorScrollbarBg(short r, short g, short b, short a) {
         this.scrollbarBg[0] = r;
         this.scrollbarBg[1] = g;
@@ -342,6 +455,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the scrollbar grab (the draggable part of the scrollbar).
+     */
     public AbstractComponent colorScrollbarGrab(short r, short g, short b, short a) {
         this.scrollbarGrab[0] = r;
         this.scrollbarGrab[1] = g;
@@ -350,6 +466,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the scrollbar grab when it is hovered over.
+     */
     public AbstractComponent colorScrollbarGrabHovered(short r, short g, short b, short a) {
         this.scrollbarGrabHovered[0] = r;
         this.scrollbarGrabHovered[1] = g;
@@ -358,6 +477,9 @@ public abstract class AbstractComponent {
         return this;
     }
 
+    /**
+     * Sets the color of the scrollbar grab when it is active (being dragged).
+     */
     public AbstractComponent colorScrollbarGrabActive(short r, short g, short b, short a) {
         this.scrollbarGrabActive[0] = r;
         this.scrollbarGrabActive[1] = g;
@@ -972,19 +1094,19 @@ public abstract class AbstractComponent {
     }
 
     public Float getWidth() {
-        return this.width != null ? this.width : this.rw != null ? this.window.getWidth() * this.rw : 0;
+        return this.width != null ? this.width : this.rw != null ? MinecraftClient.getInstance().getWindow().getWidth() * this.rw : 0;
     }
 
     public Float getHeight() {
-        return this.height != null ? this.height : this.rh != null ? this.window.getHeight() * this.rh : 0;
+        return this.height != null ? this.height : this.rh != null ? MinecraftClient.getInstance().getWindow().getHeight() * this.rh : 0;
     }
 
     public Float getX() {
-        return this.x != null ? this.x : this.rx != null ? this.window.getWidth() * this.rx : 0;
+        return this.x != null ? this.x : this.rx != null ? MinecraftClient.getInstance().getWindow().getWidth() * this.rx : 0;
     }
 
     public Float getY() {
-        return this.y != null ? this.y : this.ry != null ? this.window.getHeight() * this.ry : 0;
+        return this.y != null ? this.y : this.ry != null ? MinecraftClient.getInstance().getWindow().getHeight() * this.ry : 0;
     }
 
     public Float getRelativeWidth() {

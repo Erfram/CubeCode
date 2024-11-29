@@ -7,11 +7,12 @@ import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.basic.window.WindowData;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
-import com.cubecode.network.packets.all.IDEARequestedPacket;
+import com.cubecode.network.packets.all.IDERequestedPacket;
 import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.Icons;
 import imgui.*;
 import imgui.flag.ImGuiDockNodeFlags;
+import net.minecraft.client.Mouse;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -26,8 +27,8 @@ public class DashboardView extends View {
     public void render() {
         CubeImGui.mainMenuBar(() -> {
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.windows.title").getString(), () -> {
-                CubeImGui.menuItem("CubeCodeIDEA", () -> {
-                    Dispatcher.sendToServer(new IDEARequestedPacket());
+                CubeImGui.menuItem("CubeCodeIDE", () -> {
+                    Dispatcher.sendToServer(new IDERequestedPacket());
                 });
 
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.windows.events.title").getString(), () -> {
@@ -61,6 +62,12 @@ public class DashboardView extends View {
 
             CubeImGui.imageButton(Icons.LLAMA, Text.translatable("imgui.cubecode.dashboard.support.title").getString(), 16, 16, () -> {
                 Util.getOperatingSystem().open("https://boosty.to/jenyuyhj");
+            });
+
+            ImGui.setCursorPosX(iconPosX - 64);
+
+            CubeImGui.imageButton(Icons.DISCORD, Text.translatable("imgui.cubecode.dashboard.discord.title").getString(), 16, 16, () -> {
+                Util.getOperatingSystem().open("https://discord.gg/wjYnZGSKjT");
             });
         });
 

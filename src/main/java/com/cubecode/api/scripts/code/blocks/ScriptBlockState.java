@@ -159,7 +159,7 @@ public class ScriptBlockState {
     }
 
     /**
-     * 	Returns the value of the specified property
+     * Returns the value of the specified property
      */
     public Object getProperty(String name) throws CubeCodeException {
         return this.blockState.getProperties().stream()

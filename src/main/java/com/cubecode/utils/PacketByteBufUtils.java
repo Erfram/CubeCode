@@ -1,12 +1,10 @@
 package com.cubecode.utils;
 
 import com.cubecode.api.scripts.ServerScript;
-import com.cubecode.client.scripts.ClientScript;
-import com.cubecode.client.views.idea.utils.Extension;
-import com.cubecode.client.views.idea.utils.node.FolderNode;
-import com.cubecode.client.views.idea.utils.node.IdeaNode;
-import com.cubecode.client.views.idea.utils.node.NodeType;
-import com.cubecode.client.views.idea.utils.node.ScriptNode;
+import com.cubecode.client.views.ide.utils.node.FolderNode;
+import com.cubecode.client.views.ide.utils.node.IdeaNode;
+import com.cubecode.client.views.ide.utils.node.NodeType;
+import com.cubecode.client.views.ide.utils.node.ScriptNode;
 import net.minecraft.network.PacketByteBuf;
 
 import java.util.ArrayList;
@@ -16,10 +14,14 @@ public class PacketByteBufUtils {
     public static void writeScript(PacketByteBuf buf, ServerScript script) {
         buf.writeString(script.getName());
         buf.writeString(script.getCode());
+        buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
     }
 
     public static ServerScript readScript(PacketByteBuf buf) {
-        return new ServerScript(buf.readString(), buf.readString());
+        ServerScript serverScript = new ServerScript(buf.readString(), buf.readString());
+        serverScript.setLibraries(buf.readCollection(ArrayList::new, PacketByteBuf::readString));
+
+        return serverScript;
     }
 
     public static void writeIdeaNode(PacketByteBuf buf, IdeaNode node) {
@@ -37,8 +39,8 @@ public class PacketByteBufUtils {
             ScriptNode scriptNode = (ScriptNode) node;
             buf.writeString(scriptNode.getScript().getName());
             buf.writeString(scriptNode.getScript().getCode());
+            buf.writeCollection(scriptNode.getScript().getLibraries(), PacketByteBuf::writeString);
             buf.writeEnumConstant(scriptNode.getScript().getSide());
-            buf.writeEnumConstant(scriptNode.getScriptType());
         }
     }
 
@@ -59,11 +61,13 @@ public class PacketByteBufUtils {
         } else if (type == NodeType.SCRIPT) {
             String scriptName = buf.readString();
             String scriptCode = buf.readString();
+            List<String> scriptLibraries = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
             ScriptSide scriptSide = buf.readEnumConstant(ScriptSide.class);
-            Extension scriptType = buf.readEnumConstant(Extension.class);
             Script script = new ServerScript(scriptName, scriptCode, scriptSide);
 
-            return new ScriptNode(name, script, scriptType, path);
+            script.setLibraries(scriptLibraries);
+
+            return new ScriptNode(name, script, path);
         }
         return null;
     }

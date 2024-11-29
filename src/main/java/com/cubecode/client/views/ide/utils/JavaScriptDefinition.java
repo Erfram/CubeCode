@@ -1,4 +1,4 @@
-package com.cubecode.client.views.idea.utils;
+package com.cubecode.client.views.ide.utils;
 
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
 

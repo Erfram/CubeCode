@@ -21,6 +21,10 @@ public class ClientScriptEntity<T extends Entity> {
         this.entity = entity;
     }
 
+    /**
+     * Returns the underlying Minecraft entity object.
+     * This method is primarily for internal use and advanced scripting.
+     */
     public Entity getMinecraftEntity() {
         return this.entity;
     }

@@ -41,6 +41,24 @@ public class TextComponent extends AbstractComponent {
         return this;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setColor(int r, int g, int b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = 255;
+    }
+
+    public void setColor(int r, int g, int b, int a) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.a = a;
+    }
+
     @Override
     public void render() {
         ImGui.textColored(this.r, this.g, this.b, this.a, this.text);

@@ -2,9 +2,11 @@ package com.cubecode.utils;
 
 import com.cubecode.CubeCode;
 import com.cubecode.client.config.CubeCodeConfig;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Icons {
+    ACCEPT(),
     APPEARANCE(),
     THEME(),
     BLOCK(),
@@ -19,6 +22,7 @@ public enum Icons {
     CLIPBOARD(),
     CLIENT(),
     CUBECODE(),
+    DISCORD(),
     EMPTY(),
     ENTITY(),
     FLAG(),
@@ -66,7 +70,16 @@ public enum Icons {
     }
 
     private int registerIcon(String path) {
-        return MinecraftClient.getInstance().getTextureManager().getTexture(new Identifier(CubeCode.MOD_ID, "imgui/icons/" + path + ".png")).getGlId();
+        Identifier iconIdentifier = new Identifier(CubeCode.MOD_ID, "imgui/icons/" + path + ".png");
+        int icon = MinecraftClient.getInstance().getTextureManager().getTexture(iconIdentifier).getGlId();
+
+        GlStateManager._bindTexture(MinecraftClient.getInstance().getTextureManager().getTexture(iconIdentifier).getGlId());
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
+
+        return icon;
     }
 
     public static void register() {

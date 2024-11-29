@@ -1,5 +1,6 @@
 package com.cubecode.client.scripts.code.ui.components;
 
+import com.cubecode.client.scripts.code.ui.CubeCodeUIBuilder;
 import com.cubecode.client.scripts.code.ui.components.draw.DrawComponent;
 import com.cubecode.client.views.TestView;
 import imgui.ImGui;
@@ -73,6 +74,17 @@ public class ChildComponent extends AbstractComponent implements CubeCodeUIBuild
     @Override
     public IconComponent icon(String iconId) {
         IconComponent component = new IconComponent(iconId);
+
+        try {
+            this.components.add(component);
+        } catch (UnsupportedOperationException ignored) {}
+
+        return component;
+    }
+
+    @Override
+    public ImageComponent image(String iconPath) {
+        ImageComponent component = new ImageComponent(iconPath);
 
         try {
             this.components.add(component);

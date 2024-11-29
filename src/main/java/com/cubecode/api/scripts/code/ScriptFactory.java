@@ -1,6 +1,7 @@
 package com.cubecode.api.scripts.code;
 
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
+import com.cubecode.client.scripts.code.ui.ClientCubeCodeUI;
 import com.cubecode.utils.GsonManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -206,5 +207,14 @@ public class ScriptFactory {
      */
     public ScriptVector vector(double x, double y, double z) {
         return new ScriptVector(x, y, z);
+    }
+
+    /**
+     * Creates and returns a new instance of the ClientCubeCodeUI class,
+     * which is used for building and managing the user interface components
+     * in the client-side scripting environment.
+     */
+    public ClientCubeCodeUI createUI() {
+        return new ClientCubeCodeUI();
     }
 }

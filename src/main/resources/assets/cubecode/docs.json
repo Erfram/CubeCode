@@ -1,5 +1,5 @@
 {
-  "chapters": {
+  "Server": {
     "ScriptItem": {
       "description": "",
       "script": "",
@@ -49,13 +49,6 @@
           "script": "",
           "arguments": [],
           "returnType": "ScriptWorld"
-        },
-        {
-          "name": "getMinecraftServer",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "MinecraftServer"
         },
         {
           "name": "getMaxPlayerCount",
@@ -522,11 +515,23 @@
         },
         {
           "name": "sendTo",
-          "description": "",
-          "script": "",
+          "description": "Runs a client script.\r\n\r\nExample:",
+          "script": "//Server Script: a.js | Client Script: b.js\n\n// a.js\nfunction server(c) {\n\tc.getPlayer().sendTo(\"b.js\")\n}\n\n// b.js\nfunction client(c) {\n\tc.player.send(\"Hello Client!\")\n}",
           "arguments": [
             {
-              "name": "script",
+              "name": "scriptName",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "sendTo",
+          "description": "Runs a client script. You can pass nbt to use it in some way on the client side\r\n\r\nExample:",
+          "script": "//Server Script: a.js | Client Script: b.js\n\n// a.js\nfunction server(c) {\n\tc.getPlayer().sendTo(\n\t\t\"b.js\",\n\t\tCubeCode.createCompound(\"{\\\"a\\\":\\\"b\\\"}\")\n\t)\n}\n\n// b.js\nfunction client(c) {\n var data \u003d c.getValue(\"data\") //ScriptNbtCompound\n\tc.player.send(\"Hello Client!\")\n\tc.player.send(\"Data: \" + data.getString(\"a\"))\n}",
+          "arguments": [
+            {
+              "name": "scriptName",
               "type": "String"
             },
             {
@@ -998,439 +1003,6 @@
         }
       ]
     },
-    "ScriptNbtCompound": {
-      "description": "",
-      "script": "",
-      "methods": [
-        {
-          "name": "getMinecraftNbtCompound",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "NbtCompound"
-        },
-        {
-          "name": "isCompound",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "isList",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "stringify",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "String"
-        },
-        {
-          "name": "isEmpty",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "size",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "int"
-        },
-        {
-          "name": "copy",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "Nbt"
-        },
-        {
-          "name": "combine",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "nbt",
-              "type": "Nbt"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "isSame",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "nbt",
-              "type": "Nbt"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "has",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "remove",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "keys",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "Set\u003cString\u003e"
-        },
-        {
-          "name": "getByte",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "byte"
-        },
-        {
-          "name": "putByte",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "byte"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getShort",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "short"
-        },
-        {
-          "name": "putShort",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "short"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getInt",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "int"
-        },
-        {
-          "name": "putInt",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getLong",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "long"
-        },
-        {
-          "name": "putLong",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "long"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getFloat",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "float"
-        },
-        {
-          "name": "putFloat",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getDouble",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "double"
-        },
-        {
-          "name": "putDouble",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "double"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getString",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "String"
-        },
-        {
-          "name": "putString",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getBoolean",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "putBoolean",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "boolean"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "ScriptNbtCompound"
-        },
-        {
-          "name": "setCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "ScriptNbtCompound"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getList",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "ScriptNbtList"
-        },
-        {
-          "name": "setList",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "ScriptNbtList"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "get",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "Object"
-        },
-        {
-          "name": "equals",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "compound",
-              "type": "ScriptNbtCompound"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "addCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "dumpJSON",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "String"
-        }
-      ]
-    },
     "ScriptRayTrace": {
       "description": "Docs for rayTrace bruh",
       "script": "var rayTrace \u003d c.getPlayer().rayTraceBlock(5, false);\n\nc.getPlayer().send(rayTrace.getBlock().getBlockId();",
@@ -1527,18 +1099,6 @@
           "returnType": "ScriptVector"
         },
         {
-          "name": "cross",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "vector",
-              "type": "ScriptVector"
-            }
-          ],
-          "returnType": "ScriptVector"
-        },
-        {
           "name": "length",
           "description": "Calculates the length of this vector",
           "script": "",
@@ -1582,54 +1142,20 @@
         }
       ]
     },
-    "JavaUtils": {
-      "description": "",
-      "script": "",
-      "methods": [
-        {
-          "name": "type",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "className",
-              "type": "String"
-            }
-          ],
-          "returnType": "NativeJavaClass"
-        },
-        {
-          "name": "extend",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "baseClass",
-              "type": "Class\u003c?\u003e"
-            },
-            {
-              "name": "methods",
-              "type": "Object"
-            }
-          ],
-          "returnType": "Scriptable"
-        }
-      ]
-    },
     "ScriptWorld": {
-      "description": "",
-      "script": "",
+      "description": "Tab with methods that can be used on world.",
+      "script": "var block \u003d c.getWorld().getBlock(213, 24, 232);\n\nc.getWorld().setBlock(block, 232, 55, 563);",
       "methods": [
         {
           "name": "getMinecraftWorld",
-          "description": "",
-          "script": "",
+          "description": "Returns the Minecraft World object associated with this script world",
+          "script": "//You can use yarn mappings\n//All mappings search site https://linkie.shedaniel.dev/\n\nc.getWorld().getMinecraftWorld().getWorldChunk(CubeCode.vector(232, 232, 223).toBlockPos());",
           "arguments": [],
           "returnType": "World"
         },
         {
           "name": "getBlock",
-          "description": "",
+          "description": "Returns the block state at the specified coordinates",
           "script": "",
           "arguments": [
             {
@@ -1649,7 +1175,7 @@
         },
         {
           "name": "getBlock",
-          "description": "",
+          "description": "Returns the block state at the specified vector position",
           "script": "",
           "arguments": [
             {
@@ -1660,9 +1186,41 @@
           "returnType": "ScriptBlockState"
         },
         {
-          "name": "setBlock",
-          "description": "",
+          "name": "getBlockEntity",
+          "description": "getBlockEntity",
           "script": "",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            }
+          ],
+          "returnType": "ScriptBlockEntity"
+        },
+        {
+          "name": "getBlockEntity",
+          "description": "getBlockEntity",
+          "script": "",
+          "arguments": [
+            {
+              "name": "vector",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "ScriptBlockEntity"
+        },
+        {
+          "name": "setBlock",
+          "description": "Sets the block at the specified coordinates to the given block state",
+          "script": "c.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), 223, 223, 223);",
           "arguments": [
             {
               "name": "scriptBlockState",
@@ -1685,12 +1243,52 @@
         },
         {
           "name": "setBlock",
-          "description": "",
-          "script": "",
+          "description": "Sets the block at the specified vector position to the given block state",
+          "script": "var pos \u003d CubeCode.vector(223, 223, 223);\n\nc.getWorld().setBlock(CubeCode.createBlockState(\"minecraft:dirt\"), pos.x, pos.y, pos.z);",
           "arguments": [
             {
               "name": "scriptBlockState",
               "type": "ScriptBlockState"
+            },
+            {
+              "name": "vector",
+              "type": "ScriptVector"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setBlockEntity",
+          "description": "setBlockEntity",
+          "script": "",
+          "arguments": [
+            {
+              "name": "scriptBlockEntity",
+              "type": "ScriptBlockEntity"
+            },
+            {
+              "name": "x",
+              "type": "int"
+            },
+            {
+              "name": "y",
+              "type": "int"
+            },
+            {
+              "name": "z",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setBlockEntity",
+          "description": "setBlockEntity",
+          "script": "",
+          "arguments": [
+            {
+              "name": "scriptBlockEntity",
+              "type": "ScriptBlockEntity"
             },
             {
               "name": "vector",
@@ -1701,15 +1299,15 @@
         },
         {
           "name": "getServer",
-          "description": "",
+          "description": "Returns the server associated with this world",
           "script": "",
           "arguments": [],
           "returnType": "ScriptServer"
         },
         {
           "name": "getEntities",
-          "description": "",
-          "script": "",
+          "description": "Returns a list of entities that match the given selector",
+          "script": "var entities \u003d c.getWorld().getEntities(\"@e[type\u003dminecraft:cow]\");\n\nentities.forEach(entity \u003d\u003e entity.setVelocity(0, 1, 0));",
           "arguments": [
             {
               "name": "selector",
@@ -1720,8 +1318,8 @@
         },
         {
           "name": "getEntity",
-          "description": "",
-          "script": "",
+          "description": "Returns the entity with the specified UUID",
+          "script": "c.getWorld().getEntity(\"5c5d80c8-7583-47f9-bb0e-de13fc816ad5\");",
           "arguments": [
             {
               "name": "uuid",
@@ -1732,8 +1330,8 @@
         },
         {
           "name": "spawnEntity",
-          "description": "",
-          "script": "",
+          "description": "Spawns an entity of the specified type at the given coordinates",
+          "script": "c.getWorld().spawnEntity(\"minecraft:cow\", 232, 20, 232);",
           "arguments": [
             {
               "name": "id",
@@ -1756,8 +1354,8 @@
         },
         {
           "name": "playSound",
-          "description": "",
-          "script": "",
+          "description": "Plays a sound at the specified location with custom parameters",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\", 1, 1, true);",
           "arguments": [
             {
               "name": "x",
@@ -1796,8 +1394,8 @@
         },
         {
           "name": "playSound",
-          "description": "",
-          "script": "",
+          "description": "Plays a sound at the specified location with default parameters",
+          "script": "c.getWorld().playSound(245, 45, 323, \"block.anvil.break\", \"master\");",
           "arguments": [
             {
               "name": "x",
@@ -1824,15 +1422,15 @@
         },
         {
           "name": "getTime",
-          "description": "",
+          "description": "time",
           "script": "",
           "arguments": [],
           "returnType": "long"
         },
         {
           "name": "getEntities",
-          "description": "",
-          "script": "",
+          "description": "Returns a list of entities within the specified bounding box",
+          "script": "var cows \u003d c.getWorld().getEntities(\"@e[type\u003dminecraft:cow]\", 211, 213, 123, 311, 210, 120)\n\ncows.forEach(entity \u003d\u003e entity.setVelocity(0, 1, 0));",
           "arguments": [
             {
               "name": "entity",
@@ -1867,8 +1465,8 @@
         },
         {
           "name": "getEntities",
-          "description": "",
-          "script": "",
+          "description": "Returns a list of entities within the bounding box defined by two vectors",
+          "script": "c.getWorld().getEntities(\n     \"@e[type\u003dminecraft:cow]\",\n     CubeCode.vector(211, 213, 123),\n     CubeCode.vector(311, 210, 120)\n).forEach(entity \u003d\u003e entity.setVelocity(0, 1, 0););",
           "arguments": [
             {
               "name": "entity",
@@ -1887,73 +1485,6 @@
         }
       ]
     },
-    "ScriptBlockEntity": {
-      "description": "",
-      "script": "",
-      "methods": [
-        {
-          "name": "getMinecraftTileEntity",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "BlockEntity"
-        },
-        {
-          "name": "getWorld",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "ScriptWorld"
-        },
-        {
-          "name": "getType",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "String"
-        },
-        {
-          "name": "getPosition",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "ScriptVector"
-        },
-        {
-          "name": "markDirty",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "void"
-        },
-        {
-          "name": "getBlock",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "ScriptBlockState"
-        },
-        {
-          "name": "getNbtCompound",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "ScriptNbtCompound"
-        },
-        {
-          "name": "setNbtCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "nbtCompound",
-              "type": "ScriptNbtCompound"
-            }
-          ],
-          "returnType": "void"
-        }
-      ]
-    },
     "CubeCodeStates": {
       "description": "Docs for states bruh",
       "script": "function main(c) {\n    let states \u003d c.getPlayer().getStates();\n    let array \u003d [1337, \"TheBendy\"];\n\n    states.putString(\"example\", JSON.stringify(array));  // \"[1337,\\\"TheBendy\\\"]\"\n    c.player.send(array \u003d\u003d JSON.parse(states.getString(\"example\"))); // true\n}",
@@ -1964,22 +1495,6 @@
           "script": "let keys \u003d c.getPlayer().getStates().getKeys();\n\nc.getPlayer().send(keys[\"example\"]); //1337",
           "arguments": [],
           "returnType": "List\u003cString\u003e"
-        },
-        {
-          "name": "putString",
-          "description": "",
-          "script": "c.getPlayer().getStates().putString(\"example\", \"Name\");",
-          "arguments": [
-            {
-              "name": "key",
-              "type": "String"
-            },
-            {
-              "name": "value",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
         },
         {
           "name": "putInt",
@@ -2163,476 +1678,6 @@
         }
       ]
     },
-    "ScriptNbtList": {
-      "description": "",
-      "script": "",
-      "methods": [
-        {
-          "name": "getMinecraftNbtList",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "NbtList"
-        },
-        {
-          "name": "isCompound",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "isList",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "stringify",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "String"
-        },
-        {
-          "name": "isEmpty",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "boolean"
-        },
-        {
-          "name": "size",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "int"
-        },
-        {
-          "name": "copy",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "Nbt"
-        },
-        {
-          "name": "combine",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "nbt",
-              "type": "Nbt"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "isSame",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "nbt",
-              "type": "Nbt"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "has",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "remove",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getByte",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "byte"
-        },
-        {
-          "name": "setByte",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "byte"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addByte",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "byte"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getShort",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "short"
-        },
-        {
-          "name": "setShort",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "short"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addShort",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "short"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getInt",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "int"
-        },
-        {
-          "name": "setInt",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addInt",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "int"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getFloat",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "float"
-        },
-        {
-          "name": "setFloat",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addFloat",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "float"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getDouble",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "double"
-        },
-        {
-          "name": "setDouble",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "double"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addDouble",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "double"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getString",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "String"
-        },
-        {
-          "name": "setString",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addString",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getBoolean",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "boolean"
-        },
-        {
-          "name": "setBoolean",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "boolean"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addBoolean",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "boolean"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "ScriptNbtCompound"
-        },
-        {
-          "name": "setCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "ScriptNbtCompound"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addCompound",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "ScriptNbtCompound"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "getList",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            }
-          ],
-          "returnType": "ScriptNbtList"
-        },
-        {
-          "name": "setList",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "index",
-              "type": "int"
-            },
-            {
-              "name": "value",
-              "type": "ScriptNbtList"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "addList",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "value",
-              "type": "ScriptNbtList"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
-          "name": "toArray",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "Object[]"
-        }
-      ]
-    },
     "ScriptItemStack": {
       "description": "",
       "script": "",
@@ -2727,24 +1772,6 @@
           "script": "",
           "arguments": [],
           "returnType": "String"
-        }
-      ]
-    },
-    "JavaScriptUtils": {
-      "description": "",
-      "script": "",
-      "methods": [
-        {
-          "name": "loadScript",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "scriptPath",
-              "type": "String"
-            }
-          ],
-          "returnType": "void"
         }
       ]
     },
@@ -2919,13 +1946,6 @@
       "script": "c.getPlayer().send(c.getPlayer().getName());",
       "methods": [
         {
-          "name": "getScript",
-          "description": "",
-          "script": "",
-          "arguments": [],
-          "returnType": "String"
-        },
-        {
           "name": "getFunction",
           "description": "Returns the function associated with this event",
           "script": "",
@@ -3003,18 +2023,6 @@
           "returnType": "void"
         },
         {
-          "name": "setValues",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "values",
-              "type": "Map\u003cString,Object\u003e"
-            }
-          ],
-          "returnType": "void"
-        },
-        {
           "name": "cancel",
           "description": "Cancels this event",
           "script": "",
@@ -3071,22 +2079,6 @@
           "returnType": "ScriptNbtCompound"
         },
         {
-          "name": "dump",
-          "description": "",
-          "script": "",
-          "arguments": [
-            {
-              "name": "object",
-              "type": "Object"
-            },
-            {
-              "name": "simple",
-              "type": "boolean"
-            }
-          ],
-          "returnType": "String"
-        },
-        {
           "name": "getClassName",
           "description": "Returns the class name of the given object",
           "script": "CubeCode.getClassName(c.getPlayer());",
@@ -3117,6 +2109,1328 @@
             }
           ],
           "returnType": "ScriptVector"
+        },
+        {
+          "name": "createUI",
+          "description": "Creates and returns a new instance of the ClientCubeCodeUI class,\r\nwhich is used for building and managing the user interface components\r\nin the client-side scripting environment.",
+          "script": "",
+          "arguments": [],
+          "returnType": "ClientCubeCodeUI"
+        }
+      ]
+    }
+  },
+  "Client": {
+    "AbstractComponent": {
+      "description": "AbstractComponent serves as a base class for creating and manipulating UI components\r\nin a graphical user interface framework. It provides a fluent interface for setting\r\nvarious properties of the component, including position, size, colors, transparency,\r\npadding, and rounding. This class allows for a high degree of customization and\r\nflexibility when designing UI elements.",
+      "script": "",
+      "methods": [
+        {
+          "name": "x",
+          "description": "Sets the X coordinate of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "rx",
+          "description": "Sets the X relative of the component.\r\nIf the Y relative (ry) is not set, it defaults to 0.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "rx",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "y",
+          "description": "Sets the Y coordinate of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "y",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "ry",
+          "description": "Sets the Y relative of the component.\r\nIf the X relative (rx) is not set, it defaults to 0.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "ry",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "xy",
+          "description": "Sets both the X and Y coordinates of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "x",
+              "type": "float"
+            },
+            {
+              "name": "y",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "rxy",
+          "description": "Sets both the X and Y relative of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "rx",
+              "type": "float"
+            },
+            {
+              "name": "ry",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetX",
+          "description": "Resets the X coordinate of the component.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetY",
+          "description": "Resets the Y coordinate of the component.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetPosition",
+          "description": "Resets both the X and Y coordinates, as well as the relative X and relative Y.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "w",
+          "description": "Sets the width of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "width",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetWidth",
+          "description": "Resets the width of the component.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "h",
+          "description": "Sets the height of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "height",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetHeight",
+          "description": "Resets the height of the component.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "wh",
+          "description": "Sets both the width and height of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "width",
+              "type": "float"
+            },
+            {
+              "name": "height",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "rwh",
+          "description": "Sets the relative width and height.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "rw",
+              "type": "float"
+            },
+            {
+              "name": "rh",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "rw",
+          "description": "Sets the relative width of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "rw",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "rh",
+          "description": "Sets the relative height of the component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "rh",
+              "type": "float"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "resetSize",
+          "description": "Resets the relative width and height of the component to null.",
+          "script": "",
+          "arguments": [],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorText",
+          "description": "Sets the color of the text.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorTextDisabled",
+          "description": "Sets the color of the text in a disabled state.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorWindowBg",
+          "description": "Sets the background color of the window.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorChildBg",
+          "description": "Sets the background color of the child component.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorPopupBg",
+          "description": "Sets the background color of the popup window.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorBorder",
+          "description": "Sets the border color.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorBorderShadow",
+          "description": "Sets the color of the border shadow.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorFrameBg",
+          "description": "Sets the background color of the frame.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorFrameBgHovered",
+          "description": "Sets the background color of the frame when hovered.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorFrameBgActive",
+          "description": "Sets the background color of the frame when it is active (e.g., being clicked or focused).",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorTitleBg",
+          "description": "Sets the background color of the title bar.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorTitleBgActive",
+          "description": "Sets the background color of the title bar when it is active.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorTitleBgCollapsed",
+          "description": "Sets the background color of the title bar when it is collapsed.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorMenuBarBg",
+          "description": "Sets the background color of the menu bar.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorScrollbarBg",
+          "description": "Sets the background color of the scrollbar.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorScrollbarGrab",
+          "description": "Sets the color of the scrollbar grab (the draggable part of the scrollbar).",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorScrollbarGrabHovered",
+          "description": "Sets the color of the scrollbar grab when it is hovered over.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        },
+        {
+          "name": "colorScrollbarGrabActive",
+          "description": "Sets the color of the scrollbar grab when it is active (being dragged).",
+          "script": "",
+          "arguments": [
+            {
+              "name": "r",
+              "type": "short"
+            },
+            {
+              "name": "g",
+              "type": "short"
+            },
+            {
+              "name": "b",
+              "type": "short"
+            },
+            {
+              "name": "a",
+              "type": "short"
+            }
+          ],
+          "returnType": "AbstractComponent"
+        }
+      ]
+    },
+    "ClientCubeCodeUI": {
+      "description": "ClientCubeCodeUI is a class that implements the CubeCodeUIBuilder interface, providing a user interface (UI)\r\nObject for creating various UI components\r\nThis class serves as a bridge between the UI components and the underlying view, allowing for the creation and management of windows, buttons, text fields, and other interactive elements.\r\nIt encapsulates the behavior of UI components and manages their addition to the view, while also\r\nproviding utility methods for handling input events and layout management.",
+      "script": "var ui \u003d CubeCode.createUI()\n\nui.window(\"\", () \u003d\u003e {\n    ui.button(\"click\")\n}).render()\n\nc.player.openUI(ui)",
+      "methods": [
+        {
+          "name": "window",
+          "description": "Creates a new window component with the specified title and callback to be executed when the window is rendered.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "title",
+              "type": "String"
+            },
+            {
+              "name": "callback",
+              "type": "Runnable"
+            }
+          ],
+          "returnType": "WindowComponent"
+        },
+        {
+          "name": "window",
+          "description": "Creates a new window component with a specified title.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "title",
+              "type": "String"
+            }
+          ],
+          "returnType": "WindowComponent"
+        },
+        {
+          "name": "text",
+          "description": "Creates a new text component with the specified text.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "text",
+              "type": "String"
+            }
+          ],
+          "returnType": "TextComponent"
+        },
+        {
+          "name": "icon",
+          "description": "Creates a new icon component with the specified icon ID.\r\nIcon ID\u0027s:\r\nAPPEARANCE, THEME, BLOCK, BLOCK_ENTITY, CLIPBOARD, CLIENT,\r\nCUBECODE, EMPTY, ENTITY, FLAG, FABRIC, FACTORY,\r\nFOLDER, MODULE, INFO, INVENTORY, ITEM, ITEM_STACK\r\nLLAMA, MAGMAOUT, MATH, MINUS, NBT_COMPOUND, NBT_LIST\r\nPLAYER, PLUS, QUESTION, RAY_TRACE, RESET, SAVE\r\nSEARCH, SERVER, STATE, STICK, VECTOR, WORLD\r\nSTART, BOOK, CUT, DELETE, EDIT, COPY\r\nPASTE, HAMMER, JS, LUA",
+          "script": "",
+          "arguments": [
+            {
+              "name": "iconId",
+              "type": "String"
+            }
+          ],
+          "returnType": "IconComponent"
+        },
+        {
+          "name": "image",
+          "description": "Creates a new image component with the specified icon path.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "iconPath",
+              "type": "String"
+            }
+          ],
+          "returnType": "ImageComponent"
+        },
+        {
+          "name": "checkbox",
+          "description": "Creates a new checkbox component with the specified ID and initial active state.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "active",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "CheckboxComponent"
+        },
+        {
+          "name": "button",
+          "description": "Creates a new button component with the specified label.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "label",
+              "type": "String"
+            }
+          ],
+          "returnType": "ButtonComponent"
+        },
+        {
+          "name": "radioButton",
+          "description": "Creates a new radio button component with the specified ID and initial active state, and adds it to the view.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "active",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "RadioButtonComponent"
+        },
+        {
+          "name": "arrowButton",
+          "description": "Creates a new arrow button component with the specified ID and direction.\r\n\r\nDirections:\r\nNone - -1\r\nLeft - 0\r\nRight - 1\r\nUp - 2\r\nDown - 3",
+          "script": "",
+          "arguments": [
+            {
+              "name": "id",
+              "type": "String"
+            },
+            {
+              "name": "dir",
+              "type": "int"
+            }
+          ],
+          "returnType": "ArrowButtonComponent"
+        },
+        {
+          "name": "inputText",
+          "description": "Creates a new input text component with the specified label, initial text, and maximum length.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "label",
+              "type": "String"
+            },
+            {
+              "name": "text",
+              "type": "String"
+            },
+            {
+              "name": "maxLength",
+              "type": "int"
+            }
+          ],
+          "returnType": "InputTextComponent"
+        },
+        {
+          "name": "inputText",
+          "description": "Creates a new input text component with the specified label and an empty initial text.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "label",
+              "type": "String"
+            },
+            {
+              "name": "text",
+              "type": "String"
+            }
+          ],
+          "returnType": "InputTextComponent"
+        },
+        {
+          "name": "inputText",
+          "description": "Creates a new input text component with the specified label, empty initial text, and maximum length.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "label",
+              "type": "String"
+            }
+          ],
+          "returnType": "InputTextComponent"
+        },
+        {
+          "name": "slider",
+          "description": "Creates a new slider component with the specified label, initial value, and range.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "label",
+              "type": "String"
+            },
+            {
+              "name": "value",
+              "type": "float"
+            },
+            {
+              "name": "degreesMin",
+              "type": "float"
+            },
+            {
+              "name": "degreesMax",
+              "type": "float"
+            }
+          ],
+          "returnType": "SliderComponent"
+        },
+        {
+          "name": "child",
+          "description": "Creates a new child component with the specified ID.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "strId",
+              "type": "String"
+            }
+          ],
+          "returnType": "ChildComponent"
+        },
+        {
+          "name": "draw",
+          "description": "Creates a new draw component.",
+          "script": "",
+          "arguments": [],
+          "returnType": "DrawComponent"
+        },
+        {
+          "name": "separator",
+          "description": "Inserts a separator.",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "sameLine",
+          "description": "Moves the cursor to the same line for the next UI element.",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "sameLine",
+          "description": "Moves the cursor to the same line with a specified offset from the start X position.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "offsetFromStartX",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "sameLine",
+          "description": "Moves the cursor to the same line with a specified offset from the start X position and spacing.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "offsetFromStartX",
+              "type": "float"
+            },
+            {
+              "name": "spacing",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "newLine",
+          "description": "Moves the cursor to a new line",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "spacing",
+          "description": "Adds spacing in the UI layout.",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "indent",
+          "description": "Indents the current position in the UI layout.",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "indent",
+          "description": "Indents the current position in the UI layout by a specified width.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "indentW",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "unindent",
+          "description": "Unindents the current position in the UI layout.",
+          "script": "",
+          "arguments": [],
+          "returnType": "void"
+        },
+        {
+          "name": "unindent",
+          "description": "Unindents the current position in the UI layout by a specified width.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "indentW",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "isKeyDown",
+          "description": "Checks if a specific key is currently pressed down.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "keyCode",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isKeyPressed",
+          "description": "Checks if a specific key was pressed during the current frame.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "keyCode",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isKeyPressed",
+          "description": "Checks if a specific key was pressed during the current frame, with an option to allow repeated presses.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "keyCode",
+              "type": "int"
+            },
+            {
+              "name": "repeat",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isKeyReleased",
+          "description": "Checks if a specific key was released during the current frame.",
+          "script": "",
+          "arguments": [
+            {
+              "name": "keyCode",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseClicked",
+          "description": "Checks if a specific mouse button was clicked during the current frame.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseClicked",
+          "description": "Checks if a specific mouse button was clicked during the current frame, with an option to allow repeated clicks.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            },
+            {
+              "name": "repeat",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseDown",
+          "description": "Checks if a specific mouse button is currently down.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseDragging",
+          "description": "Checks if a specific mouse button is currently being dragged.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseDragging",
+          "description": "Checks if a specific mouse button is currently being dragged, with a specified lock threshold.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            },
+            {
+              "name": "lockThreshold",
+              "type": "float"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isMouseReleased",
+          "description": "Checks if a specific mouse button was released during the current frame.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [
+            {
+              "name": "mouse",
+              "type": "int"
+            }
+          ],
+          "returnType": "boolean"
+        },
+        {
+          "name": "isAnyMouseDown",
+          "description": "Checks if any mouse button is currently down.\r\n\r\nLeft \u003d 0\r\nRight \u003d 1\r\nMiddle \u003d 2",
+          "script": "",
+          "arguments": [],
+          "returnType": "boolean"
+        },
+        {
+          "name": "getMousePosition",
+          "description": "Retrieves the current mouse position as a ScriptVector.",
+          "script": "",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "setMouseCursor",
+          "description": "None: -1\r\nArrow: 0\r\nTextInput: 1\r\nResizeAll: 2\r\nResizeNS: 3\r\nResizeEW: 4\r\nResizeNESW: 5\r\nResizeNWSE: 6\r\nHand: 7\r\nNotAllowed: 8",
+          "script": "",
+          "arguments": [
+            {
+              "name": "type",
+              "type": "int"
+            }
+          ],
+          "returnType": "void"
+        }
+      ]
+    },
+    "ClientScriptPlayer": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftPlayer",
+          "description": "Retrieves the Minecraft player entity associated with this instance.",
+          "script": "",
+          "arguments": [],
+          "returnType": "Entity"
+        },
+        {
+          "name": "getMinecraftClient",
+          "description": "Retrieves the current instance of the Minecraft client.",
+          "script": "",
+          "arguments": [],
+          "returnType": "MinecraftClient"
+        },
+        {
+          "name": "send",
+          "description": "Sends a chat message to the player.",
+          "script": "player.send(\"Hello world!\");\nplayer.send(\"§cColored text\");",
+          "arguments": [
+            {
+              "name": "message",
+              "type": "String"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getRotations",
+          "description": "Gets the player\u0027s current rotation angles.\r\nReturns a vector where:\r\nx \u003d pitch (vertical rotation, -90 to 90)\r\ny \u003d yaw (horizontal rotation, -180 to 180)\r\nz \u003d head yaw (head rotation, -180 to 180)",
+          "script": "var rotations \u003d player.getRotations();\nc.player.send(\"Pitch: \" + rotations.x);\nc.player.send(\"Yaw: \" + rotations.y);\nc.player.send(\"Head Yaw: \" + rotations.z);",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "setRotations",
+          "description": "Sets the player\u0027s rotation angles.",
+          "script": "// Look straight up\nplayer.setRotations(-90, 0, 0);\n\n// Look straight down\nplayer.setRotations(90, 0, 0);",
+          "arguments": [
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "headYaw",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "setRotations",
+          "description": "Sets the player\u0027s rotation angles including body rotation.",
+          "script": "// Look and turn body to the right\nplayer.setRotations(0, 90, 90, 90);",
+          "arguments": [
+            {
+              "name": "pitch",
+              "type": "float"
+            },
+            {
+              "name": "yaw",
+              "type": "float"
+            },
+            {
+              "name": "headYaw",
+              "type": "float"
+            },
+            {
+              "name": "bodyYaw",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "playSound",
+          "description": "Plays a sound for the player at their location.\r\n\r\nThe sound identifier (e.g. \"block.note_block.harp\")\r\nThe sound category (e.g. \"master\", \"music\", \"records\", \"weather\", \"blocks\", \"hostile\", \"neutral\", \"players\", \"ambient\", \"voice\")\r\nThe sound volume (0.0 to 1.0)\r\nThe sound pitch (0.5 to 2.0)",
+          "script": "// Play a creeper hiss\nplayer.playSound(\"entity.creeper.primed\", \"hostile\", 1.0, 1.0);\n\n// Play a note block sound\nplayer.playSound(\"block.note_block.harp\", \"records\", 1.0, 1.0);",
+          "arguments": [
+            {
+              "name": "sound",
+              "type": "String"
+            },
+            {
+              "name": "soundCategory",
+              "type": "String"
+            },
+            {
+              "name": "volume",
+              "type": "float"
+            },
+            {
+              "name": "pitch",
+              "type": "float"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "getResolution",
+          "description": "Gets the player\u0027s game window resolution.\r\nReturns a vector where:\r\nX \u003d window width in pixels\r\nY \u003d window height in pixels\r\nZ \u003d always 0",
+          "script": "var res \u003d player.getResolution();\nc.player.send(\"Window size: \" + res.x + \"x\" + res.y);",
+          "arguments": [],
+          "returnType": "ScriptVector"
+        },
+        {
+          "name": "openUI",
+          "description": "Opens a custom UI screen for the player.\r\nThe UI will pause the game and have a dark background.",
+          "script": "var ui \u003d CubeCode.createUI();\n\nui.window(\"window\", () \u003d\u003e {\n    var button \u003d ui.button(\"click me\")\n        .onClick(() \u003d\u003e {\n            button.setLabel(\"Clicked!\")\n        })\n        .rxy(0.5, 0.5)\n        .rwh(0.5, 0.5)\n}).rxy(0.5, 0.5).rwh(0.5, 0.5).render()\n\nc.player.openUI(ui);",
+          "arguments": [
+            {
+              "name": "clientCubeCodeUI",
+              "type": "ClientCubeCodeUI"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "openUI",
+          "description": "Opens a custom UI screen for the player with background visibility control.\r\nThe UI will pause the game.",
+          "script": "var ui \u003d CubeCode.createUI();\nui.window(\"window\", () \u003d\u003e {\n    var button \u003d ui.button(\"click me\")\n        .onClick(() \u003d\u003e {\n            button.setLabel(\"Clicked!\")\n        })\n        .rxy(0.5, 0.5)\n        .rwh(0.5, 0.5)\n}).rxy(0.5, 0.5).rwh(0.5, 0.5).render()\nplayer.openUI(ui, false); // transparent background",
+          "arguments": [
+            {
+              "name": "clientCubeCodeUI",
+              "type": "ClientCubeCodeUI"
+            },
+            {
+              "name": "isBackground",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "openUI",
+          "description": "Opens a custom UI screen for the player with full control over background and pause state.",
+          "script": "var ui \u003d CubeCode.createUI();\nui.window(\"window\", () \u003d\u003e {\n    var button \u003d ui.button(\"click me\")\n        .onClick(() \u003d\u003e {\n            button.setLabel(\"Clicked!\")\n        })\n        .rxy(0.5, 0.5)\n        .rwh(0.5, 0.5)\n}).rxy(0.5, 0.5).rwh(0.5, 0.5).render()\nplayer.openUI(ui, false, false); // transparent background, doesn\u0027t pause game",
+          "arguments": [
+            {
+              "name": "clientCubeCodeUI",
+              "type": "ClientCubeCodeUI"
+            },
+            {
+              "name": "isBackground",
+              "type": "boolean"
+            },
+            {
+              "name": "shouldPause",
+              "type": "boolean"
+            }
+          ],
+          "returnType": "void"
+        },
+        {
+          "name": "closeUI",
+          "description": "Closes any open UI screens and returns to the game view.",
+          "script": "// Open a UI\nplayer.openUI(ui);\n\n// Later, close it\nplayer.closeUI();",
+          "arguments": [],
+          "returnType": "void"
+        }
+      ]
+    },
+    "ClientScriptEntity": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "getMinecraftEntity",
+          "description": "Returns the underlying Minecraft entity object.\r\nThis method is primarily for internal use and advanced scripting.",
+          "script": "",
+          "arguments": [],
+          "returnType": "Entity"
+        }
+      ]
+    },
+    "IconComponent": {
+      "description": "",
+      "script": "",
+      "methods": [
+        {
+          "name": "onClick",
+          "description": "fwef",
+          "script": "",
+          "arguments": [
+            {
+              "name": "onClick",
+              "type": "Runnable"
+            }
+          ],
+          "returnType": "IconComponent"
         }
       ]
     }

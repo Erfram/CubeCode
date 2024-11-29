@@ -13,6 +13,9 @@ public class DrawComponent extends AbstractComponent {
         this.drawList = ImGui.getWindowDrawList();
     }
 
+    /**
+     *
+     */
     public void rect(float minX, float minY, float maxX, float maxY) {
         this.onRender = () -> this.drawList.addRect(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,

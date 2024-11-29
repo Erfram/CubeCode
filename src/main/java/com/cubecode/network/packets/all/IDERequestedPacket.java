@@ -2,8 +2,8 @@ package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
-import com.cubecode.client.views.idea.core.CubeCodeIDEAView;
-import com.cubecode.client.views.idea.utils.node.IdeaNode;
+import com.cubecode.client.views.ide.core.CubeCodeIDEView;
+import com.cubecode.client.views.ide.utils.node.IdeaNode;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class IDEARequestedPacket extends AbstractPacket {
+public class IDERequestedPacket extends AbstractPacket {
     public List<IdeaNode> nodes = new ArrayList<>();
 
-    public IDEARequestedPacket() {}
+    public IDERequestedPacket() {}
 
-    public IDEARequestedPacket(List<IdeaNode> nodes) {
+    public IDERequestedPacket(List<IdeaNode> nodes) {
         this.nodes = nodes;
     }
 
@@ -46,17 +46,17 @@ public class IDEARequestedPacket extends AbstractPacket {
         return new Identifier("cubecode", "idea_requested_packet");
     }
 
-    public static class ServerHandler implements ServerPacketHandler<IDEARequestedPacket>  {
+    public static class ServerHandler implements ServerPacketHandler<IDERequestedPacket>  {
         @Override
-        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, IDEARequestedPacket packet) {
-            Dispatcher.sendTo(new IDEARequestedPacket(CubeCode.projectManager.getNodes()), player);
+        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, IDERequestedPacket packet) {
+            Dispatcher.sendTo(new IDERequestedPacket(CubeCode.projectManager.getNodes()), player);
         }
     }
 
-    public static class ClientHandler implements ClientPacketHandler<IDEARequestedPacket> {
+    public static class ClientHandler implements ClientPacketHandler<IDERequestedPacket> {
         @Override
-        public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, IDEARequestedPacket packet) {
-            ImGuiLoader.pushView(new CubeCodeIDEAView(new CopyOnWriteArrayList<>(packet.nodes)));
+        public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, IDERequestedPacket packet) {
+            ImGuiLoader.pushView(new CubeCodeIDEView(new CopyOnWriteArrayList<>(packet.nodes)));
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.cubecode;
 
 import com.cubecode.client.gifs.GifManager;
+import com.cubecode.client.image.ImageManager;
 import com.cubecode.client.imgui.basic.window.WindowStateManager;
 import com.cubecode.client.scripts.ClientProjectManager;
 import net.fabricmc.api.EnvType;
@@ -19,6 +20,7 @@ public class EventHandlerClient {
             CubeCodeClient.windowStateManager = new WindowStateManager();
 
             CubeCodeClient.projectManager = new ClientProjectManager();
+            CubeCodeClient.imageManager = new ImageManager();
         });
     }
 }

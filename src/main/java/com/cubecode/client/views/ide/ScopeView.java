@@ -1,11 +1,10 @@
-package com.cubecode.client.views.idea;
+package com.cubecode.client.views.ide;
 
 import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.RequestScriptScopeC2SPacket;
-import com.cubecode.utils.Script;
 import imgui.ImGui;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -34,7 +33,7 @@ public class ScopeView extends View {
 
     @Override
     public String getName() {
-        return String.format(Text.translatable("imgui.cubecode.windows.CubeCodeIDEA.scope").getString() + "##%s", uniqueID);
+        return String.format(Text.translatable("imgui.cubecode.windows.CubeCodeIDE.scope").getString() + "##%s", uniqueID);
     }
 
     public void render() {
