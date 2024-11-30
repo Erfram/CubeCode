@@ -73,7 +73,7 @@ public enum Icons {
         Identifier iconIdentifier = new Identifier(CubeCode.MOD_ID, "imgui/icons/" + path + ".png");
         int icon = MinecraftClient.getInstance().getTextureManager().getTexture(iconIdentifier).getGlId();
 
-        GlStateManager._bindTexture(MinecraftClient.getInstance().getTextureManager().getTexture(iconIdentifier).getGlId());
+        GlStateManager._bindTexture(icon);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
         //GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST_MIPMAP_LINEAR);
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_CLAMP);

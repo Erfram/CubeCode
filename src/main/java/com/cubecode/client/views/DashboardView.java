@@ -4,7 +4,7 @@ import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.imgui.basic.window.WindowData;
+import com.cubecode.client.imgui.basic.ViewDataManager;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.all.IDERequestedPacket;
@@ -12,15 +12,13 @@ import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.Icons;
 import imgui.*;
 import imgui.flag.ImGuiDockNodeFlags;
-import net.minecraft.client.Mouse;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
 public class DashboardView extends View {
     @Override
     public void init() {
-        CubeCodeClient.windowStateManager.loadWindowState();
-        CubeCodeClient.windowStateManager.loadSessionWindowState();
+        CubeCodeClient.viewDataManager.loadSessionViews();
     }
 
     @Override
@@ -55,7 +53,21 @@ public class DashboardView extends View {
             ImGui.setCursorPosX(iconPosX);
 
             CubeImGui.imageButton(Icons.SAVE, Text.translatable("imgui.cubecode.dashboard.saveWindows.title").getString(), 16, 16, () -> {
-                CubeCodeClient.windowStateManager.saveWindowState();
+                CubeCodeClient.viewDataManager.clearViewsData();
+
+                for (View view : ImGuiLoader.getViews()) {
+                    if (view instanceof TestView || view instanceof DashboardView)
+                        continue;
+
+                    CubeCodeClient.viewDataManager.addViewData(view.getClass().getName()+"#"+view.getUniqueID(), new ViewDataManager.ViewData(
+                            view.windowPos.x,
+                            view.windowPos.y,
+                            view.windowSize.x,
+                            view.windowSize.y,
+                            view.windowCollapsed,
+                            view.serializeData()
+                    ));
+                }
             });
 
             ImGui.setCursorPosX(iconPosX - 32);
@@ -76,19 +88,6 @@ public class DashboardView extends View {
 
     @Override
     public void onClose() {
-        CubeCodeClient.windowStateManager.clearSessionWindows();
-
-        for (View view : ImGuiLoader.getViews()) {
-            if (view instanceof DashboardView)
-                continue;
-
-            CubeCodeClient.windowStateManager.addSessionWindow(view, new WindowData(
-                    view.windowPos.x,
-                    view.windowPos.y,
-                    view.windowSize.x,
-                    view.windowSize.y,
-                    view.windowCollapsed
-            ));
-        }
+        CubeCodeClient.viewDataManager.addAllSessionView(ImGuiLoader.getViews().stream().filter(view -> !(view instanceof DashboardView)).toList());
     }
 }

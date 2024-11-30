@@ -2,6 +2,8 @@ package com.cubecode.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class GsonManager {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -40,6 +43,30 @@ public class GsonManager {
             return GSON.fromJson(reader, type);
         } catch (IOException ignored) {
             return null;
+        }
+    }
+
+    public static boolean isValidJSON(File file) {
+        JsonParser parser = new JsonParser();
+
+        try{
+            parser.parse(Files.readString(file.toPath()));
+
+            return true;
+        } catch(JsonSyntaxException | IOException ignored){
+            return false;
+        }
+    }
+
+    public static boolean isValidJSON(String json) {
+        JsonParser parser = new JsonParser();
+
+        try{
+            parser.parse(json);
+
+            return true;
+        } catch(JsonSyntaxException ignored){
+            return false;
         }
     }
 

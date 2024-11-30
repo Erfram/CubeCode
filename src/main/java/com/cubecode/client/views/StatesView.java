@@ -23,16 +23,6 @@ public class StatesView extends View {
     }
 
     @Override
-    public void init() {
-        int viewWidth = 320;
-        float posX = (windowWidth - viewWidth) * 0.5f;
-        int viewHeight = 240;
-        float posY = (windowHeight - viewHeight) * 0.5f;
-        ImGui.setNextWindowPos(posX, posY);
-        ImGui.setNextWindowSize(viewWidth, viewHeight);
-    }
-
-    @Override
     public String getName() {
         return "States##"+this.getUniqueID();
     }

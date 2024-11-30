@@ -11,6 +11,7 @@ import imgui.ImGui;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 
 import java.util.*;
@@ -31,8 +32,8 @@ public class SettingsView extends View {
 
     @Override
     public void init() {
-        float posX = (windowWidth - viewWidth) * 0.5f;
-        float posY = (windowHeight - viewHeight) * 0.5f;
+        float posX = (MinecraftClient.getInstance().getWindow().getWidth() - viewWidth) * 0.5f;
+        float posY = (MinecraftClient.getInstance().getWindow().getHeight() - viewHeight) * 0.5f;
 
         ImGui.setNextWindowPos(posX, posY);
         ImGui.setNextWindowSize(viewWidth, viewHeight);

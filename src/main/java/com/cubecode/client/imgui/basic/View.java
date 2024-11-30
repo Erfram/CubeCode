@@ -22,9 +22,6 @@ public abstract class View {
     protected final UUID uniqueID;
     protected Theme theme;
 
-    protected final int windowWidth = MinecraftClient.getInstance().getWindow().getWidth();
-    protected final int windowHeight = MinecraftClient.getInstance().getWindow().getHeight();
-
     public View(Theme theme) {
         this.uniqueID = UUID.randomUUID();
         this.theme = theme;
@@ -97,11 +94,11 @@ public abstract class View {
     /**
      * Initialization, such as window positions and other states
      */
-    public void init() {
+    protected void init() {
         int viewWidth = 640;
-        float posX = (windowWidth - viewWidth) * 0.5f;
+        float posX = (MinecraftClient.getInstance().getWindow().getWidth() - viewWidth) * 0.5f;
         int viewHeight = 480;
-        float posY = (windowHeight - viewHeight) * 0.5f;
+        float posY = (MinecraftClient.getInstance().getWindow().getHeight() - viewHeight) * 0.5f;
         ImGui.setNextWindowPos(posX, posY);
         ImGui.setNextWindowSize(viewWidth, viewHeight);
     }
@@ -109,7 +106,7 @@ public abstract class View {
     /**
      * Stores the render implementation for the current task
      */
-    public void render() {
+    protected void render() {
 
     }
 
