@@ -1,6 +1,5 @@
 package com.cubecode.client.scripts;
 
-import com.cubecode.api.files.FileManager;
 import com.cubecode.utils.DirectoryManager;
 
 import java.io.File;
@@ -9,7 +8,6 @@ import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ClientLoggerManager extends DirectoryManager {
@@ -50,7 +48,11 @@ public class ClientLoggerManager extends DirectoryManager {
         List<String> logs = new ArrayList<>(List.of(this.getLogs()));
         logs.add(message);
 
-        FileManager.writeToFile(this.logger.getPath(), String.join("\n", logs));
+        try {
+            Files.writeString(this.logger.toPath(), String.join("\n", logs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void info(String source, String info) {
@@ -63,7 +65,11 @@ public class ClientLoggerManager extends DirectoryManager {
         List<String> logs = new ArrayList<>(List.of(this.getLogs()));
         logs.add(message);
 
-        FileManager.writeToFile(this.logger.getPath(), String.join("\n", logs));
+        try {
+            Files.writeString(this.logger.toPath(), String.join("\n", logs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void warn(String source, String warn) {
@@ -76,6 +82,10 @@ public class ClientLoggerManager extends DirectoryManager {
         List<String> logs = new ArrayList<>(List.of(this.getLogs()));
         logs.add(message);
 
-        FileManager.writeToFile(this.logger.getPath(), String.join("\n", logs));
+        try {
+            Files.writeString(this.logger.toPath(), String.join("\n", logs));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

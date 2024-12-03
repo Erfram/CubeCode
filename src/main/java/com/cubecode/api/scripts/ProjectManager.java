@@ -1,7 +1,6 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.files.FileManager;
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.client.views.ide.utils.node.*;
@@ -96,10 +95,8 @@ public class ProjectManager extends DirectoryManager {
 
     private void loadSettings() {
         try {
-            if (settings.createNewFile()) {
-                FileManager.writeToFile(settings.getPath(), "{}");
-            } else if (!JsonUtils.isValid(this.readFileToString(settings.getPath()))) {
-                FileManager.writeToFile(settings.getPath(), "{}");
+            if (settings.createNewFile() || !JsonUtils.isValid(this.readFileToString(settings.getPath()))) {
+                Files.writeString(settings.toPath(), "{}");
             }
         } catch (IOException ignored) {
         }
@@ -190,7 +187,11 @@ public class ProjectManager extends DirectoryManager {
     }
 
     public void writeToFile(String path, String content) {
-        FileManager.writeToFile(this.DIRECTORY.toPath().resolve(path).toString(), content);
+        try {
+            Files.writeString(this.DIRECTORY.toPath(), content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         this.loadScriptsAndNodes();
     }

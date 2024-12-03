@@ -1,10 +1,10 @@
 package com.cubecode.api.scripts;
 
-import com.cubecode.api.files.FileManager;
 import com.cubecode.utils.DirectoryManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class LoggerManager extends DirectoryManager {
     File logger;
@@ -26,27 +26,30 @@ public class LoggerManager extends DirectoryManager {
     public void error(String source, String error) {
         String message = "[&4" + source + "&r]" + ": " + error;
 
-        FileManager.writeToFile(
-            this.logger.getPath(),
-            message
-        );
+        try {
+            Files.writeString(this.logger.toPath(), message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void info(String source, String info) {
         String message = "[&6" + source + "&r]" + ": " + info;
 
-        FileManager.writeToFile(
-            this.logger.getPath(),
-            message
-        );
+        try {
+            Files.writeString(this.logger.toPath(), message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void warn(String source, String warn) {
         String message = "[&c" + source + "&r]" + ": " + warn;
 
-        FileManager.writeToFile(
-            this.logger.getPath(),
-            message
-        );
+        try {
+            Files.writeString(this.logger.toPath(), message);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

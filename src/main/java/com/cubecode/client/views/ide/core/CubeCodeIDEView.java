@@ -20,13 +20,17 @@ import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.network.packets.server.*;
 import com.cubecode.utils.*;
+import com.google.gson.JsonObject;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.*;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
@@ -366,25 +370,52 @@ public class CubeCodeIDEView extends View {
 
     private void manageMouse() {
         if (ImGui.beginPopup("Context Menu IDE", ImGuiWindowFlags.AlwaysAutoResize)) {
-            if (ImGui.button("Вставить позицию игрока", ImGui.calcTextSize("Вставить позицию игрока").x + 7, 22)) {
-                this.codeEditor.insertText(MinecraftClient.getInstance().player.getBlockPos().toShortString());
-                ImGui.closeCurrentPopup();
+            Map<Documentation.Chapter, String> methodVariations = Documentation.findMethodVariations(Documentation.parseDocs, this.codeEditor.getSelectedText());
+            if (!methodVariations.isEmpty()) {
+                methodVariations.forEach((chapter, method) -> CubeImGui.buttonAndImage(Icons.BOOK, chapter.name + " " + method, () -> {
+                    DocumentationView documentationView = new DocumentationView(Documentation.parseDocs);
+                    documentationView.selectedChapter = chapter;
+
+                    ImGuiLoader.pushView(documentationView);
+
+                    ImGui.closeCurrentPopup();
+                }));
+
+                ImGui.separator();
             }
 
-            if (ImGui.button("Вставить поворот игрока", ImGui.calcTextSize("Вставить поворот игрока").x + 7, 22)) {
+            CubeImGui.buttonAndImage(Icons.BLOCK, "Вставить позицию блока", () -> {
+                HitResult raycast = MinecraftClient.getInstance().player.raycast(4, 0, false);
+
+                if (raycast.getType() == HitResult.Type.BLOCK) {
+                    this.codeEditor.insertText(((BlockHitResult)raycast).getBlockPos().toShortString());
+                }
+
+
+                ImGui.closeCurrentPopup();
+            });
+
+            CubeImGui.buttonAndImage(Icons.VECTOR, "Вставить позицию игрока", () -> {
+                this.codeEditor.insertText(MinecraftClient.getInstance().player.getBlockPos().toShortString());
+                ImGui.closeCurrentPopup();
+            });
+
+            CubeImGui.buttonAndImage(Icons.PLAYER, "Вставить поворот игрока", () -> {
                 this.codeEditor.insertText(new ScriptVector(
                         MinecraftClient.getInstance().player.getPitch(),
                         MinecraftClient.getInstance().player.getYaw(),
                         MinecraftClient.getInstance().player.getHeadYaw()
                 ).toBlockPos().toShortString());
                 ImGui.closeCurrentPopup();
-            }
+            });
+
             ImGui.endPopup();
         }
 
         if (this.isIDEFocused) {
             if (ImGui.isMouseReleased(ImGuiMouseButton.Right)) {
                 ImGui.openPopup("Context Menu IDE");
+                Documentation.parseDocs();
             }
         }
     }
@@ -798,5 +829,23 @@ public class CubeCodeIDEView extends View {
         this.codeEditor.render("IDEA");
 
         this.isIDEFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
+    }
+
+    @Override
+    public JsonObject serializeData() {
+        JsonObject jsonObject = new JsonObject();
+
+        if (this.selectedNode != null) {
+            jsonObject.addProperty("selectedNode", this.selectedNode.getPath());
+        }
+
+        return jsonObject;
+    }
+
+    @Override
+    public void deserializeData(JsonObject jsonObject) {
+        if (jsonObject.has("selectedNode")) {
+            this.selectedNode = NodeUtils.findNodeByPath(this.nodes, jsonObject.get("selectedNode").getAsString());
+        }
     }
 }

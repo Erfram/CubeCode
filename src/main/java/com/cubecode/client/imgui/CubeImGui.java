@@ -465,6 +465,28 @@ public class CubeImGui {
         }
     }
 
+    public static void buttonAndImage(Icons icon, String text, Runnable runnable) {
+        ImGui.image(icon.getGlId(), 16, 16);
+
+        ImGui.sameLine();
+
+        ImVec2 cursorPos = ImGui.getCursorPos();
+
+        if (ImGui.button("##"+text, ImGui.calcTextSize(text).x, ImGui.calcTextSize(text).y)) {
+            runnable.run();
+        }
+
+        ImGui.setCursorPos(cursorPos.x, cursorPos.y);
+
+        int index = text.indexOf(" ") + 1;
+
+        ImGui.textColored(255, 207, 64, 255, text.substring(0, index));
+
+        ImGui.sameLine(0, 0);
+
+        ImGui.text(text.substring(index));
+    }
+
     /**
      * Example:
      * <pre>{@code

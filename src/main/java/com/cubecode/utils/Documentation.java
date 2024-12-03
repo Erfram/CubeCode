@@ -12,8 +12,10 @@ import net.minecraft.util.Identifier;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Documentation {
+    public static Map<EnvType, List<Chapter>> parseDocs;
     public static class Chapter {
         public String name;
         public String description;
@@ -66,7 +68,7 @@ public class Documentation {
 
         JsonObject docs = gson.fromJson(new InputStreamReader(inputStream), JsonObject.class);
 
-        Map<EnvType, List<Chapter>> parseDocs = new HashMap<>();
+        parseDocs = new HashMap<>();
 
         for (String sideName : docs.keySet()) {
             JsonObject sideChapters = docs.get(sideName).getAsJsonObject();
@@ -110,5 +112,35 @@ public class Documentation {
         }
 
         return parseDocs;
+    }
+
+    public static Map<Chapter, String> findMethodVariations(Map<EnvType, List<Chapter>> parseDocs, String methodName) {
+        Map<Chapter, String> result = new HashMap<>();
+
+        for (List<Chapter> chapters : parseDocs.values()) {
+            for (Chapter chapter : chapters) {
+                if (chapter.methods != null) {
+                    for (Method method : chapter.methods) {
+                        if (method.name.equals(methodName)) {
+                            StringBuilder methodStr = new StringBuilder();
+                            methodStr.append(method.name).append("(");
+
+                            if (method.arguments != null && !method.arguments.isEmpty()) {
+                                String args = method.arguments.stream()
+                                        .map(arg -> arg.type)
+                                        .collect(Collectors.joining(", "));
+                                methodStr.append(args);
+                            }
+
+                            methodStr.append(")");
+
+                            result.put(chapter, methodStr.toString());
+                        }
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 }

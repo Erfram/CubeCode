@@ -246,7 +246,6 @@ public class JsonDoclet {
     public static void main(String[] args) {
         generateDocs(
                 List.of(
-                        "com/cubecode/api/scripts/code/JavaScriptUtils.java",
                         "com/cubecode/api/scripts/code/JavaUtils.java",
                         "com/cubecode/api/scripts/code/ScriptEvent.java",
                         "com/cubecode/api/scripts/code/ScriptFactory.java",

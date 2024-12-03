@@ -2,10 +2,11 @@ package com.cubecode;
 
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.image.ImageManager;
-import com.cubecode.client.imgui.basic.window.WindowStateManager;
 import com.cubecode.client.scripts.ClientProjectManager;
+import com.cubecode.utils.Icons;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
@@ -16,8 +17,12 @@ public class EventHandlerClient {
             GifManager.update();
         });
 
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            Icons.register();
+        });
+
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            CubeCodeClient.windowStateManager = new WindowStateManager();
+            //CubeCodeClient.windowStateManager = new WindowStateManager();
 
             CubeCodeClient.projectManager = new ClientProjectManager();
             CubeCodeClient.imageManager = new ImageManager();

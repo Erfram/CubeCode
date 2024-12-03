@@ -5,13 +5,16 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.basic.ViewDataManager;
+import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.all.IDERequestedPacket;
 import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.Icons;
 import imgui.*;
+import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiDockNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -83,7 +86,8 @@ public class DashboardView extends View {
             });
         });
 
-        ImGui.dockSpaceOverViewport(ImGui.getWindowViewport(), ImGuiDockNodeFlags.NoCentralNode | ImGuiDockNodeFlags.PassthruCentralNode);
+
+        ImGui.dockSpaceOverViewport(ImGui.getMainViewport(), ImGuiDockNodeFlags.NoCentralNode | ImGuiDockNodeFlags.PassthruCentralNode);
     }
 
     @Override

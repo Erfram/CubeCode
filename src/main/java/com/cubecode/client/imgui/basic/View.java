@@ -1,9 +1,10 @@
 package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
-import com.cubecode.client.imgui.basic.window.WindowData;
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
-import com.cubecode.client.views.TestView;
+import com.cubecode.client.views.DashboardView;
+import com.cubecode.utils.CubeCodeException;
+import com.google.gson.JsonObject;
 import imgui.ImGui;
 import imgui.ImVec2;
 import net.minecraft.client.MinecraftClient;
@@ -71,19 +72,22 @@ public abstract class View {
      */
     protected final void loop() {
         if (!isInit) {
+//            if (!(this instanceof DashboardView)) {
+//                try {
+//                    UUID viewUUID = CubeCodeClient.viewDataManager.getViewUUID(this.getClass().getName());
+//                    ViewDataManager.ViewData viewData = CubeCodeClient.viewDataManager.getViewData(this.getClass().getName() + "#" + viewUUID);
+//
+//                    ImGui.setNextWindowPos(viewData.pos.x, viewData.pos.y);
+//                    ImGui.setNextWindowSize(viewData.size.x, viewData.size.y);
+//                    ImGui.setNextWindowCollapsed(viewData.collapsed);
+//
+//                    this.deserializeData(viewData.data);
+//                } catch (CubeCodeException e) {
+//                    CubeCodeClient.LOGGER.error(e.getMessage());
+//                }
+//            }
+
             this.init();
-
-            if (!(this instanceof TestView)) {
-                WindowData windowData = CubeCodeClient.windowStateManager.getSessionWindowData(this);
-
-                if (windowData != null) {
-                    ImGui.setNextWindowPos(windowData.getPosition()[0], windowData.getPosition()[1]);
-                    ImGui.setNextWindowSize(windowData.getSize()[0], windowData.getSize()[1]);
-                    ImGui.setNextWindowCollapsed(windowData.isCollapsed());
-                } else if (CubeCodeClient.windowStateManager.hasWindow(this.getClass())) {
-                    CubeCodeClient.windowStateManager.applyWindowState(this.getClass());
-                }
-            }
 
             this.isInit = true;
         }
@@ -129,5 +133,13 @@ public abstract class View {
     }
 
     public void onClose() {
+    }
+
+    public JsonObject serializeData() {
+        return new JsonObject();
+    }
+
+    public void deserializeData(JsonObject jsonObject) {
+
     }
 }

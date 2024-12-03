@@ -26,7 +26,7 @@ public class DocumentationView extends View {
 
     TextEditor codeEditor = new TextEditor();
 
-    Documentation.Chapter selectedChapter = null;
+    public Documentation.Chapter selectedChapter = null;
 
     Map<String, Icons> docsIcons = new HashMap<>();
 
@@ -276,7 +276,7 @@ public class DocumentationView extends View {
 
         ImVec2 scriptSize = ImGui.calcTextSize(script);
 
-        float codeEditorWidth = (float) (scriptSize.x + ImGui.getStyle().getItemSpacingX() + ImGui.getStyle().getWindowPaddingX() + 16 * Math.ceil(script.split("\n").length / 10f));
+        float codeEditorWidth = (float) (scriptSize.x + ImGui.getStyle().getItemSpacingX() + ImGui.getStyle().getWindowPaddingX() + 16 * Math.ceil((script.split("\n").length + 1) / 10f));
 
         ImGui.pushTextWrapPos(script.isEmpty() ? width : Math.min(width, codeEditorWidth));
 

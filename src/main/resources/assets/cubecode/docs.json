@@ -1587,7 +1587,7 @@
             },
             {
               "name": "value",
-              "type": "NbtCompound"
+              "type": "ScriptNbtCompound"
             }
           ],
           "returnType": "void"
@@ -1913,7 +1913,7 @@
         },
         {
           "name": "getProperty",
-          "description": "\tReturns the value of the specified property",
+          "description": "Returns the value of the specified property",
           "script": "",
           "arguments": [
             {

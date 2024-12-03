@@ -58,7 +58,6 @@ public class Window {
 		if (ImGui.begin(this.title, close, this.flags)) {
 			if (!close.get()) {
 				this.onExit.run();
-				CubeCodeClient.windowStateManager.removeSessionWindow(view);
 				ImGuiLoader.removeView(view);
 			} else {
 				CubeImGui.manageDocking(view);

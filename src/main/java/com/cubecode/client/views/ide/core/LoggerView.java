@@ -1,12 +1,14 @@
 package com.cubecode.client.views.ide.core;
 
 import com.cubecode.CubeCodeClient;
-import com.cubecode.api.files.FileManager;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
+
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class LoggerView extends View {
     @Override
@@ -25,7 +27,11 @@ public class LoggerView extends View {
             .title(getName())
             .callback(() -> {
                 if (ImGui.button("clear")) {
-                    FileManager.writeToFile(CubeCodeClient.loggerManager.logger.getPath(), "");
+                    try {
+                        Files.writeString(CubeCodeClient.loggerManager.logger.toPath(), "");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
                 CubeImGui.beginChild("logs", 0, 0, true, () -> {
