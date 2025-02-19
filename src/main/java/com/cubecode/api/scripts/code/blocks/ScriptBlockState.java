@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * ScriptBlockState represents the state of a block in the Minecraft world, including its properties, characteristics, and behavior parameters.
+ *
  * <pre>{@code
  * c.getServer().send(CubeCode.createBlockState(\"minecraft:dirt\").getId(), false)
  * }</pre>
@@ -35,10 +37,14 @@ public class ScriptBlockState {
     }
 
     /**
-     * Returns the current Minecraft block state
+     * Returns the underlying Minecraft BlockState instance.
+     *
+     * This method provides access to the native Minecraft block state object,
+     * useful for advanced operations or compatibility with other mods.
      *
      * <pre>{@code
-     * CubeCode.createBlockState(\"minecraft:dirt\").getMinecraftBlockState();
+     * const blockState = c.world.getBlock(1, 1, 1);
+     * const minecraftState = blockState.getMinecraftBlockState();
      * }</pre>
      */
     public BlockState getMinecraftBlockState() {
@@ -46,14 +52,23 @@ public class ScriptBlockState {
     }
 
     /**
-     * Returns the identifier of the block state
+     * Returns the identifier of this block state.
+     *
+     * Returns the block ID in the format "namespace:name" (e.g., "minecraft:stone").
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * const blockId = blockState.getId();
+     * c.server.send(`Block ID: ${blockId}`, false);
+     * }</pre>
      */
     public String getId() {
         return Registries.BLOCK.getId(this.blockState.getBlock()).toString();
     }
 
     /**
-     * Checks if this block state is the same as the given state
+     * Checks if this block state is exactly the same as another block state.
+     * Compares both the block type and all state properties.
      *
      * <pre>{@code
      * CubeCode.createBlockState(\"minecraft:dirt\").isSame(CubeCode.createBlockState(\"minecraft:dirt\"));
@@ -65,10 +80,16 @@ public class ScriptBlockState {
 
 
     /**
-     * Checks if this block state is from the same block as the given state
+     * Checks if this block state is of the same block type as another state.
+     *
+     * Compares only the block type, ignoring state properties.
      *
      * <pre>{@code
-     *      CubeCode.createBlockState(\"minecraft:dirt\").isSameBlock(CubeCode.createBlockState(\"minecraft:dirt\"));
+     * const block1 = c.world.getBlock(x1, y1, z1);
+     * const block2 = c.world.getBlock(x2, y2, z2);
+     * if (block1.isSameBlock(block2)) {
+     *     c.server.send("The blocks are of the same type", false);
+     * }
      * }</pre>
      */
     public boolean isSameBlock(ScriptBlockState state) {
@@ -76,35 +97,57 @@ public class ScriptBlockState {
     }
 
     /**
-     * Checks if the block state is opaque
+     * Checks if this block is opaque (fully blocks light).
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * if (blockState.isOpaque()) {
+     *     c.server.send("This block completely blocks light", false);
+     * }
+     * }</pre>
      */
     public boolean isOpaque() {
         return this.blockState.isOpaque();
     }
 
     /**
-     * Checks if the block state represents air
+     * Checks if this block state represents air.
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * if (blockState.isAir()) {
+     *     c.server.send("This block is air", false);
+     * }
+     * }</pre>
      */
     public boolean isAir() {
         return this.blockState.isAir();
     }
 
     /**
-     * Checks if the block state is burnable
+     * Checks if this block can be burned.
      */
     public boolean isBurnable() {
         return this.blockState.isBurnable();
     }
 
     /**
-     * Checks if the block state has collision at the given coordinates in the world
+     * Checks if this block has collision at the specified position.
      */
     public boolean hasCollision(ScriptWorld world, int x, int y, int z) {
         return this.blockState.getCollisionShape(world.getMinecraftWorld(), new BlockPos(x, y, z)) != null;
     }
 
     /**
-     * Returns a list of property names for the block state
+     * Returns a list of available property names for this block state.
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * const properties = blockState.getProperties();
+     * properties.forEach(prop => {
+     *     c.server.send(`Property: ${prop}`, false);
+     * });
+     * }</pre>
      */
     public List<String> getProperties() {
         List<String> properties = new ArrayList<>();
@@ -117,49 +160,61 @@ public class ScriptBlockState {
     }
 
     /**
-     * Returns the name of the block
+     * Returns the name of this block.
      */
     public String getName() {
         return this.blockState.getBlock().getName().toString();
     }
 
     /**
-     * Returns the blast resistance of the block
+     * Returns the blast resistance value of this block.
      */
     public float getBlastResistance() {
         return this.blockState.getBlock().getBlastResistance();
     }
 
     /**
-     * Returns the slipperiness of the block
+     * Returns the slipperiness value of this block.
+     *
+     * Higher values make entities slide more on the block.
      */
     public float getSlipperiness() {
         return this.blockState.getBlock().getSlipperiness();
     }
 
     /**
-     * Returns the hardness of the block
+     * Returns the hardness value of this block.
+     *
+     * Determines how long it takes to break the block.
      */
     public float getHardness() {
         return this.blockState.getBlock().getHardness();
     }
 
     /**
-     * Returns the velocity multiplier of the block
+     * Returns the velocity multiplier for entities moving on this block.
      */
     public float getVelocityMultiplier() {
         return this.blockState.getBlock().getVelocityMultiplier();
     }
 
     /**
-     * Returns the jump velocity multiplier of the block
+     * Returns the jump velocity multiplier for entities jumping from this block.
      */
     public float getJumpVelocityMultiplier() {
         return this.blockState.getBlock().getJumpVelocityMultiplier();
     }
 
     /**
-     * Returns the value of the specified property
+     * Gets the value of a specific block state property.
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * if (blockState.getId() === "minecraft:door") {
+     *     const isOpen = blockState.getProperty("open");
+     *     c.server.send(`Door is open: ${isOpen}`, false);
+     * }
+     * }</pre>
      */
     public Object getProperty(String name) throws CubeCodeException {
         return this.blockState.getProperties().stream()
@@ -170,7 +225,14 @@ public class ScriptBlockState {
     }
 
     /**
-     * Sets the value of the specified property
+     * Sets the value of a specific block state property.
+     *
+     * <pre>{@code
+     * const blockState = c.world.getBlock(x, y, z);
+     * if (blockState.getId() === "minecraft:door") {
+     *     blockState.setProperty("open", true);
+     * }
+     * }</pre>
      */
     public void setProperty(String name, Object value) throws CubeCodeException {
         if (!(value instanceof Comparable)) {

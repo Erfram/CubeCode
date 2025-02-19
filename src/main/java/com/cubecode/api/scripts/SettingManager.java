@@ -2,7 +2,7 @@ package com.cubecode.api.scripts;
 
 import com.cubecode.utils.DirectoryManager;
 import com.cubecode.utils.GsonManager;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -66,13 +66,13 @@ public class SettingManager extends DirectoryManager {
         this.write();
     }
 
-    public void addScript(String scriptName, ScriptSide side) {
+    public void addScript(String scriptName, ScriptType side) {
         this.settings.put(scriptName, new ScriptSetting(side));
 
         this.write();
     }
 
-    public void setScriptSide(String scriptName, ScriptSide side) {
+    public void setScriptSide(String scriptName, ScriptType side) {
         ScriptSetting scriptSetting = this.settings.get(scriptName);
 
         this.settings.remove(scriptName);
@@ -144,7 +144,7 @@ public class SettingManager extends DirectoryManager {
             });
 
             settings.put(key, new ScriptSetting(
-                ScriptSide.valueOf(jsonScriptSetting.get("Side").getAsString().toUpperCase()),
+                ScriptType.valueOf(jsonScriptSetting.get("Side").getAsString().toUpperCase()),
                 libraries
             ));
         });
@@ -153,15 +153,15 @@ public class SettingManager extends DirectoryManager {
     }
 
     public static class ScriptSetting {
-        ScriptSide side;
+        ScriptType side;
         List<String> libraries;
 
-        public ScriptSetting(ScriptSide side, List<String> libraries) {
+        public ScriptSetting(ScriptType side, List<String> libraries) {
             this.side = side;
             this.libraries = libraries;
         }
 
-        public ScriptSetting(ScriptSide side) {
+        public ScriptSetting(ScriptType side) {
             this.side = side;
             this.libraries = new ArrayList<>();
         }

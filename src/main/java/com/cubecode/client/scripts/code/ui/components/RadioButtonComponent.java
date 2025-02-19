@@ -4,6 +4,9 @@ import com.cubecode.client.imgui.basic.View;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
+/**
+ * RadioButton
+ */
 public class RadioButtonComponent extends AbstractComponent {
     View view;
     boolean active;
@@ -17,6 +20,9 @@ public class RadioButtonComponent extends AbstractComponent {
         this.onClick = () -> {};
     }
 
+    /**
+     * onClick
+     */
     public RadioButtonComponent onClick(Runnable onClick) {
         this.onClick = onClick;
         return this;

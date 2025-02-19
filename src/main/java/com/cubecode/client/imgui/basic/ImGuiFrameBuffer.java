@@ -1,6 +1,4 @@
 package com.cubecode.client.imgui.basic;
-
-import net.minecraft.client.MinecraftClient;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 

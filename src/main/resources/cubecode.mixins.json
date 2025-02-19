@@ -5,6 +5,7 @@
   "mixins": [
   ],
   "client": [
+    "GameRendererMixin",
     "imgui.RenderSystemMixin",
     "imgui.WindowMixin"
   ],

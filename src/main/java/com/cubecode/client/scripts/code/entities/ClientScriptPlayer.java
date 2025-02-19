@@ -8,9 +8,12 @@ import com.cubecode.client.screens.TestScreen;
 import com.cubecode.client.scripts.code.ui.ClientCubeCodeUI;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.RunScriptPacket;
+import com.cubecode.state.PlayerState;
+import com.cubecode.state.ServerState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -82,6 +85,20 @@ public class ClientScriptPlayer extends ClientScriptEntity<ClientPlayerEntity> {
         this.entity.setPitch(pitch);
         this.entity.setYaw(yaw);
         this.entity.setHeadYaw(headYaw);
+    }
+
+    /**
+     * setPosition
+     */
+    public void setPosition(double x, double y, double z) {
+        this.entity.setPosition(x, y, z);
+    }
+
+    /**
+     * getPosition
+     */
+    public ScriptVector getPosition() {
+        return new ScriptVector(this.entity.getX(), this.entity.getY(), this.entity.getZ());
     }
 
     /**
@@ -229,5 +246,14 @@ public class ClientScriptPlayer extends ClientScriptEntity<ClientPlayerEntity> {
 
     public void sendToServer(String scriptName, ScriptNbtCompound nbt) {
         Dispatcher.sendToServer(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()));
+    }
+
+    public void setHandRender(boolean handRender) {
+        PlayerState playerState = ServerState.getPlayerState((PlayerEntity) this.getMinecraftPlayer());
+        NbtCompound cubeValues = playerState.getCubeValues();
+
+        cubeValues.putBoolean("isHandRender", handRender);
+
+        playerState.setCubeValues(cubeValues);
     }
 }

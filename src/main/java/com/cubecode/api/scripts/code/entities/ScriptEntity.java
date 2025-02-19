@@ -59,10 +59,10 @@ public class ScriptEntity<T extends Entity> {
     }
 
     /**
-     * Sets the entity's position in the world
+     * Sets entity position in the world
      *
      * <pre>{@code
-     *      c.getPlayer().setPosition(485, 43, 43);
+     * c.getPlayer().setPosition(485, 43, 43);
      * }</pre>
      */
     public void setPosition(double x, double y, double z) {
@@ -146,7 +146,7 @@ public class ScriptEntity<T extends Entity> {
      * }</pre>
      */
     public void addVelocity(double x, double y, double z) {
-        this.entity.setVelocity(x, y, z);
+        this.entity.addVelocity(x, y, z);
     }
 
     /**
@@ -377,6 +377,10 @@ public class ScriptEntity<T extends Entity> {
      */
     public void kill() {
         this.entity.kill();
+    }
+
+    public void remove() {
+        this.entity.remove(Entity.RemovalReason.DISCARDED);
     }
 
     /**

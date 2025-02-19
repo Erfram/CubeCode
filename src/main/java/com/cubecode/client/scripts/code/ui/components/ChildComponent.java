@@ -10,6 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * child
+ */
 public class ChildComponent extends AbstractComponent implements CubeCodeUIBuilder {
     TestView view;
     String strId;
@@ -25,12 +28,18 @@ public class ChildComponent extends AbstractComponent implements CubeCodeUIBuild
         this.components = new LinkedList<>();
     }
 
+    /**
+     * border
+     */
     public ChildComponent border(boolean isBorder) {
         this.border = isBorder;
 
         return this;
     }
 
+    /**
+     * components
+     */
     public ChildComponent components(Consumer<ChildComponent> childConsumer) {
         this.childConsumer = childConsumer;
 

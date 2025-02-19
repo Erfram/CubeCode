@@ -158,8 +158,7 @@ public class ScriptNbtCompound implements Nbt{
         this.nbt.put(key, value.getMinecraftNbtList());
     }
     
-    public Object get(String key)
-    {
+    public Object get(String key) {
         NbtElement element = this.nbt.get(key);
 
         if (element instanceof NbtCompound) {

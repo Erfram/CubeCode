@@ -426,7 +426,6 @@ public class ClientCubeCodeUI implements CubeCodeUIBuilder {
      * NotAllowed: 8
      */
     public void setMouseCursor(int type) {
-
         ImGui.setMouseCursor(type);
     }
 

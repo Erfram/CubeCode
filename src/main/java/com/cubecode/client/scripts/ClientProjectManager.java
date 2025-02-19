@@ -6,7 +6,7 @@ import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.client.views.ide.utils.node.IdeaNode;
 import com.cubecode.utils.CubeCodeException;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.*;
 import dev.latvian.mods.rhino.mod.util.RemappingHelper;
 import dev.latvian.mods.rhino.util.Remapper;
@@ -96,7 +96,7 @@ public class ClientProjectManager {
         this.scripts = new HashSet<>(scripts);
     }
 
-    public void setScriptSide(String name, ScriptSide side) {
+    public void setScriptSide(String name, ScriptType side) {
         ClientScript script = this.getScript(name);
         if (script != null) {
             script.setSide(side);

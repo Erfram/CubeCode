@@ -9,15 +9,21 @@ import com.cubecode.state.ServerState;
 import java.util.List;
 
 /**
- * Docs for states bruh
+ * CubeCodeStates
+ *
+ * Overview:
+ * CubeCodeStates provides a persistent key-value storage system that can be accessed from both player and server contexts. It supports various data types and can be used to store game state information.
+ *
+ * Getting States Object:
+ * States can be accessed from both player and server contexts using the getStates() method.
  *
  * <pre>{@code
  * function main(c) {
- *     let states = c.getPlayer().getStates();
- *     let array = [1337, "TheBendy"];
+ *     const states = c.getPlayer().getStates();
+ *     const array = [1337, "TheBendy"];
  *
  *     states.putString("example", JSON.stringify(array));  // "[1337,\"TheBendy\"]"
- *     c.player.send(array == JSON.parse(states.getString("example"))); // true
+ *     c.player.send(array == JSON.parse(states.getString("example")), false); // true
  * }
  * }</pre>
  */
@@ -37,11 +43,14 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns a list of all state keys
-     * <pre>{@code
-     * let keys = c.getPlayer().getStates().getKeys();
+     * Returns a list of all stored keys.
      *
-     * c.getPlayer().send(keys["example"]); //1337
+     * <pre>{@code
+     * const states = c.server.getStates();
+     * const keys = states.getKeys();
+     * keys.forEach(key => {
+     *     c.log(`Found key: ${key}`);
+     * });
      * }</pre>
      */
     public List<String> getKeys() {
@@ -49,8 +58,11 @@ public class CubeCodeStates {
     }
 
     /**
+     * Stores a string value associated with the specified key.
+     *
      * <pre>{@code
-     * c.getPlayer().getStates().putString("example", "Name");
+     * const states = c.server.getStates();
+     * states.putString("cool_player", "theuran");
      * }</pre>
      */
     public void putString(String key, String value) {
@@ -60,10 +72,11 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds an integer value for the specified key
+     * Stores an integer value associated with the specified key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().putInt("example", 2204);
+     * const states = c.server.getStates();
+     * states.putInt("playerCount", 5);
      * }</pre>
      */
     public void putInt(String key, int value) {
@@ -73,9 +86,11 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds a double value for the specified key
+     * Stores a double value associated with the specified key.
+     *
      * <pre>{@code
-     * c.getPlayer().getStates().putDouble("example", 100.8974);
+     * const states = c.server.getStates();
+     * states.putDouble("exactPosition", 123.456);
      * }</pre>
      */
     public void putDouble(String key, double value) {
@@ -85,9 +100,11 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds a float value for the specified key
+     * Stores a float value associated with the specified key.
+     *
      * <pre>{@code
-     * c.getPlayer().getStates().putFloat("example", 100.89);
+     * const states = c.server.getStates();
+     * states.putFloat("speed", 1.5);
      * }</pre>
      */
     public void putFloat(String key, float value) {
@@ -97,10 +114,11 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds a boolean value for the specified key
+     * Stores a boolean value associated with the specified key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().putBoolean("example", true);
+     * const states = c.server.getStates();
+     * states.putBoolean("isEventActive", true);
      * }</pre>
      */
     public void putBoolean(String key, boolean value) {
@@ -110,10 +128,11 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds a byte value for the specified key
+     * Stores a byte value associated with the specified key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().putByte("example", 127);
+     * const states = c.server.getStates();
+     * states.putByte("flag", 1);
      * }</pre>
      */
     public void putByte(String key, byte value) {
@@ -123,23 +142,27 @@ public class CubeCodeStates {
     }
 
     /**
-     * Adds an NbtCompound object for the specified key
+     * Stores an NBT compound associated with the specified key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().putNbt("example", CubeCode.createCompound("{}"));
+     * const states = c.server.getStates();
+     * const nbt = CubeCode.createCompound(`{"name":"test"}`);
+     * states.putNbt("customData", nbt);
      * }</pre>
      */
     public void putNbt(String key, ScriptNbtCompound value) {
-        this.values.put(key, value.getMinecraftNbtCompound());
+        this.values.put(key, value.getMinecraftNbtCompound().copy());
 
         this.saveStates();
     }
 
     /**
-     * Returns the string value for the specified key
+     * Retrieves a string value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getString("example");
+     * const states = c.server.getStates();
+     * const lastPlayer = states.getString("lastPlayer");
+     * c.log(`Last player was: ${lastPlayer}`);
      * }</pre>
      */
     public String getString(String key) {
@@ -147,10 +170,12 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the integer value for the specified key
+     * Retrieves an integer value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getInt("example");
+     * const states = c.server.getStates();
+     * const count = states.getInt("playerCount");
+     * c.server.send(`Player count: ${count}`, false);
      * }</pre>
      */
     public int getInt(String key) {
@@ -158,10 +183,12 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the double value for the specified key
+     * Retrieves a double value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getDouble("example");
+     * const states = c.server.getStates();
+     * const position = states.getDouble("exactPosition");
+     * c.server.send(`Position: ${position}`, false);
      * }</pre>
      */
     public double getDouble(String key) {
@@ -169,10 +196,12 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the float value for the specified key
+     * Retrieves a float value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getFloat("example");
+     * const states = c.server.getStates();
+     * const speed = states.getFloat("speed");
+     * c.server.send(`Speed: ${speed}`, false);
      * }</pre>
      */
     public float getFloat(String key) {
@@ -180,10 +209,12 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the boolean value for the specified key
+     * Retrieves a boolean value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getBoolean("example");
+     * const states = c.server.getStates();
+     * const isActive = states.getBoolean("isEventActive");
+     * c.server.send(`Event active: ${isActive}`, false);
      * }</pre>
      */
     public boolean getBoolean(String key) {
@@ -191,10 +222,12 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the byte value for the specified key
+     * Retrieves a byte value by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getByte("example");
+     * const states = c.server.getStates();
+     * const flag = states.getByte("flag");
+     * c.server.send(`Flag value: ${flag}`, false);
      * }</pre>
      */
     public byte getByte(String key) {
@@ -202,10 +235,13 @@ public class CubeCodeStates {
     }
 
     /**
-     * Returns the NbtCompound object for the specified key
+     * Retrieves an NBT compound by its key.
      *
      * <pre>{@code
-     * c.getPlayer().getStates().getNbt("example");
+     * const states = c.server.getStates();
+     * const data = states.getNbt("customData");
+     * const name = data.getString("name");
+     * c.server.send(`Custom data name: ${name}`, false);
      * }</pre>
      */
     public NbtCompound getNbt(String key) {

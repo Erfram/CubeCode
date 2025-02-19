@@ -9,7 +9,7 @@ import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.server.CreateFolderC2SPacket;
 import com.cubecode.network.packets.all.CreateScriptPacket;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
@@ -49,7 +49,7 @@ public class CreateView extends View {
         return String.format("Create File" + "##%s", uniqueID);
     }
 
-    public ScriptSide side = ScriptSide.SERVER;
+    public ScriptType side = ScriptType.SERVER;
 
     @Override
     public void render() {
@@ -72,16 +72,16 @@ public class CreateView extends View {
                         ImGui.separator();
                         ImGui.spacing();
 
-                        if (ImGui.selectable("Server", this.side == ScriptSide.SERVER)) {
-                            this.side = ScriptSide.SERVER;
+                        if (ImGui.selectable("Server", this.side == ScriptType.SERVER)) {
+                            this.side = ScriptType.SERVER;
 
                             if (ImGui.isMouseDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                                 this.createScript();
                             }
                         }
 
-                        if (ImGui.selectable("Client", this.side == ScriptSide.CLIENT)) {
-                            this.side = ScriptSide.CLIENT;
+                        if (ImGui.selectable("Client", this.side == ScriptType.CLIENT)) {
+                            this.side = ScriptType.CLIENT;
 
                             if (ImGui.isMouseDoubleClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                                 this.createScript();
@@ -132,7 +132,7 @@ public class CreateView extends View {
             } else {
                 ScriptNode scriptNode = new ScriptNode(
                     new ServerScript(name,
-                        this.side == ScriptSide.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT,
+                        this.side == ScriptType.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT,
                         this.side
                     )
                 );

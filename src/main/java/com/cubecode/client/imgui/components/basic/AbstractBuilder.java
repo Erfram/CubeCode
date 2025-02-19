@@ -1,7 +1,5 @@
 package com.cubecode.client.imgui.components.basic;
 
-import com.cubecode.utils.CubeCodeException;
-
 public class AbstractBuilder<Bld> {
     protected final CommonProperties commonProperties;
 

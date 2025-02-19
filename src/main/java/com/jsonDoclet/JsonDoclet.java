@@ -274,6 +274,7 @@ public class JsonDoclet {
                         "com/cubecode/client/scripts/code/ui/components/CheckboxComponent.java",
                         "com/cubecode/client/scripts/code/ui/components/ChildComponent.java",
                         "com/cubecode/client/scripts/code/ui/components/IconComponent.java",
+                        "com/cubecode/client/scripts/code/ui/components/ImageComponent.java",
                         "com/cubecode/client/scripts/code/ui/components/InputTextComponent.java",
                         "com/cubecode/client/scripts/code/ui/components/RadioButtonComponent.java",
                         "com/cubecode/client/scripts/code/ui/components/SliderComponent.java",

@@ -55,7 +55,7 @@ public class ProjectManager extends DirectoryManager {
         this.refreshSettings();
 
         this.scripts.forEach((script) -> {
-            if (script.getSide() == ScriptSide.CLIENT)
+            if (script.getSide() == ScriptType.CLIENT)
                 this.clientScripts.add(script);
         });
     }
@@ -147,7 +147,7 @@ public class ProjectManager extends DirectoryManager {
                     });
                 }
 
-                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptSide.valueOf(side.toUpperCase()), libraries);
+                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptType.valueOf(side.toUpperCase()), libraries);
 
                 scripts.add(script);
                 nodes.add(new ScriptNode(fileName, script, "/" + scriptPath));
@@ -162,7 +162,7 @@ public class ProjectManager extends DirectoryManager {
             for (ServerScript script : this.scripts) {
                 if (!this.isValidSetting(script.getName())) {
                     JsonObject jsonScriptSetting = new JsonObject();
-                    jsonScriptSetting.addProperty("Side", ScriptSide.SERVER.name());
+                    jsonScriptSetting.addProperty("Side", ScriptType.SERVER.name());
                     jsonScriptSetting.add("Libraries", new JsonArray());
 
                     jsonSetting.add(script.getName(), jsonScriptSetting);
@@ -188,8 +188,9 @@ public class ProjectManager extends DirectoryManager {
 
     public void writeToFile(String path, String content) {
         try {
-            Files.writeString(this.DIRECTORY.toPath(), content);
+            Files.writeString(this.DIRECTORY.toPath().resolve(path), content);
         } catch (IOException e) {
+            CubeCode.LOGGER.error(e.getMessage());
             throw new RuntimeException(e);
         }
 

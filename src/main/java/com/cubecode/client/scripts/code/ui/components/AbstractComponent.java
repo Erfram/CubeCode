@@ -1,6 +1,5 @@
 package com.cubecode.client.scripts.code.ui.components;
 
-import com.cubecode.CubeCode;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -8,7 +7,6 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
-import net.minecraft.util.Identifier;
 
 /**
  * AbstractComponent serves as a base class for creating and manipulating UI components

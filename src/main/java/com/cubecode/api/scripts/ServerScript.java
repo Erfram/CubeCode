@@ -2,7 +2,7 @@ package com.cubecode.api.scripts;
 
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.Script;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
@@ -15,19 +15,19 @@ import static com.cubecode.CubeCode.projectManager;
 public class ServerScript implements Script {
     private String name;
     private String code;
-    private ScriptSide side;
+    private ScriptType side;
     private List<String> libraries;
     public Context context;
     public ScriptScope scope;
 
-    public ServerScript(String name, String code, ScriptSide side, List<String> libraries) {
+    public ServerScript(String name, String code, ScriptType side, List<String> libraries) {
         this.name = name;
         this.code = code;
         this.side = side;
         this.libraries = libraries;
     }
 
-    public ServerScript(String name, String code, ScriptSide side) {
+    public ServerScript(String name, String code, ScriptType side) {
         this.name = name;
         this.code = code;
         this.side = side;
@@ -37,7 +37,7 @@ public class ServerScript implements Script {
     public ServerScript(String name, String code) {
         this.name = name;
         this.code = code;
-        this.side = ScriptSide.SERVER;
+        this.side = ScriptType.SERVER;
         this.libraries = new ArrayList<>();
     }
 
@@ -49,7 +49,7 @@ public class ServerScript implements Script {
         return code;
     }
 
-    public ScriptSide getSide() {
+    public ScriptType getSide() {
         return side;
     }
 
@@ -66,7 +66,7 @@ public class ServerScript implements Script {
         this.code = code;
     }
 
-    public void setSide(ScriptSide side) {
+    public void setSide(ScriptType side) {
         this.side = side;
     }
 

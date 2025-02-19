@@ -26,7 +26,6 @@ import imgui.ImVec2;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
@@ -296,7 +295,7 @@ public class CubeCodeIDEView extends View {
         }
         Icons icon;
         if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            icon = scriptNode.getScript().getSide() == ScriptSide.SERVER ? Icons.WORLD : Icons.CLIENT;
+            icon = scriptNode.getScript().getSide() == ScriptType.SERVER ? Icons.WORLD : Icons.CLIENT;
         } else {
             icon = Icons.JS;
         }
@@ -425,8 +424,11 @@ public class CubeCodeIDEView extends View {
             ImGui.pushStyleColor(ImGuiCol.Border, ColorUtils.rgbaToImguiColor(255, 255, 255, 255));
             ImGui.openPopup("confirm_delete");
 
+            ImGui.pushStyleColor(ImGuiCol.ModalWindowDimBg, ImGui.getColorU32(0.0f, 0.0f, 0.0f, 0.5f)); // Устанавливаем цвет фона
             if (ImGui.beginPopupModal("confirm_delete", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.AlwaysAutoResize)) {
                 ImGui.textColored(255, 207, 72, 255, "Удалить " + this.preSelectedNode.getName() + "?");
+
+                ImGui.separator();
 
                 if (ImGui.button("Да")) {
                     this.isDeletePopupModalRender = false;
@@ -442,6 +444,7 @@ public class CubeCodeIDEView extends View {
 
                 ImGui.endPopup();
             }
+            ImGui.popStyleColor();
             ImGui.popStyleColor();
         }
     }
@@ -520,7 +523,7 @@ public class CubeCodeIDEView extends View {
 
             for (IdeaNode node : this.nodes) {
                 if (node.getType() == NodeType.SCRIPT) {
-                    if (((ScriptNode)node).getScript().getSide() == ScriptSide.CLIENT) {
+                    if (((ScriptNode)node).getScript().getSide() == ScriptType.CLIENT) {
                         clientScripts.add(((ScriptNode) node).getServerScript());
                     }
                 } else {
@@ -543,7 +546,7 @@ public class CubeCodeIDEView extends View {
     private void scanFolder(FolderNode folderNode, List<ServerScript> serverScripts) {
         folderNode.getChildren().forEach(node -> {
             if (node.getType() == NodeType.SCRIPT) {
-                if (((ScriptNode)node).getScript().getSide() == ScriptSide.CLIENT) {
+                if (((ScriptNode)node).getScript().getSide() == ScriptType.CLIENT) {
                     serverScripts.add(((ScriptNode) node).getServerScript());
                 }
             } else {
@@ -739,7 +742,7 @@ public class CubeCodeIDEView extends View {
     }
 
     private void actionChangeSide() {
-        ScriptSide side = ((ScriptNode) this.preSelectedNode).getServerScript().getSide() == ScriptSide.SERVER ? ScriptSide.CLIENT : ScriptSide.SERVER;
+        ScriptType side = ((ScriptNode) this.preSelectedNode).getServerScript().getSide() == ScriptType.SERVER ? ScriptType.CLIENT : ScriptType.SERVER;
         String path = this.preSelectedNode.getPath();
         for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
             ScriptNode nodeByPath = (ScriptNode) NodeUtils.findNodeByPath(view.nodes, path);
@@ -767,7 +770,7 @@ public class CubeCodeIDEView extends View {
             if (this.selectedNode.getType() == NodeType.SCRIPT) {
                 this.saveContentScript();
                 ScriptNode scriptNode = (ScriptNode) this.selectedNode;
-                if (scriptNode.getScript().getSide() == ScriptSide.SERVER) {
+                if (scriptNode.getScript().getSide() == ScriptType.SERVER) {
                     Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getServerScript()));
                 } else {
                     ClientProperties properties = ClientProperties.create(

@@ -14,10 +14,23 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ServerState extends PersistentState {
-
     public NbtCompound values = new NbtCompound();
     public NbtList events = new NbtList();
     public HashMap<UUID, PlayerState> players = new HashMap<>();
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        NbtCompound playersNbtCompound = new NbtCompound();
+        players.forEach((UUID, playerSate) -> {
+            playersNbtCompound.put(String.valueOf(UUID), playerSate.getValues());
+        });
+
+        nbt.put("players", playersNbtCompound);
+        nbt.put("states", this.values);
+        nbt.put("events", this.events);
+
+        return nbt;
+    }
 
     public static ServerState createFromNbt(NbtCompound tag) {
         ServerState serverState = new ServerState();
@@ -29,7 +42,8 @@ public class ServerState extends PersistentState {
         playersTag.getKeys().forEach(key -> {
             PlayerState playerState = new PlayerState();
 
-            playerState.setValues(playersTag.getCompound(key));
+            playerState.setValues(playersTag.getCompound(key).getCompound("values"));
+            playerState.setCubeValues(playersTag.getCompound(key).getCompound("cubeValues"));
 
             serverState.players.put(UUID.fromString(key), playerState);
         });
@@ -63,19 +77,5 @@ public class ServerState extends PersistentState {
         PlayerState playerState = serverState.players.computeIfAbsent(player.getUuid(), uuid -> new PlayerState());
 
         return playerState;
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        NbtCompound playersNbtCompound = new NbtCompound();
-        players.forEach((UUID, playerSate) -> {
-            playersNbtCompound.put(String.valueOf(UUID), playerSate.getValues());
-        });
-
-        nbt.put("players", playersNbtCompound);
-        nbt.put("states", this.values);
-        nbt.put("events", this.events);
-
-        return nbt;
     }
 }

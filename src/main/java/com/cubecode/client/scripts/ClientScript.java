@@ -3,7 +3,7 @@ package com.cubecode.client.scripts;
 import com.cubecode.api.scripts.ScriptScope;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.Script;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
@@ -16,7 +16,7 @@ import static com.cubecode.CubeCodeClient.projectManager;
 public class ClientScript implements Script {
     private String name;
     private String code;
-    private ScriptSide side;
+    private ScriptType side;
     private List<String> libraries;
 
     public Context context;
@@ -25,7 +25,7 @@ public class ClientScript implements Script {
     public ClientScript(String name, String code) {
         this.name = name;
         this.code = code;
-        this.side = ScriptSide.CLIENT;
+        this.side = ScriptType.CLIENT;
         this.libraries = new ArrayList<>();
     }
 
@@ -90,7 +90,7 @@ public class ClientScript implements Script {
     }
 
     @Override
-    public ScriptSide getSide() {
+    public ScriptType getSide() {
         return this.side;
     }
 
@@ -118,7 +118,7 @@ public class ClientScript implements Script {
         this.code = code;
     }
 
-    public void setSide(ScriptSide side) {
+    public void setSide(ScriptType side) {
         this.side = side;
     }
 

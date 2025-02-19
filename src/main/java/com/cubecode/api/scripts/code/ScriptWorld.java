@@ -2,6 +2,8 @@ package com.cubecode.api.scripts.code;
 
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.mojang.brigadier.StringReader;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.command.EntitySelector;
 import net.minecraft.command.EntitySelectorReader;
 import net.minecraft.entity.Entity;

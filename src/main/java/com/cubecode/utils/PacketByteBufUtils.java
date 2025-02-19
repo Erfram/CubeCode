@@ -62,8 +62,8 @@ public class PacketByteBufUtils {
             String scriptName = buf.readString();
             String scriptCode = buf.readString();
             List<String> scriptLibraries = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
-            ScriptSide scriptSide = buf.readEnumConstant(ScriptSide.class);
-            Script script = new ServerScript(scriptName, scriptCode, scriptSide);
+            ScriptType scriptType = buf.readEnumConstant(ScriptType.class);
+            Script script = new ServerScript(scriptName, scriptCode, scriptType);
 
             script.setLibraries(scriptLibraries);
 

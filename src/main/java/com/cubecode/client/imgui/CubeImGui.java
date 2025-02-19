@@ -8,6 +8,7 @@ import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.screens.DashboardScreen;
 import com.cubecode.utils.Icons;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.ImDrawList;
 import imgui.ImGui;
@@ -16,7 +17,8 @@ import imgui.flag.*;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.gl.Framebuffer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -26,9 +28,13 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import org.joml.Quaternionf;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+
+import static imgui.ImGui.*;
 
 public class CubeImGui {
     public static void pushItemHeight(float height) {
@@ -441,12 +447,12 @@ public class CubeImGui {
         // Если окно было закреплено и теперь откреплено, восстановить размеры и установить позицию окна к курсору
         if (wasDocked && !isDocked) {
             ImGui.setWindowSize(undockedWidth, undockedHeight);
-            ImGui.setWindowPos(ImGui.getMousePosX(), ImGui.getMousePosY());
+            ImGui.setWindowPos(ImGui.getMousePosX(), getMousePosY());
         }
 
         // Если окно не закреплено, сохранить его текущие размеры
         if (!isDocked) {
-            view.setVariable(widthKey, ImGui.getWindowWidth());
+            view.setVariable(widthKey, getWindowWidth());
             view.setVariable(heightKey, ImGui.getWindowHeight());
         }
 
@@ -775,43 +781,99 @@ public class CubeImGui {
         RenderSystem.applyModelViewMatrix();
     }
 
+    public static final Framebuffer buffer = new Framebuffer(false) {};
+
+    public static void renderCharacter(float x, float y, float scale) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        LivingEntity player = mc.player;
+        if (player == null) return;
+
+        // Сохраняем текущие состояния OpenGL
+        int lastTexture = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+        int lastFBO = GL11.glGetInteger(GL30.GL_FRAMEBUFFER_BINDING);
+
+        // Сохраняем состояние viewport
+        int[] viewport = new int[4];
+        GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport);
+
+        Framebuffer mainBuffer = mc.getFramebuffer();
+
+        if (buffer == null) {
+            buffer.initFbo(mainBuffer.textureWidth, mainBuffer.textureHeight, false);
+        }
+        if (buffer.textureWidth != mainBuffer.textureWidth || buffer.textureHeight != mainBuffer.textureHeight) {
+            buffer.resize(mainBuffer.textureWidth, mainBuffer.textureHeight, false);
+        }
+
+        buffer.clear(false);
+        GlStateManager._glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, buffer.fbo);
+        buffer.beginWrite(false);
+
+        // Настройка освещения
+        DiffuseLighting.method_34742();
+
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.push();
+        matrixStack.translate(x, y, 100);
+        matrixStack.scale(-scale, -scale, -scale);
+        matrixStack.translate(0, player.getScaleFactor() / 2f, 0);
+
+        Quaternionf quaternion = new Quaternionf().rotateZ((float) Math.PI);
+        matrixStack.multiply(quaternion);
+
+        // Сохраняем оригинальные повороты
+        float bodyYaw = player.bodyYaw;
+        float yaw = player.getYaw();
+        float pitch = player.getPitch();
+        float headYawO = player.prevHeadYaw;
+        float headYaw = player.headYaw;
+
+        // Обновляем повороты на основе положения мыши
+        player.bodyYaw = 180.0f;
+        player.setYaw(180.0f);
+        player.setPitch(0.0f);
+        player.headYaw = player.getYaw();
+        player.prevHeadYaw = player.getYaw();
+
+        EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
+        dispatcher.setRenderShadows(false);
+
+        VertexConsumerProvider.Immediate bufferSource = mc.getBufferBuilders().getEntityVertexConsumers();
+
+        dispatcher.render(player, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack,
+                bufferSource, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+
+        bufferSource.draw();
+        dispatcher.setRenderShadows(true);
+
+        // Восстанавливаем повороты
+        player.bodyYaw = bodyYaw;
+        player.setYaw(yaw);
+        player.setPitch(pitch);
+        player.prevHeadYaw = headYawO;
+        player.headYaw = headYaw;
+
+        matrixStack.pop();
+
+        // Отключаем освещение
+        DiffuseLighting.enableGuiDepthLighting();
+
+        buffer.endWrite();
+
+        // Восстанавливаем состояния OpenGL
+        GlStateManager._glBindFramebuffer(GL30.GL_FRAMEBUFFER, lastFBO);
+        GlStateManager._bindTexture(lastTexture);
+        GL11.glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+
+        // Очищаем состояния
+        RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+    }
+
     public static void item(ItemStack itemStack, int width, int height) {
         ImGuiFrameBuffer frameBuffer = ImGuiLoader.frameBuffer;
 
-        frameBuffer.render(width, height, () -> {
-            MatrixStack posestack = RenderSystem.getModelViewStack();
-            posestack.push();
-            //posestack.scale(1.0F, 1.0F, -1.0F);
-            RenderSystem.applyModelViewMatrix();
-
-            RenderSystem.runAsFancy(() -> {
-                DashboardScreen.drawContext.drawItem(itemStack, 0, 0);
-//                MinecraftClient.getInstance().getItemRenderer().renderItem(
-//                        itemStack,
-//                        ModelTransformationMode.GUI,
-//                        false,
-//                        DashboardScreen.drawContext.getMatrices(),
-//                        MinecraftClient.getInstance().getBufferBuilders().getOutlineVertexConsumers(),
-//                        LightmapTextureManager.MAX_LIGHT_COORDINATE,
-//                        OverlayTexture.DEFAULT_UV,
-//                        MinecraftClient.getInstance().getItemRenderer().getModel(itemStack, MinecraftClient.getInstance().world, null, 0)
-//                );
-            });
-
-            posestack.pop();
-
-
-            //renderEntityInInventoryRaw(0, 30, 50, 0, 0, 0, MinecraftClient.getInstance().player);
-//            MinecraftClient.getInstance().getItemRenderer().renderItem(
-//                    itemStack,
-//                    ModelTransformationMode.GUI,
-//                    false,
-//                    DashboardScreen.drawContext.getMatrices(),
-//                    MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers(),
-//                    LightmapTextureManager.MAX_LIGHT_COORDINATE,
-//                    OverlayTexture.DEFAULT_UV,
-//                    MinecraftClient.getInstance().getItemRenderer().getModel(itemStack, MinecraftClient.getInstance().world, null, 0));
-        });
 
         ImGui.imageButton(frameBuffer.getTexture(), width, height);
     }

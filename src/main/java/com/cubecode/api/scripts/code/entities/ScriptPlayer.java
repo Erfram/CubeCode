@@ -287,10 +287,56 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
         Dispatcher.sendTo(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()), this.entity);
     }
 
+    /**
+     * Runs a client script and other function.
+     *
+     * Example:
+     * <pre>{@code
+     * //Server Script: a.js | Client Script: b.js
+     *
+     * // a.js
+     * function server(c) {
+     * 	c.getPlayer().sendTo(
+     * 		"b.js",
+     * 		"fff"
+     * 	)
+     * }
+     *
+     * // b.js
+     * function fff(c) {
+     * 	c.player.send("Hello Client!")
+     * }
+     *
+     * }</pre>
+     */
     public void sendTo(String script, String function) {
         Dispatcher.sendTo(new RunScriptPacket(script, function, new NbtCompound()), this.entity);
     }
 
+    /**
+     * Runs a client script. You can pass nbt to use it in some way on the client side and other function
+     *
+     * Example:
+     * <pre>{@code
+     * //Server Script: a.js | Client Script: b.js
+     *
+     * // a.js
+     * function server(c) {
+     * 	c.getPlayer().sendTo(
+     * 		"b.js",
+     * 		CubeCode.createCompound("{\"a\":\"b\"}")
+     * 	)
+     * }
+     *
+     * // b.js
+     * function client(c) {
+     *  var data = c.getValue("data") //ScriptNbtCompound
+     * 	c.player.send("Hello Client!")
+     * 	c.player.send("Data: " + data.getString("a"))
+     * }
+     *
+     * }</pre>
+     */
     public void sendTo(String script, String function, ScriptNbtCompound nbt) {
         Dispatcher.sendTo(new RunScriptPacket(script, function, nbt.getMinecraftNbtCompound()), this.entity);
     }

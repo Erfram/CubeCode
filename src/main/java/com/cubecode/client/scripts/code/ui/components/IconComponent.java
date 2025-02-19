@@ -3,6 +3,9 @@ package com.cubecode.client.scripts.code.ui.components;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
 
+/**
+ * icon
+ */
 public class IconComponent extends AbstractComponent {
     String iconId;
     boolean isClickable;
@@ -16,21 +19,16 @@ public class IconComponent extends AbstractComponent {
         this.onClick = () -> {};
     }
 
-    public IconComponent wh(float width, float height) {
-        this.width = width;
-        this.height = height;
-        return this;
-    }
-
+    /**
+     * clickable
+     */
     public IconComponent clickable() {
         this.isClickable = true;
         return this;
     }
 
     /**
-     * fwef
-     * @param onClick
-     * @return
+     * onClick
      */
     public IconComponent onClick(Runnable onClick) {
         this.onClick = onClick;

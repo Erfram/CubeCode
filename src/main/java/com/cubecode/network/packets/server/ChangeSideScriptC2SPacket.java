@@ -5,7 +5,7 @@ import com.cubecode.client.views.ide.utils.node.ScriptNode;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.utils.PacketByteBufUtils;
-import com.cubecode.utils.ScriptSide;
+import com.cubecode.utils.ScriptType;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -15,13 +15,13 @@ import net.minecraft.util.Identifier;
 
 public class ChangeSideScriptC2SPacket extends AbstractPacket {
     ScriptNode node;
-    ScriptSide side;
+    ScriptType side;
 
     public ChangeSideScriptC2SPacket() {
 
     }
 
-    public ChangeSideScriptC2SPacket(ScriptNode node, ScriptSide side) {
+    public ChangeSideScriptC2SPacket(ScriptNode node, ScriptType side) {
         this.node = node;
         this.side = side;
     }
@@ -35,7 +35,7 @@ public class ChangeSideScriptC2SPacket extends AbstractPacket {
     @Override
     public void fromBytes(PacketByteBuf buf) {
         this.node = (ScriptNode) PacketByteBufUtils.readIdeaNode(buf);
-        this.side = buf.readEnumConstant(ScriptSide.class);
+        this.side = buf.readEnumConstant(ScriptType.class);
     }
 
     @Override

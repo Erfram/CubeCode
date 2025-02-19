@@ -2,6 +2,9 @@ package com.cubecode.client.scripts.code.ui.components;
 
 import imgui.ImGui;
 
+/**
+ * textComponent
+ */
 public class TextComponent extends AbstractComponent {
     String text;
     int r;
@@ -16,8 +19,12 @@ public class TextComponent extends AbstractComponent {
         this.g = 255;
         this.b = 255;
         this.a = 255;
+        this.onClick = () -> {};
     }
 
+    /**
+     * color
+     */
     public TextComponent color(int r, int g, int b) {
         this.r = r;
         this.g = g;
@@ -27,6 +34,9 @@ public class TextComponent extends AbstractComponent {
         return this;
     }
 
+    /**
+     * color
+     */
     public TextComponent color(int r, int g, int b, int a) {
         this.r = r;
         this.g = g;
@@ -36,27 +46,17 @@ public class TextComponent extends AbstractComponent {
         return this;
     }
 
+    /**
+     * onClick
+     */
     public TextComponent onClick(Runnable onClick) {
         this.onClick = onClick;
         return this;
     }
 
-    public void setText(String text) {
+    public TextComponent text(String text) {
         this.text = text;
-    }
-
-    public void setColor(int r, int g, int b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = 255;
-    }
-
-    public void setColor(int r, int g, int b, int a) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = a;
+        return this;
     }
 
     @Override
