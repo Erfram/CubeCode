@@ -46,7 +46,7 @@ public final class CubeCodeCommand {
         String code = MessageArgumentType.getMessage(context, "script").getString();
 
         try {
-            CubeCode.projectManager.evalCode(code, "eval", properties.getMap());
+            CubeCode.scriptExecutor.evalCode(code, "eval", properties.getMap());
         } catch (CubeCodeException exception) {
             context.getSource().sendError(Text.of(exception.getMessage()));
         }

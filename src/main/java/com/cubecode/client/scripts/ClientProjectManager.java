@@ -34,39 +34,6 @@ public class ClientProjectManager {
         globalScope.set("Java", new JavaUtils(globalContext, globalScope));
     }
 
-    public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
-        return context.evaluateString(scope, code, sourceName, 1, null);
-    }
-
-    public Object invokeFunction(Context context, Scriptable scope, String function, Object[] args) {
-        Function functionObject = (Function) ScriptableObject.getProperty(scope, function, context);
-        return functionObject.call(context, scope, scope, args);
-    }
-
-    public void evalCode(String code, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        Context context = Context.enter();
-        ScriptableObject scope = context.initSafeStandardObjects();
-
-        context.setRemapper(remapper);
-        context.setApplicationClassLoader(ProjectManager.class.getClassLoader());
-
-        if (properties != null) {
-            for (Map.Entry<String, Object> property : properties.entrySet()) {
-                ScriptableObject.putConstProperty(scope, property.getKey(), Context.javaToJS(context, property.getValue(), scope), context);
-            }
-        }
-
-        try {
-            context.evaluateString(scope, code, sourceName, 1, null);
-        } catch (EvaluatorException | EcmaError e) {
-            String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
-            String details = e.details().replaceFirst("TypeError: ", "");
-            throw new CubeCodeException(errorType + ": " + details, sourceName);
-        } catch (Exception e) {
-            throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
-        }
-    }
-
     @Nullable
     public ClientScript getScript(String scriptName) {
         for (ClientScript script : this.scripts) if (script.getName().equals(scriptName)) {

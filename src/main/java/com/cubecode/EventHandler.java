@@ -2,10 +2,7 @@ package com.cubecode;
 
 import com.cubecode.api.events.CubeEvent;
 import com.cubecode.api.events.EventManager;
-import com.cubecode.api.scripts.Properties;
-import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.api.scripts.ServerScript;
-import com.cubecode.api.scripts.SettingManager;
+import com.cubecode.api.scripts.*;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
@@ -49,6 +46,7 @@ public class EventHandler {
 
             CubeCode.settingManager = new SettingManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.projectManager = new ProjectManager(new File(CubeCode.cubeCodeDirectory, "project"));
+            CubeCode.scriptExecutor = new ScriptExecutor();
 
             CubeCode.eventManager = new EventManager(new File(CubeCode.cubeCodeDirectory, "events.json"));
 

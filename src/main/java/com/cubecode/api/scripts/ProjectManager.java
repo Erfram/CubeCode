@@ -3,6 +3,7 @@ package com.cubecode.api.scripts;
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
+import com.cubecode.client.scripts.ClientScript;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.utils.*;
 import com.google.gson.*;
@@ -58,39 +59,6 @@ public class ProjectManager extends DirectoryManager {
             if (script.getSide() == ScriptType.CLIENT)
                 this.clientScripts.add(script);
         });
-    }
-
-    public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
-        return context.evaluateString(scope, code, sourceName, 1, null);
-    }
-
-    public Object invokeFunction(Context context, Scriptable scope, String function, Object[] args) {
-        Function functionObject = (Function) ScriptableObject.getProperty(scope, function, context);
-        return functionObject.call(context, scope, scope, args);
-    }
-
-    public void evalCode(String code, String sourceName, @Nullable Map<String, Object> properties) throws CubeCodeException {
-        Context context = Context.enter();
-        ScriptableObject scope = context.initSafeStandardObjects();
-
-        context.setRemapper(remapper);
-        context.setApplicationClassLoader(ProjectManager.class.getClassLoader());
-
-        if (properties != null) {
-            for (Map.Entry<String, Object> property : properties.entrySet()) {
-                ScriptableObject.putConstProperty(scope, property.getKey(), Context.javaToJS(context, property.getValue(), scope), context);
-            }
-        }
-
-        try {
-            context.evaluateString(scope, code, sourceName, 1, null);
-        } catch (EvaluatorException | EcmaError e) {
-            String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
-            String details = e.details().replaceFirst("TypeError: ", "");
-            throw new CubeCodeException(errorType + ": " + details, sourceName);
-        } catch (Exception e) {
-            throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
-        }
     }
 
     private void loadSettings() {
@@ -281,6 +249,15 @@ public class ProjectManager extends DirectoryManager {
     @Nullable
     public ServerScript getScript(String name) {
         for (ServerScript script : this.getScripts()) if (script.getName().equals(name)) {
+            return script;
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public ServerScript getClientScript(String name) {
+        for (ServerScript script : this.getClientScripts()) if (script.getName().equals(name)) {
             return script;
         }
 

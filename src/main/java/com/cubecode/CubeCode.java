@@ -1,6 +1,7 @@
 package com.cubecode;
 
 import com.cubecode.api.events.EventManager;
+import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.api.scripts.SettingManager;
 import com.cubecode.network.Dispatcher;
 import com.mojang.logging.LogUtils;
@@ -20,6 +21,7 @@ public class CubeCode implements ModInitializer {
     public static File contentDirectory;
 
     public static ProjectManager projectManager;
+    public static ScriptExecutor scriptExecutor;
     public static SettingManager settingManager;
     public static EventManager eventManager;
 

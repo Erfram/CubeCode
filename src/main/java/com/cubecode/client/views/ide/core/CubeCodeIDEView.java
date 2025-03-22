@@ -513,7 +513,7 @@ public class CubeCodeIDEView extends View {
                 ScriptNode scriptNode = (ScriptNode) NodeUtils.findNodeByPath(view.nodes, this.selectedNode.getPath());
 
                 if (scriptNode != null) {
-                    scriptNode.setScript(new ServerScript(scriptNode.getScript().getName(), this.codeEditor.getText().replaceAll("\\n+$", ""), scriptNode.getScript().getSide()));
+                    scriptNode.setScript(new ServerScript(scriptNode.getScript().getName(), this.codeEditor.getText().replaceAll("\\n+$", ""), scriptNode.getScript().getSide(), scriptNode.getScript().getLibraries()));
                 }
             }
 
@@ -534,7 +534,7 @@ public class CubeCodeIDEView extends View {
             List<ClientScript> scripts = new ArrayList<>();
 
             for (Script script : clientScripts) {
-                scripts.add(new ClientScript(script.getName(), script.getCode()));
+                scripts.add(new ClientScript(script.getName(), script.getCode(), script.getLibraries()));
             }
 
             CubeCodeClient.projectManager.setScripts(scripts);

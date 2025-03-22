@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.cubecode.CubeCode.projectManager;
+import static com.cubecode.CubeCode.scriptExecutor;
 
 public class ServerScript implements Script {
     private String name;
@@ -97,19 +98,21 @@ public class ServerScript implements Script {
     }
 
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
+        this.prepare();
         try {
             this.libraries.forEach(library -> {
                 ServerScript script = projectManager.getScript(library);
                 if (script != null) {
-                    this.context.evaluateString(this.scope, script.getCode(), sourceName, 1, null);
+                    scriptExecutor.evaluate(this.context, this.scope,  script.getCode(), sourceName);
                 }
             });
 
             this.evaluate();
-            projectManager.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
+            scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
+
             throw new CubeCodeException(errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
                     "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", ""), sourceName
@@ -119,11 +122,14 @@ public class ServerScript implements Script {
         }
     }
 
-    public void evaluate() throws CubeCodeException {
+    public void prepare() {
         this.context = Context.enter();
         this.scope = new ScriptScope(name, this.context);
         this.scope.setParentScope(ProjectManager.globalScope);
-        projectManager.evaluate(this.context, this.scope, code, name);
+    }
+
+    public void evaluate() throws CubeCodeException {
+        scriptExecutor.evaluate(this.context, this.scope, code, name);
     }
 
     public void run(String sourceName, Properties properties) throws CubeCodeException {

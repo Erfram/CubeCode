@@ -1,5 +1,6 @@
 package com.cubecode;
 
+import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.image.ImageManager;
 import com.cubecode.client.imgui.basic.ViewDataManager;
@@ -28,6 +29,7 @@ public class CubeCodeClient implements ClientModInitializer {
     public static FontManager fontManager;
     public static ThemeManager themeManager;
     public static ClientProjectManager projectManager;
+    public static ScriptExecutor scriptExecutor;
     public static ClientLoggerManager loggerManager;
     public static ImageManager imageManager;
     public static ViewDataManager viewDataManager;
@@ -57,6 +59,7 @@ public class CubeCodeClient implements ClientModInitializer {
         cubeCodePath = MinecraftClient.getInstance().runDirectory.toPath().resolve("cubecode");
 
         projectManager = new ClientProjectManager();
+        scriptExecutor = new ScriptExecutor();
         loggerManager = new ClientLoggerManager(cubeCodePath.toFile());
 
         viewDataManager = new ViewDataManager();
