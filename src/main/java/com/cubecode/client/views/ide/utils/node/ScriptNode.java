@@ -1,8 +1,6 @@
 package com.cubecode.client.views.ide.utils.node;
 
-import com.cubecode.api.scripts.ServerScript;
-import com.cubecode.client.scripts.ClientScript;
-import com.cubecode.utils.Script;
+import com.cubecode.api.scripts.Script;
 
 public class ScriptNode implements IdeaNode {
     private String name;
@@ -56,22 +54,14 @@ public class ScriptNode implements IdeaNode {
 
     @Override
     public IdeaNode copy() {
-        return new ScriptNode(new ServerScript(this.script.getName(), this.script.getCode(), this.script.getSide()), this.path);
+        return new ScriptNode(new Script(this.script.getName(), this.script.getCode(), this.script.getSide()), this.path);
     }
 
     public Script getScript() {
         return script;
     }
 
-    public ServerScript getServerScript() {
-        return (ServerScript) this.script;
-    }
-
-    public ClientScript getClientScript() {
-        return (ClientScript) this.script;
-    }
-
-    public void setScript(ServerScript script) {
+    public void setScript(Script script) {
         this.script = script;
     }
 }

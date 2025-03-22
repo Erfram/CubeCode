@@ -45,8 +45,8 @@ public class RemoveLibraryC2SPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<RemoveLibraryC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RemoveLibraryC2SPacket packet) {
-            CubeCode.projectManager.removeLibraryScript(packet.scriptNode.getServerScript().getName(), packet.library);
-            CubeCode.settingManager.removeLibrary(packet.scriptNode.getServerScript().getName(), packet.library);
+            CubeCode.projectManager.removeLibraryScript(packet.scriptNode.getScript().getName(), packet.library);
+            CubeCode.settingManager.removeLibrary(packet.scriptNode.getScript().getName(), packet.library);
         }
     }
 }

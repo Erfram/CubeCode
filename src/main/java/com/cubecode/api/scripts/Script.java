@@ -1,7 +1,6 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.utils.CubeCodeException;
-import com.cubecode.utils.Script;
 import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.EcmaError;
@@ -13,33 +12,24 @@ import java.util.List;
 import static com.cubecode.CubeCode.projectManager;
 import static com.cubecode.CubeCode.scriptExecutor;
 
-public class ServerScript implements Script {
+public class Script {
+
     private String name;
     private String code;
     private ScriptType side;
     private List<String> libraries;
-    public Context context;
-    public ScriptScope scope;
+    private Context context;
+    private ScriptScope scope;
 
-    public ServerScript(String name, String code, ScriptType side, List<String> libraries) {
+    public Script(String name, String code, ScriptType side, List<String> libraries) {
         this.name = name;
         this.code = code;
         this.side = side;
         this.libraries = libraries;
     }
 
-    public ServerScript(String name, String code, ScriptType side) {
-        this.name = name;
-        this.code = code;
-        this.side = side;
-        this.libraries = new ArrayList<>();
-    }
-
-    public ServerScript(String name, String code) {
-        this.name = name;
-        this.code = code;
-        this.side = ScriptType.SERVER;
-        this.libraries = new ArrayList<>();
+    public Script(String name, String code, ScriptType side) {
+        this(name, code, side, new ArrayList<>());
     }
 
     public String getName() {
@@ -54,7 +44,6 @@ public class ServerScript implements Script {
         return side;
     }
 
-    @Override
     public List<String> getLibraries() {
         return this.libraries;
     }
@@ -71,17 +60,14 @@ public class ServerScript implements Script {
         this.side = side;
     }
 
-    @Override
     public void setLibraries(List<String> libraries) {
         this.libraries = libraries;
     }
 
-    @Override
     public void addLibraryScript(String scriptName) {
         this.libraries.add(scriptName);
     }
 
-    @Override
     public boolean hasLibraryScript(String scriptName) {
         int index = this.libraries.indexOf(scriptName);
 
@@ -92,16 +78,19 @@ public class ServerScript implements Script {
         return false;
     }
 
-    @Override
     public void removeLibraryScript(String scriptName) {
         this.libraries.remove(scriptName);
+    }
+
+    public void run(String sourceName, Properties properties) throws CubeCodeException {
+        this.run(this.side == ScriptType.CLIENT ? "client" : "server", sourceName, properties);
     }
 
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
         this.prepare();
         try {
             this.libraries.forEach(library -> {
-                ServerScript script = projectManager.getScript(library);
+                Script script = projectManager.getScript(library);
                 if (script != null) {
                     scriptExecutor.evaluate(this.context, this.scope,  script.getCode(), sourceName);
                 }
@@ -125,22 +114,26 @@ public class ServerScript implements Script {
     public void prepare() {
         this.context = Context.enter();
         this.scope = new ScriptScope(name, this.context);
-        this.scope.setParentScope(ProjectManager.globalScope);
+        this.scope.setParentScope(ScriptExecutor.globalScope);
     }
 
-    public void evaluate() throws CubeCodeException {
+    public void evaluate() {
         scriptExecutor.evaluate(this.context, this.scope, code, name);
     }
 
-    public void run(String sourceName, Properties properties) throws CubeCodeException {
-        this.run("server", sourceName, properties);
+    public ScriptScope getScope() {
+        return this.scope;
     }
 
-    public void run(String function, String sourceName) throws CubeCodeException {
-        this.run(function, sourceName, Properties.create());
+    public Context getContext() {
+        return this.context;
     }
 
-    public void run(String sourceName) throws CubeCodeException {
-        this.run("server", sourceName, Properties.create());
+    public void setScope(ScriptScope scope) {
+        this.scope = scope;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

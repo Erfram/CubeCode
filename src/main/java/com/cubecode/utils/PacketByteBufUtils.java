@@ -1,6 +1,6 @@
 package com.cubecode.utils;
 
-import com.cubecode.api.scripts.ServerScript;
+import com.cubecode.api.scripts.Script;
 import com.cubecode.client.views.ide.utils.node.FolderNode;
 import com.cubecode.client.views.ide.utils.node.IdeaNode;
 import com.cubecode.client.views.ide.utils.node.NodeType;
@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PacketByteBufUtils {
-    public static void writeScript(PacketByteBuf buf, ServerScript script) {
+    public static void writeScript(PacketByteBuf buf, Script script) {
         buf.writeString(script.getName());
         buf.writeString(script.getCode());
         buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
     }
 
-    public static ServerScript readScript(PacketByteBuf buf) {
-        ServerScript serverScript = new ServerScript(buf.readString(), buf.readString());
-        serverScript.setLibraries(buf.readCollection(ArrayList::new, PacketByteBuf::readString));
+    public static Script readScript(PacketByteBuf buf) {
+        Script script = new Script(buf.readString(), buf.readString(), ScriptType.SERVER);
+        script.setLibraries(buf.readCollection(ArrayList::new, PacketByteBuf::readString));
 
-        return serverScript;
+        return script;
     }
 
     public static void writeIdeaNode(PacketByteBuf buf, IdeaNode node) {
@@ -63,7 +63,7 @@ public class PacketByteBufUtils {
             String scriptCode = buf.readString();
             List<String> scriptLibraries = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
             ScriptType scriptType = buf.readEnumConstant(ScriptType.class);
-            Script script = new ServerScript(scriptName, scriptCode, scriptType);
+            Script script = new Script(scriptName, scriptCode, scriptType);
 
             script.setLibraries(scriptLibraries);
 

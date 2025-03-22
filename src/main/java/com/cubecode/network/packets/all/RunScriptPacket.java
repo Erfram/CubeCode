@@ -3,16 +3,14 @@ package com.cubecode.network.packets.all;
 import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.api.scripts.Properties;
-import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.api.scripts.code.ScriptEvent;
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
-import com.cubecode.client.scripts.ClientProperties;
-import com.cubecode.client.scripts.ClientScript;
 import com.cubecode.client.scripts.code.ClientScriptEvent;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.utils.CubeCodeException;
+import com.cubecode.api.scripts.Script;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -63,17 +61,17 @@ public class RunScriptPacket extends AbstractPacket {
     public static class ClientHandler implements ClientPacketHandler<RunScriptPacket> {
         @Override
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, RunScriptPacket packet) {
-            ClientScript script = CubeCodeClient.projectManager.getScript(packet.scriptName);
+            Script script = CubeCodeClient.projectManager.getScript(packet.scriptName);
 
             if (script != null) {
-                ClientProperties properties = ClientProperties.create(script.getName(), packet.function, client.player, null, client.world);
+                Properties properties = Properties.create(script.getName(), packet.function, client.player, null, client.world, null);
 
                 ClientScriptEvent scriptEvent = (ClientScriptEvent) properties.get("Context");
 
                 scriptEvent.setValue("data", new ScriptNbtCompound(packet.nbt));
 
                 try {
-                    script.run(properties);
+                    script.run(packet.scriptName, properties);
                 } catch(CubeCodeException e){
                     client.player.sendMessage(Text.of("§c" + e.getMessage()));
                 }
@@ -84,7 +82,7 @@ public class RunScriptPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<RunScriptPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RunScriptPacket packet) {
-            ServerScript script = CubeCode.projectManager.getScript(packet.scriptName);
+            Script script = CubeCode.projectManager.getScript(packet.scriptName);
 
             if (script != null) {
                 Properties properties = Properties.create(script.getName(), packet.function, player, null, player.getWorld(), server);

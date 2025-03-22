@@ -47,7 +47,7 @@ public class ChangeSideScriptC2SPacket extends AbstractPacket {
 
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, ChangeSideScriptC2SPacket packet) {
-            CubeCode.settingManager.setScriptSide(packet.node.getServerScript().getName(), packet.side);
+            CubeCode.settingManager.setScriptSide(packet.node.getScript().getName(), packet.side);
         }
     }
 }

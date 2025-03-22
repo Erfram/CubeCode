@@ -2,13 +2,12 @@ package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
-import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.client.scripts.ClientProjectManager;
-import com.cubecode.client.scripts.ClientScript;
+import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
 import com.cubecode.network.basic.ServerPacketHandler;
+import com.cubecode.api.scripts.Script;
 import com.cubecode.utils.ScriptType;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -62,7 +61,7 @@ public class CreateScriptPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<CreateScriptPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, CreateScriptPacket packet) {
-            String code = packet.scriptType == ScriptType.SERVER ? ProjectManager.DEFAULT_SCRIPT : ProjectManager.DEFAULT_CLIENT_SCRIPT;
+            String code = packet.scriptType == ScriptType.SERVER ? ScriptExecutor.DEFAULT_SCRIPT : ScriptExecutor.DEFAULT_CLIENT_SCRIPT;
 
             CubeCode.projectManager.createTxtFile(packet.scriptName, packet.scriptPath, code);
             CubeCode.settingManager.addScript(packet.scriptName, packet.scriptType);
@@ -76,7 +75,7 @@ public class CreateScriptPacket extends AbstractPacket {
     public static class ClientHandler implements ClientPacketHandler<CreateScriptPacket> {
         @Override
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, CreateScriptPacket packet) {
-            CubeCodeClient.projectManager.createScript(new ClientScript(packet.scriptPath, ClientProjectManager.DEFAULT_SCRIPT));
+            CubeCodeClient.projectManager.createScript(new Script(packet.scriptPath, ScriptExecutor.DEFAULT_CLIENT_SCRIPT, ScriptType.CLIENT));
         }
     }
 }

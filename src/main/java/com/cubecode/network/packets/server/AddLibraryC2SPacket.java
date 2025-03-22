@@ -45,8 +45,8 @@ public class AddLibraryC2SPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<AddLibraryC2SPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, AddLibraryC2SPacket packet) {
-            CubeCode.projectManager.addLibraryScript(packet.scriptNode.getServerScript().getName(), packet.library);
-            CubeCode.settingManager.addLibrary(packet.scriptNode.getServerScript().getName(), packet.library);
+            CubeCode.projectManager.addLibraryScript(packet.scriptNode.getScript().getName(), packet.library);
+            CubeCode.settingManager.addLibrary(packet.scriptNode.getScript().getName(), packet.library);
         }
     }
 }

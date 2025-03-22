@@ -1,15 +1,13 @@
 package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.scripts.ProjectManager;
-import com.cubecode.api.scripts.ServerScript;
+import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.network.packets.client.FillScriptScopeS2CPacket;
-import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.PacketByteBufUtils;
-import com.cubecode.utils.Script;
+import com.cubecode.api.scripts.Script;
 import dev.latvian.mods.rhino.Scriptable;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.nbt.NbtCompound;
@@ -25,13 +23,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RequestScriptScopeC2SPacket extends AbstractPacket {
-    public ServerScript script;
+    public Script script;
 
     public RequestScriptScopeC2SPacket() {
 
     }
 
-    public RequestScriptScopeC2SPacket(ServerScript script) {
+    public RequestScriptScopeC2SPacket(Script script) {
         this.script = script;
     }
 
@@ -54,15 +52,15 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
 
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestScriptScopeC2SPacket packet) {
-            ServerScript script = (ServerScript) packet.script;
+            Script script = packet.script;
             try {
                 script.evaluate();
-            } catch (CubeCodeException ignored) {
+            } catch (Exception ignored) {
                 player.closeHandledScreen();
             }
             ArrayList<Scriptable> scopes = new ArrayList<>();
-            scopes.add(script.scope);
-            Scriptable parentScope = script.scope.getParentScope();
+            scopes.add(script.getScope());
+            Scriptable parentScope = script.getScope().getParentScope();
             while (parentScope != null) {
                 scopes.add(parentScope);
                 parentScope = parentScope.getParentScope();
@@ -72,7 +70,7 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
             for (int i = scopes.size() - 1; i >= 0; i--) {
                 NbtCompound scope = new NbtCompound();
                 NbtList keys = new NbtList();
-                Arrays.stream(scopes.get(i).getAllIds(ProjectManager.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
+                Arrays.stream(scopes.get(i).getAllIds(ScriptExecutor.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
                 scope.put("keys", keys);
                 prev.put(scopes.get(i).toString(), scope);
                 prev = scope;

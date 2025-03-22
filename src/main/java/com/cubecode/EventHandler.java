@@ -11,8 +11,7 @@ import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.state.PlayerState;
 import com.cubecode.state.ServerState;
-import com.cubecode.utils.GsonManager;
-import com.cubecode.utils.Script;
+import com.cubecode.api.scripts.Script;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -73,7 +72,7 @@ public class EventHandler {
 
             serverState.events = EventManager.cubeEventsToNbtList(events);
 
-            List<ServerScript> scripts = new ArrayList<>(CubeCode.projectManager.getClientScripts());
+            List<Script> scripts = new ArrayList<>(CubeCode.projectManager.getClientScripts());
 
             Dispatcher.sendTo(new SynchronizedClientScriptsPacket(scripts), handler.player);
         });

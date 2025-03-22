@@ -1,12 +1,35 @@
 package com.cubecode.api.scripts;
 
+import com.cubecode.api.scripts.code.JavaUtils;
+import com.cubecode.api.scripts.code.ScriptFactory;
 import com.cubecode.utils.CubeCodeException;
 import dev.latvian.mods.rhino.*;
+import dev.latvian.mods.rhino.mod.util.RemappingHelper;
+import dev.latvian.mods.rhino.util.Remapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public class ScriptExecutor {
+
+    public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
+    public static final Context globalContext = Context.enter();
+    public static final ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
+
+    public static final String DEFAULT_SCRIPT = "function server(c) {\n    c.server.send(\"Hello World!\", true)\n}";
+    public static final String DEFAULT_CLIENT_SCRIPT = "function client(c) {\n\n}";
+
+
+    public ScriptExecutor() {
+
+        globalContext.setRemapper(remapper);
+        globalContext.setApplicationClassLoader(ProjectManager.class.getClassLoader());
+        globalContext.setMaximumInterpreterStackDepth(500);
+        globalScope.setParentScope(globalContext.initStandardObjects());
+
+        globalScope.set("CubeCode", new ScriptFactory());
+        globalScope.set("Java", new JavaUtils(globalContext, globalScope));
+    }
 
     public Object evaluate(Context context, ScriptScope scope, String code, String sourceName) {
         return context.evaluateString(scope, code, sourceName, 1, null);
@@ -21,7 +44,7 @@ public class ScriptExecutor {
         Context context = Context.enter();
         ScriptableObject scope = context.initSafeStandardObjects();
 
-        context.setRemapper(ProjectManager.remapper);
+        context.setRemapper(remapper);
         context.setApplicationClassLoader(ProjectManager.class.getClassLoader());
 
         if (properties != null) {

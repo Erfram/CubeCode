@@ -1,15 +1,9 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
-import com.cubecode.api.scripts.code.JavaUtils;
-import com.cubecode.api.scripts.code.ScriptFactory;
-import com.cubecode.client.scripts.ClientScript;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.utils.*;
 import com.google.gson.*;
-import dev.latvian.mods.rhino.*;
-import dev.latvian.mods.rhino.mod.util.RemappingHelper;
-import dev.latvian.mods.rhino.util.Remapper;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,32 +16,17 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class ProjectManager extends DirectoryManager {
-    public static final Remapper remapper = RemappingHelper.getMinecraftRemapper();
-    public static final Context globalContext = Context.enter();
-    public static final ScriptScope globalScope = new ScriptScope("CubeCode global scope", globalContext);
 
     private static File settings;
 
-    public static final String DEFAULT_SCRIPT = "function server(c) {\n    c.server.send(\"Hello World!\", true)\n}";
-    public static final String DEFAULT_CLIENT_SCRIPT = "function client(c) {\n\n}";
-
-    private List<ServerScript> scripts = new ArrayList<>();
-    private List<ServerScript> clientScripts = new ArrayList<>();
+    private List<Script> scripts = new ArrayList<>();
+    private List<Script> clientScripts = new ArrayList<>();
     private List<IdeaNode> nodes = new ArrayList<>();
 
     public ProjectManager(File scriptsDirectory) {
         super(scriptsDirectory);
-
-        globalContext.setRemapper(remapper);
-        globalContext.setApplicationClassLoader(ProjectManager.class.getClassLoader());
-        globalContext.setMaximumInterpreterStackDepth(500);
-        globalScope.setParentScope(globalContext.initStandardObjects());
-
-        globalScope.set("CubeCode", new ScriptFactory());
-        globalScope.set("Java", new JavaUtils(globalContext, globalScope));
 
         settings = this.DIRECTORY.toPath().resolve("settings.json").toFile();
 
@@ -56,8 +35,9 @@ public class ProjectManager extends DirectoryManager {
         this.refreshSettings();
 
         this.scripts.forEach((script) -> {
-            if (script.getSide() == ScriptType.CLIENT)
+            if (script.getSide() == ScriptType.CLIENT) {
                 this.clientScripts.add(script);
+            }
         });
     }
 
@@ -90,7 +70,7 @@ public class ProjectManager extends DirectoryManager {
         CubeCode.settingManager.setSettings(CubeCode.settingManager.jsonToSettings(jsonObject));
     }
 
-    private void scanDirectory(List<File> files, List<ServerScript> scripts, List<IdeaNode> nodes, JsonObject settingsJson) {
+    private void scanDirectory(List<File> files, List<Script> scripts, List<IdeaNode> nodes, JsonObject settingsJson) {
         files.forEach(file -> {
             String fileName = file.getName();
             if (file.isDirectory()) {
@@ -115,7 +95,7 @@ public class ProjectManager extends DirectoryManager {
                     });
                 }
 
-                ServerScript script = new ServerScript(scriptPath, scriptContent, ScriptType.valueOf(side.toUpperCase()), libraries);
+                Script script = new Script(scriptPath, scriptContent, ScriptType.valueOf(side.toUpperCase()), libraries);
 
                 scripts.add(script);
                 nodes.add(new ScriptNode(fileName, script, "/" + scriptPath));
@@ -127,7 +107,7 @@ public class ProjectManager extends DirectoryManager {
         String settingsContent = this.readFileToString(settings.getPath());
         if (JsonUtils.isValid(settingsContent)) {
             JsonObject jsonSetting = JsonParser.parseString(settingsContent).getAsJsonObject();
-            for (ServerScript script : this.scripts) {
+            for (Script script : this.scripts) {
                 if (!this.isValidSetting(script.getName())) {
                     JsonObject jsonScriptSetting = new JsonObject();
                     jsonScriptSetting.addProperty("Side", ScriptType.SERVER.name());
@@ -234,11 +214,11 @@ public class ProjectManager extends DirectoryManager {
         }
     }
 
-    public List<ServerScript> getScripts() {
+    public List<Script> getScripts() {
         return this.scripts;
     }
 
-    public List<ServerScript> getClientScripts() {
+    public List<Script> getClientScripts() {
         return this.clientScripts;
     }
 
@@ -247,8 +227,8 @@ public class ProjectManager extends DirectoryManager {
     }
 
     @Nullable
-    public ServerScript getScript(String name) {
-        for (ServerScript script : this.getScripts()) if (script.getName().equals(name)) {
+    public Script getScript(String name) {
+        for (Script script : this.getScripts()) if (script.getName().equals(name)) {
             return script;
         }
 
@@ -256,8 +236,8 @@ public class ProjectManager extends DirectoryManager {
     }
 
     @Nullable
-    public ServerScript getClientScript(String name) {
-        for (ServerScript script : this.getClientScripts()) if (script.getName().equals(name)) {
+    public Script getClientScript(String name) {
+        for (Script script : this.getClientScripts()) if (script.getName().equals(name)) {
             return script;
         }
 
@@ -265,7 +245,7 @@ public class ProjectManager extends DirectoryManager {
     }
 
     public void addLibraryScript(String name, String library) {
-        ServerScript script = this.getScript(name);
+        Script script = this.getScript(name);
 
         if(script != null) {
             script.addLibraryScript(library);
@@ -273,7 +253,7 @@ public class ProjectManager extends DirectoryManager {
     }
 
     public void removeLibraryScript(String name, String library) {
-        ServerScript script = this.getScript(name);
+        Script script = this.getScript(name);
 
         if(script != null) {
             script.removeLibraryScript(library);

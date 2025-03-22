@@ -2,7 +2,6 @@ package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.events.EventManager;
-import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.views.EventsView;
 import com.cubecode.network.Dispatcher;
@@ -11,7 +10,7 @@ import com.cubecode.network.basic.ClientPacketHandler;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.state.ServerState;
 import com.cubecode.utils.PacketByteBufUtils;
-import com.cubecode.utils.Script;
+import com.cubecode.api.scripts.Script;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -29,11 +28,11 @@ import java.util.List;
 public class EventsRequestedPacket extends AbstractPacket {
     NbtList usedEvents = null;
     NbtList events = null;
-    List<ServerScript> scripts = new ArrayList<>();
+    List<Script> scripts = new ArrayList<>();
 
     public EventsRequestedPacket() {}
 
-    public EventsRequestedPacket(NbtList usedEvents, NbtList events, List<ServerScript> scripts) {
+    public EventsRequestedPacket(NbtList usedEvents, NbtList events, List<Script> scripts) {
         this.usedEvents = usedEvents;
         this.events = events;
         this.scripts = new ArrayList<>(scripts);
@@ -87,7 +86,7 @@ public class EventsRequestedPacket extends AbstractPacket {
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, EventsRequestedPacket packet) {
             NbtList usedEvents = packet.usedEvents;
             NbtList events = packet.events;
-            List<ServerScript> scripts = packet.scripts;
+            List<Script> scripts = packet.scripts;
 
             ImGuiLoader.pushView(new EventsView(EventManager.nbtListToCubeEvents(events), scripts));
         }

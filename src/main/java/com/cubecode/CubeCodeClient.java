@@ -57,9 +57,7 @@ public class CubeCodeClient implements ClientModInitializer {
         themeManager.loadThemes();
 
         cubeCodePath = MinecraftClient.getInstance().runDirectory.toPath().resolve("cubecode");
-
         projectManager = new ClientProjectManager();
-        scriptExecutor = new ScriptExecutor();
         loggerManager = new ClientLoggerManager(cubeCodePath.toFile());
 
         viewDataManager = new ViewDataManager();

@@ -1,7 +1,7 @@
 package com.cubecode.content;
 
 import com.cubecode.api.scripts.Properties;
-import com.cubecode.api.scripts.ServerScript;
+import com.cubecode.api.scripts.Script;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -30,7 +30,7 @@ public final class CubeCodeCommand {
 
         Properties properties = CubeCodeCommand.createProperties(scriptName, "main", context);
 
-        ServerScript script = CubeCode.projectManager.getScript(scriptName);
+        Script script = CubeCode.projectManager.getScript(scriptName);
 
         try {
             script.run(function.isEmpty() ? "main" : function, scriptName, properties);

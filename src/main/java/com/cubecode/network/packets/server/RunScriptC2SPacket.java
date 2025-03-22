@@ -2,26 +2,23 @@ package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
-import com.cubecode.api.scripts.ServerScript;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.PacketByteBufUtils;
-import com.cubecode.utils.Script;
+import com.cubecode.api.scripts.Script;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class RunScriptC2SPacket extends AbstractPacket {
-    ServerScript script;
+    Script script;
 
-    public RunScriptC2SPacket(ServerScript script) {
+    public RunScriptC2SPacket(Script script) {
         this.script = script;
     }
 
