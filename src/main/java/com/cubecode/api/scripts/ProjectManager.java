@@ -77,7 +77,10 @@ public class ProjectManager extends DirectoryManager {
                 FolderNode folderNode = new FolderNode(fileName);
                 this.scanDirectory(Arrays.asList(file.listFiles()), scripts, folderNode.getChildren(), settingsJson);
                 nodes.add(folderNode);
-            } else if (!file.getName().equals("settings.json")) {
+            } else {
+                if (file.getName().equals("settings.json")) return;
+                if (file.getName().endsWith(".log")) return;
+
                 String scriptPath = this.getRelativePath(file);
                 String scriptContent = this.readFileToString(file.getPath());
                 String side = "SERVER";
