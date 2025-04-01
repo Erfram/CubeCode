@@ -54,13 +54,14 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, RequestScriptScopeC2SPacket packet) {
             Script script = packet.script;
             try {
+                script.prepare();
+                script.evaluateLibraries("ScopeViewer3000");
                 script.evaluate();
             } catch (Exception ignored) {
                 player.closeHandledScreen();
             }
             ArrayList<Scriptable> scopes = new ArrayList<>();
-            scopes.add(script.getScope());
-            Scriptable parentScope = script.getScope().getParentScope();
+            Scriptable parentScope = script.getScope();
             while (parentScope != null) {
                 scopes.add(parentScope);
                 parentScope = parentScope.getParentScope();

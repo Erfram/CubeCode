@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
+//TODO Разобраться что это и зачем это, чем отличается от ProjectManager, разделить функционал
 public class SettingManager extends DirectoryManager {
     private File settingsFile;
 

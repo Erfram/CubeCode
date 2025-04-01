@@ -89,13 +89,7 @@ public class Script {
     public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
         this.prepare();
         try {
-            this.libraries.forEach(library -> {
-                Script script = projectManager.getScript(library);
-                if (script != null) {
-                    scriptExecutor.evaluate(this.context, this.scope,  script.getCode(), sourceName);
-                }
-            });
-
+            this.evaluateLibraries(sourceName);
             this.evaluate();
             scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
         } catch (EvaluatorException | EcmaError e) {
@@ -119,6 +113,18 @@ public class Script {
 
     public void evaluate() {
         scriptExecutor.evaluate(this.context, this.scope, code, name);
+    }
+
+    public void evaluateLibraries(String sourceName) {
+        ScriptScope libraryScope = new ScriptScope(this.name + "_lib", this.context);
+        libraryScope.setParentScope(ScriptExecutor.globalScope);
+        this.libraries.forEach(library -> {
+            Script script = projectManager.getScript(library);
+            if (script != null) {
+                scriptExecutor.evaluate(this.context, libraryScope,  script.getCode(), sourceName);
+            }
+        });
+        this.scope.setParentScope(libraryScope);
     }
 
     public ScriptScope getScope() {
