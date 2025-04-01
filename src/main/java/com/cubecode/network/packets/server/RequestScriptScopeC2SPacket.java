@@ -68,7 +68,7 @@ public class RequestScriptScopeC2SPacket extends AbstractPacket {
             }
             NbtCompound structure = new NbtCompound();
             NbtCompound prev = structure;
-            for (int i = scopes.size() - 1; i >= 0; i--) {
+            for (int i = 0; i < scopes.size(); i++) {
                 NbtCompound scope = new NbtCompound();
                 NbtList keys = new NbtList();
                 Arrays.stream(scopes.get(i).getAllIds(ScriptExecutor.globalContext)).forEach(id -> keys.add(NbtString.of((String) id)));
