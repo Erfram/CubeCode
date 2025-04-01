@@ -66,3 +66,12 @@ task deobfJar(type: Jar) {
 artifacts {
 	archives deobfJar
 }
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+			artifact deobfJar
+		}
+	}
+}
