@@ -100,7 +100,7 @@ public class EventManager extends DirectoryManager {
             }
         } catch (CubeCodeException e) {
             CubeCode.LOGGER.error("Error executing script: {} - {}", eventScript.name, e.getMessage());
-            //TODO В консоль
+            CubeCode.loggerManager.error(eventScript.name, e.getMessage().replaceAll("\\n", "\n&c"));
         }
     }
 
