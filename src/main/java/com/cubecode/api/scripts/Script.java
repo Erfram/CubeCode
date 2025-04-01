@@ -96,9 +96,12 @@ public class Script {
         } catch (EvaluatorException | EcmaError e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
-
+            StringBuilder lines = new StringBuilder();
+            lines.append(" ".repeat(Math.max(0, e.columnNumber())));
             String errorMessage = errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
+                    lines + " |\n" +
+                    lines + "\\/\n" +
                     "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
 
             CubeCode.loggerManager.error(this.name, errorMessage.replaceAll("\\n", "\n&c"));
