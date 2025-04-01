@@ -119,7 +119,7 @@ public class CubeCodeIDEView extends View {
         Window.create()
                 .flags(ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoScrollWithMouse)
                 .title(getName())
-                .onExit(this::saveContentScript)
+                .onExit(this::onClose)
                 .callback(() -> {
                     ImVec2 windowSize = ImGui.getWindowSize();
                     float windowPaddingX = ImGui.getStyle().getWindowPaddingX();
