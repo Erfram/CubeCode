@@ -45,6 +45,7 @@ public class EventHandler {
 
             CubeCode.settingManager = new SettingManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.projectManager = new ProjectManager(new File(CubeCode.cubeCodeDirectory, "project"));
+            CubeCode.loggerManager = new LoggerManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.scriptExecutor = new ScriptExecutor();
 
             CubeCode.eventManager = new EventManager(new File(CubeCode.cubeCodeDirectory, "events.json"));

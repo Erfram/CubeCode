@@ -1,6 +1,6 @@
 package com.cubecode.client.views.ide.core;
 
-import com.cubecode.CubeCodeClient;
+import com.cubecode.CubeCode;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
@@ -28,14 +28,14 @@ public class LoggerView extends View {
             .callback(() -> {
                 if (ImGui.button("clear")) {
                     try {
-                        Files.writeString(CubeCodeClient.loggerManager.logger.toPath(), "");
+                        Files.writeString(CubeCode.loggerManager.logger.toPath(), "");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
 
                 CubeImGui.beginChild("logs", 0, 0, true, () -> {
-                    for (String log : CubeCodeClient.loggerManager.getLogs()) {
+                    for (String log : CubeCode.loggerManager.getLogs()) {
                         CubeImGui.textMutable(TextUtils.formatText(log));
                     }
                 });

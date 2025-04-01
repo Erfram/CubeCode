@@ -6,12 +6,9 @@ import com.cubecode.client.image.ImageManager;
 import com.cubecode.client.imgui.basic.ViewDataManager;
 import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.client.imgui.themes.ThemeManager;
-import com.cubecode.client.scripts.ClientLoggerManager;
 import com.cubecode.client.scripts.ClientProjectManager;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.utils.Documentation;
-import com.cubecode.utils.Icons;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -30,7 +27,6 @@ public class CubeCodeClient implements ClientModInitializer {
     public static ThemeManager themeManager;
     public static ClientProjectManager projectManager;
     public static ScriptExecutor scriptExecutor;
-    public static ClientLoggerManager loggerManager;
     public static ImageManager imageManager;
     public static ViewDataManager viewDataManager;
 
@@ -58,7 +54,6 @@ public class CubeCodeClient implements ClientModInitializer {
 
         cubeCodePath = MinecraftClient.getInstance().runDirectory.toPath().resolve("cubecode");
         projectManager = new ClientProjectManager();
-        loggerManager = new ClientLoggerManager(cubeCodePath.toFile());
 
         viewDataManager = new ViewDataManager();
     }

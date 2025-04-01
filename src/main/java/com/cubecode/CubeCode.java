@@ -1,6 +1,7 @@
 package com.cubecode;
 
 import com.cubecode.api.events.EventManager;
+import com.cubecode.api.scripts.LoggerManager;
 import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.api.scripts.SettingManager;
 import com.cubecode.network.Dispatcher;
@@ -22,6 +23,7 @@ public class CubeCode implements ModInitializer {
 
     public static ProjectManager projectManager;
     public static ScriptExecutor scriptExecutor;
+    public static LoggerManager loggerManager;
     public static SettingManager settingManager;
     public static EventManager eventManager;
 

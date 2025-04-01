@@ -1,5 +1,6 @@
 package com.cubecode.api.scripts.code;
 
+import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import com.cubecode.client.scripts.code.ui.ClientCubeCodeUI;
 import com.cubecode.utils.GsonManager;
@@ -216,5 +217,21 @@ public class ScriptFactory {
      */
     public ClientCubeCodeUI createUI() {
         return new ClientCubeCodeUI();
+    }
+
+    public void info(String source, String string) {
+        CubeCode.loggerManager.info(source, string);
+    }
+
+    public void error(String source, String string) {
+        CubeCode.loggerManager.error(source, string);
+    }
+
+    public void warning(String source, String string) {
+        CubeCode.loggerManager.warning(source, string);
+    }
+
+    public void debug(String source, String string) {
+        CubeCode.loggerManager.debug(source, string);
     }
 }
