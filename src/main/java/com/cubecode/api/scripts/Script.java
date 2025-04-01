@@ -1,5 +1,6 @@
 package com.cubecode.api.scripts;
 
+import com.cubecode.CubeCode;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
@@ -96,11 +97,14 @@ public class Script {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
 
-            throw new CubeCodeException(errorType + ": " + details + "\n" +
+            String errorMessage = errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
-                    "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", ""), sourceName
-            );
+                    "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
+
+            CubeCode.loggerManager.error(this.name, errorMessage.replaceAll("\\n", "\n&c"));
+            throw new CubeCodeException(errorMessage, sourceName);
         } catch (Exception e) {
+            CubeCode.loggerManager.error(this.name, e.getLocalizedMessage());
             throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
         }
     }

@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 
 //TODO: Сделать работующие логи для клиента и сервера (сейчас работает только локальный сервер)
+//TODO: Сделать логгирование всех ошибок мода в отдельной вкладке LoggerView
 public class LoggerManager extends DirectoryManager {
     public File logger;
 
@@ -32,7 +33,7 @@ public class LoggerManager extends DirectoryManager {
     }
 
     public void error(String source, String error) {
-        String message = "[&4" + source + "&r]" + ": " + error;
+        String message = "[&4" + source + "&r]" + ": &c" + error;
         this.addLine(message + "\n");
     }
 
