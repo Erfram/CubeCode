@@ -39,7 +39,7 @@ public class SettingManager extends DirectoryManager {
             libraries.add(libraryName);
 
             this.settings.remove(scriptName);
-            this.settings.put(scriptName, new ScriptSetting(scriptSetting.side, libraries));
+            this.settings.put(scriptName, new ScriptSetting(scriptSetting.side, libraries, scriptSetting.lastLaunchErrorLine, scriptSetting.lastLaunchErrorMessage));
 
             this.write();
         }
@@ -54,7 +54,7 @@ public class SettingManager extends DirectoryManager {
             libraries.remove(libraryName);
 
             this.settings.remove(scriptName);
-            this.settings.put(scriptName, new ScriptSetting(scriptSetting.side, libraries));
+            this.settings.put(scriptName, new ScriptSetting(scriptSetting.side, libraries, scriptSetting.lastLaunchErrorLine, scriptSetting.lastLaunchErrorMessage));
 
             this.write();
         }
@@ -76,7 +76,7 @@ public class SettingManager extends DirectoryManager {
         ScriptSetting scriptSetting = this.settings.get(scriptName);
 
         this.settings.remove(scriptName);
-        this.settings.put(scriptName, new ScriptSetting(side, scriptSetting.libraries != null ? scriptSetting.libraries : new ArrayList<>()));
+        this.settings.put(scriptName, new ScriptSetting(side, scriptSetting.libraries != null ? scriptSetting.libraries : new ArrayList<>(), scriptSetting.lastLaunchErrorLine, scriptSetting.lastLaunchErrorMessage));
 
         this.write();
     }
@@ -125,6 +125,8 @@ public class SettingManager extends DirectoryManager {
 
             jsonScriptSetting.addProperty("Side", scriptSetting.side.name());
             jsonScriptSetting.add("Libraries", jsonLibraries);
+            jsonScriptSetting.addProperty("LastLaunchErrorLine", scriptSetting.lastLaunchErrorLine);
+            jsonScriptSetting.addProperty("LastLaunchErrorMessage", scriptSetting.lastLaunchErrorMessage);
 
             jsonObject.add(scriptName, jsonScriptSetting);
         });
@@ -145,7 +147,9 @@ public class SettingManager extends DirectoryManager {
 
             settings.put(key, new ScriptSetting(
                 ScriptType.valueOf(jsonScriptSetting.get("Side").getAsString().toUpperCase()),
-                libraries
+                libraries,
+                jsonScriptSetting.get("LastLaunchErrorLine").getAsInt(),
+                jsonScriptSetting.get("LastLaunchErrorMessage").getAsString()
             ));
         });
 
@@ -155,15 +159,28 @@ public class SettingManager extends DirectoryManager {
     public static class ScriptSetting {
         ScriptType side;
         List<String> libraries;
+        int lastLaunchErrorLine;
+        String lastLaunchErrorMessage;
+
+        public ScriptSetting(ScriptType side, List<String> libraries, int lastLaunchErrorLine, String lastLaunchErrorMessage) {
+            this.side = side;
+            this.libraries = libraries;
+            this.lastLaunchErrorLine = lastLaunchErrorLine;
+            this.lastLaunchErrorMessage = lastLaunchErrorMessage;
+        }
 
         public ScriptSetting(ScriptType side, List<String> libraries) {
             this.side = side;
             this.libraries = libraries;
+            this.lastLaunchErrorLine = 0;
+            this.lastLaunchErrorMessage = "";
         }
 
         public ScriptSetting(ScriptType side) {
             this.side = side;
             this.libraries = new ArrayList<>();
+            this.lastLaunchErrorLine = 0;
+            this.lastLaunchErrorMessage = "";
         }
     }
 }
