@@ -176,7 +176,7 @@ public class ScriptDefinition {
                 ColorUtils.rgbaToImguiColor(39, 40, 34, 150), // Background
                 0xffe0e0e0, // Cursor
                 0x80a06020, // Selection
-                ColorUtils.rgbaToImguiColor(172, 140, 255, 255), // ErrorMarker
+                ColorUtils.rgbaToImguiColor(227, 37, 107, 255), // ErrorMarker
                 ColorUtils.rgbaToImguiColor(255, 99, 99, 255), // Breakpoint
                 ColorUtils.rgbaToImguiColor(76, 81, 74, 255), // Line number
                 0x40000000, // Current line fill

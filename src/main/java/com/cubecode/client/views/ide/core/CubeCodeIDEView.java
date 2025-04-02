@@ -511,9 +511,8 @@ public class CubeCodeIDEView extends View {
         if (this.selectedNode != null) {
             for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
                 ScriptNode scriptNode = (ScriptNode) NodeUtils.findNodeByPath(view.nodes, this.selectedNode.getPath());
-
                 if (scriptNode != null) {
-                    scriptNode.setScript(new Script(scriptNode.getScript().getName(), this.codeEditor.getText().replaceAll("\\n+$", ""), scriptNode.getScript().getSide(), scriptNode.getScript().getLibraries()));
+                    scriptNode.getScript().setCode(this.codeEditor.getText().replaceAll("\\n+$", ""));
                 }
             }
 
@@ -828,6 +827,17 @@ public class CubeCodeIDEView extends View {
         this.codeEditor.setShowWhitespaces(CubeCodeConfig.getIdeaSettingsConfig().showWhitespaces);
         this.codeEditor.setReadOnly(CubeCodeConfig.getIdeaSettingsConfig().readOnly);
         this.codeEditor.setTabSize(CubeCodeConfig.getIdeaSettingsConfig().tabSize);
+
+        if (this.selectedNode instanceof ScriptNode) {
+            Script script = CubeCodeClient.projectManager.getScript(((ScriptNode) this.selectedNode).getScript().getName());
+            //TODO: Не работает, не видит ошибку в проджект менеджере. мб сохранять её в settings.json
+            if(script != null && !script.getLastLaunchErrorMessage().isEmpty()) {
+                HashMap<Integer, String> errors = new HashMap<>();
+                errors.put(script.getLastLaunchErrorLine(), script.getLastLaunchErrorMessage());
+                this.codeEditor.setErrorMarkers(errors);
+            }
+        }
+
 
         this.codeEditor.render("IDEA");
 

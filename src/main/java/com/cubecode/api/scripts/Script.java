@@ -4,8 +4,8 @@ import com.cubecode.CubeCode;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
-import dev.latvian.mods.rhino.EcmaError;
 import dev.latvian.mods.rhino.EvaluatorException;
+import dev.latvian.mods.rhino.RhinoException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,8 @@ public class Script {
     private List<String> libraries;
     private Context context;
     private ScriptScope scope;
+    private int lastLaunchErrorLine = 0;
+    private String lastLaunchErrorMessage = "";
 
     public Script(String name, String code, ScriptType side, List<String> libraries) {
         this.name = name;
@@ -93,23 +95,43 @@ public class Script {
             this.evaluateLibraries(sourceName);
             this.evaluate();
             scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
-        } catch (EvaluatorException | EcmaError e) {
+        } catch (Exception e) {
+            this.handleException(sourceName, e);
+        }
+    }
+
+    public void handleException(String sourceName, Exception exception) throws CubeCodeException {
+        String errorMessage = "";
+        int errorLine = 0;
+        if (exception instanceof RhinoException e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
+            errorLine = e.lineNumber();
             StringBuilder lines = new StringBuilder();
             lines.append(" ".repeat(Math.max(0, e.columnNumber())));
-            String errorMessage = errorType + ": " + details + "\n" +
+            errorMessage = errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
                     lines + " |\n" +
                     lines + "\\/\n" +
-                    "Code: "+ this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
-
-            CubeCode.loggerManager.error(this.name, errorMessage.replaceAll("\\n", "\n&c"));
-            throw new CubeCodeException(errorMessage, sourceName);
-        } catch (Exception e) {
-            CubeCode.loggerManager.error(this.name, e.getLocalizedMessage());
-            throw new CubeCodeException(e.getClass().getSimpleName() + ": " + e.getLocalizedMessage(), sourceName);
+                    //"Code: " + this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
+                    "Code: " + e.lineSource();
         }
+        else {
+            errorMessage = exception.getClass().getSimpleName() + ": " + exception.getLocalizedMessage();
+        }
+        this.setLastLaunchErrorLine(errorLine);
+        this.setLastLaunchErrorMessage(errorMessage);
+        //TODO: Предлагаю тут сохранять в settings.json
+        CubeCode.loggerManager.error(this.name, errorMessage.replaceAll("\\n", "\n&c"));
+        throw new CubeCodeException(errorMessage, sourceName);
+    }
+
+    public void setLastLaunchErrorMessage(String errorMessage) {
+        this.lastLaunchErrorMessage = errorMessage;
+    }
+
+    public String getLastLaunchErrorMessage() {
+        return this.lastLaunchErrorMessage;
     }
 
     public void prepare() {
@@ -118,19 +140,32 @@ public class Script {
         this.scope.setParentScope(ScriptExecutor.globalScope);
     }
 
-    public void evaluate() {
-        scriptExecutor.evaluate(this.context, this.scope, code, name);
+    public void evaluate() throws CubeCodeException {
+        this.evaluate(this.context, this.scope, this.code, this.name);
     }
 
-    public void evaluateLibraries(String sourceName) {
+    public void evaluate(Context cx, ScriptScope scope, String code, String sourceName) throws CubeCodeException {
+        try {
+            scriptExecutor.evaluate(cx, scope, code, sourceName);
+            this.setLastLaunchErrorLine(0);
+            this.setLastLaunchErrorMessage("");
+        } catch (Exception e) {
+            this.handleException(sourceName, e);
+        }
+    }
+
+    public void evaluateLibraries(String sourceName) throws CubeCodeException {
         ScriptScope libraryScope = new ScriptScope(this.name + "_lib", this.context);
         libraryScope.setParentScope(ScriptExecutor.globalScope);
-        this.libraries.forEach(library -> {
+        for (String library : this.libraries) {
             Script script = projectManager.getScript(library);
             if (script != null) {
-                scriptExecutor.evaluate(this.context, libraryScope,  script.getCode(), sourceName);
+                script.evaluate(this.context, libraryScope,  script.getCode(), sourceName);
             }
-        });
+            else {
+                throw new CubeCodeException("Can't find library " + library + " in " + this.name, sourceName);
+            }
+        }
         this.scope.setParentScope(libraryScope);
     }
 
@@ -148,5 +183,14 @@ public class Script {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+
+    public int getLastLaunchErrorLine() {
+        return lastLaunchErrorLine;
+    }
+
+    public void setLastLaunchErrorLine(int lastLaunchErrorLine) {
+        this.lastLaunchErrorLine = lastLaunchErrorLine;
     }
 }
