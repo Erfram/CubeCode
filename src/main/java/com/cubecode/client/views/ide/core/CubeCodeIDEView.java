@@ -17,6 +17,7 @@ import com.cubecode.client.views.ide.utils.ToolItem;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.client.views.ide.ScopeView;
 import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.IDESyncPacket;
 import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.network.packets.server.*;
 import com.cubecode.utils.*;
@@ -788,6 +789,7 @@ public class CubeCodeIDEView extends View {
                         MinecraftClient.getInstance().player.sendMessage(Text.of("§c"+e.getMessage()));
                     }
                 }
+                Dispatcher.sendToServer(new IDESyncPacket());
             }
         }
     }
