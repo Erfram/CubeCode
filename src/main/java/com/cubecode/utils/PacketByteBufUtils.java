@@ -37,10 +37,11 @@ public class PacketByteBufUtils {
             }
         } else if (node instanceof ScriptNode) {
             ScriptNode scriptNode = (ScriptNode) node;
-            buf.writeString(scriptNode.getScript().getName());
-            buf.writeString(scriptNode.getScript().getCode());
-            buf.writeCollection(scriptNode.getScript().getLibraries(), PacketByteBuf::writeString);
-            buf.writeEnumConstant(scriptNode.getScript().getSide());
+            Script script = scriptNode.getScript();
+            buf.writeString(script.getName());
+            buf.writeString(script.getCode());
+            buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
+            buf.writeEnumConstant(script.getSide());
         }
     }
 
