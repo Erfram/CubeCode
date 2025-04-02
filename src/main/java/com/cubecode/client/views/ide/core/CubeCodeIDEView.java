@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class CubeCodeIDEView extends View {
     private final TextEditor codeEditor = new TextEditor();
 
-    public final CopyOnWriteArrayList<IdeaNode> nodes;
+    public CopyOnWriteArrayList<IdeaNode> nodes;
 
     private final Comparator<IdeaNode> comparator = (node1, node2) -> {
         boolean isDir1 = node1.getType() == NodeType.FOLDER;

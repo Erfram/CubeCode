@@ -25,7 +25,9 @@ public class Dispatcher {
             this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ClientHandler.class, EnvType.CLIENT);
             this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ClientHandler.class, EnvType.CLIENT);
 
+            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(CreateFolderC2SPacket.class, CreateFolderC2SPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(DeleteElementC2SPacket.class, DeleteElementC2SPacket.ServerHandler.class, EnvType.SERVER);
