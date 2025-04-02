@@ -68,7 +68,7 @@ public class ScriptDefinition {
 
         Map<String, Integer> tokenRegex = new HashMap<>();
 
-        tokenRegex.put("\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'", TextEditorPaletteIndex.String);
+        tokenRegex.put("`([^\\\\]|\\\\.)*`|\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'", TextEditorPaletteIndex.String);
 
         tokenRegex.put("\\b\\d+(\\.\\d+)?\\b", TextEditorPaletteIndex.Number);
         tokenRegex.put("!\\%\\^\\&\\*\\-\\+\\=\\~\\|\\<\\>\\?\\/", TextEditorPaletteIndex.Punctuation);
