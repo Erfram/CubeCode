@@ -126,7 +126,7 @@ public class CubeCodeIDEView extends View {
 
                     this.renderMenuBar();
 
-                    CubeImGui.beginChild("left_bar", 1.5f * CubeCodeConfig.getFontSize(), 0, false, this::renderLeftBar);
+                    CubeImGui.beginChild("left_bar", 1.5f * ImGui.getFontSize(), 0, false, this::renderLeftBar);
 
                     if (this.selectedToolItem == ToolItem.PROJECT) {
                         ImGui.sameLine();
@@ -170,7 +170,7 @@ public class CubeCodeIDEView extends View {
     }
 
     public void renderScope() {
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(Icons.SERVER, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.scope").getString(), fontSize, fontSize, () -> {
             if (this.selectedNode != null && this.selectedNode.getType() == NodeType.SCRIPT) {
                 ImGuiLoader.pushView(new ScopeView(((ScriptNode)this.selectedNode).getScript()));
@@ -179,7 +179,7 @@ public class CubeCodeIDEView extends View {
     }
 
     public void renderDocumentation() {
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(Icons.BOOK, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.documentation").getString(), fontSize, fontSize, () -> {
             ImGuiLoader.pushView(new DocumentationView(Documentation.parseDocs()));
         });
@@ -187,7 +187,7 @@ public class CubeCodeIDEView extends View {
 
     private void renderAddLibraryButton() {
         ImGui.setCursorPosX(ImGui.getWindowSize().x - 64);
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(
                 Icons.NBT_LIST,
                 Text.translatable("Add Library").getString(),
@@ -202,7 +202,7 @@ public class CubeCodeIDEView extends View {
 
     private void renderRunScriptButton() {
         ImGui.setCursorPosX(ImGui.getWindowSize().x - 32);
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(
                 Icons.START,
                 Text.translatable("imgui.cubecode.windows.CubeCodeIDE.run_script").getString(),
@@ -212,7 +212,7 @@ public class CubeCodeIDEView extends View {
     }
 
     public void renderLeftBar() {
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(Icons.FOLDER, "Project", fontSize, fontSize, () -> {
             this.selectedToolItem = this.selectedToolItem == ToolItem.PROJECT ? ToolItem.UNKNOWN : ToolItem.PROJECT;
         });
@@ -232,7 +232,7 @@ public class CubeCodeIDEView extends View {
 
     public void renderFileManager() {
         boolean treeProject = ImGui.treeNodeEx("##project", ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.DefaultOpen);
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = null;
             ImGui.openPopup("file_context_menu");
@@ -261,7 +261,7 @@ public class CubeCodeIDEView extends View {
     private void renderFolder(FolderNode folderNode) {
         int flag = folderNode.getChildren().isEmpty() ? ImGuiTreeNodeFlags.Leaf : ImGuiTreeNodeFlags.None;
         boolean treeFolder = ImGui.treeNodeEx("##"+folderNode.getName(), flag | ImGuiTreeNodeFlags.SpanAvailWidth);
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = folderNode;
             ImGui.openPopup("file_context_menu");
@@ -290,7 +290,7 @@ public class CubeCodeIDEView extends View {
     private void renderScript(ScriptNode scriptNode) {
         boolean isSelected = scriptNode.getPath().equals(this.preSelectedNode == null ? null : this.preSelectedNode.getPath());
         boolean selectableScript = ImGui.selectable("##"+scriptNode.getName(), isSelected, ImGuiSelectableFlags.AllowDoubleClick);
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = scriptNode;
             ImGui.openPopup("file_context_menu");
@@ -490,7 +490,7 @@ public class CubeCodeIDEView extends View {
 
                         if (serverScript.hasLibraryScript(scriptName)) {
                             ImGui.setCursorPos(cursorPos.x + ImGui.calcTextSize(lengthPath).x, cursorPos.y);
-                            float fontSize = CubeCodeConfig.getFontSize();
+                            float fontSize = ImGui.getFontSize();
                             ImGui.image(Icons.PLUS.getGlId(), fontSize, fontSize);
                         }
                     }
@@ -557,7 +557,7 @@ public class CubeCodeIDEView extends View {
     }
 
     private void runContextMenu() {
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         if (ImGui.beginPopup("file_context_menu")) {
             if (this.preSelectedNode == null || this.preSelectedNode.getType() != NodeType.SCRIPT) {
                 CubeImGui.menu(Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.create").getString(), Icons.HAMMER, fontSize, fontSize, () -> {
@@ -833,7 +833,6 @@ public class CubeCodeIDEView extends View {
 
         if (this.selectedNode instanceof ScriptNode) {
             Script script = ((ScriptNode) this.selectedNode).getScript();
-            //TODO: Не работает, не видит ошибку в проджект менеджере. мб сохранять её в settings.json
             if(script != null && !script.getLastLaunchErrorMessage().isEmpty()) {
                 HashMap<Integer, String> errors = new HashMap<>();
                 errors.put(script.getLastLaunchErrorLine(), script.getLastLaunchErrorMessage());

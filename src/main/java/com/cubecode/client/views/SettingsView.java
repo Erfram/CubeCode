@@ -3,6 +3,7 @@ package com.cubecode.client.views;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
+import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.imgui.fonts.FontManager;
@@ -67,7 +68,6 @@ public class SettingsView extends View {
     }
 
     private void renderSettingsPane() {
-        float fontSize = CubeCodeConfig.getFontSize();
         CubeImGui.treeNodeEx(Text.translatable("imgui.cubecode.windows.settings.general").getString(), Icons.FLAG, ImGuiTreeNodeFlags.SpanAvailWidth, () -> {
             CubeImGui.selectable(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), false, Icons.APPEARANCE, 0, () -> {
                 this.selectedSetting = this::renderAppearanceContent;
@@ -75,11 +75,11 @@ public class SettingsView extends View {
             CubeImGui.selectable("IDEA", false, Icons.SERVER, 0, () -> {
                 this.selectedSetting = this::renderIDEAContent;
             });
-        }, fontSize);
+        }, ImGui.getFontSize());
     }
 
     private void renderAppearanceContent() {
-        float fontSize = CubeCodeConfig.getFontSize();
+        float fontSize = ImGui.getFontSize();
         ImGui.image(Icons.THEME.getGlId(), fontSize, fontSize);
         ImGui.sameLine();
 

@@ -697,9 +697,8 @@ public class CubeImGui {
 
     public static void selectable(String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable selectableAction) {
         boolean selectableScript = ImGui.selectable("##"+label, isSelected, imGuiSelectableFlags);
-        float fontSize = CubeCodeConfig.getFontSize();
         ImGui.sameLine(0, 0);
-        ImGui.image(icon.getGlId(), fontSize, fontSize);
+        ImGui.image(icon.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
 
         ImGui.sameLine(0, 4);
         ImGui.text(label);
@@ -711,9 +710,8 @@ public class CubeImGui {
 
     public static void treeNode(String label, Icons icon, int imguiTreeNodeFlags, Runnable render) {
         boolean tree = ImGui.treeNodeEx("##"+label, imguiTreeNodeFlags);
-        float fontSize = CubeCodeConfig.getFontSize();
         ImGui.sameLine(0, 4);
-        ImGui.image(icon.getGlId(), fontSize, fontSize);
+        ImGui.image(icon.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
 
         ImGui.sameLine(0, 4);
         ImGui.text(label);
