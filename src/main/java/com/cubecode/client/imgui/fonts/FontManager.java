@@ -7,6 +7,7 @@ import imgui.*;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -25,69 +26,55 @@ public class FontManager {
         final ImFontAtlas fontAtlas = io.getFonts();
         fontAtlas.clear();
 
-        ImFontConfig fontConfig = new ImFontConfig();
-        fontConfig.setGlyphRanges(fontAtlas.getGlyphRangesCyrillic());
-        //TODO: REFACTOR BLYAT
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/Monocraft.ttf")) {
-            byte[] bytes = inputStream.readAllBytes();
-            //TODO: В нормальном виде сделать добавление ренжей
-            short[] ranges = io.getFonts().getGlyphRangesCyrillic();
-            short[] newArray = new short[ranges.length + 2];
-            System.arraycopy(ranges, 0, newArray, 0, ranges.length);
-            newArray[ranges.length] = 8592;
-            newArray[ranges.length + 1] = 8703;
-            ImFontConfig imFontConfig = new ImFontConfig();
-            imFontConfig.setRasterizerMultiply(1);
-            imFontConfig.setOversampleH(3);
-            imFontConfig.setOversampleV(3);
-            imFontConfig.setPixelSnapH(true);
-            fonts.put("Monocraft", fontAtlas.addFontFromMemoryTTF(bytes, 64, imFontConfig, newArray));
-        } catch (Exception exception) {
-            CubeCode.LOGGER.error(exception.getMessage());
-        }
+        ImFontConfig standardFontConfig = new ImFontConfig();
+        standardFontConfig.setRasterizerMultiply(1);
+        standardFontConfig.setOversampleH(3);
+        standardFontConfig.setOversampleV(3);
+        standardFontConfig.setPixelSnapH(true);
 
-        try (InputStream inputStream = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/JetBrainsMono-Regular.ttf")) {
-            byte[] bytes = inputStream.readAllBytes();
-            //TODO: В нормальном виде сделать добавление ренжей
-            short[] ranges = io.getFonts().getGlyphRangesCyrillic();
-            short[] newArray = new short[ranges.length + 2];
-            System.arraycopy(ranges, 0, newArray, 0, ranges.length);
-            newArray[ranges.length] = 8592;
-            newArray[ranges.length + 1] = 8703;
-            ImFontConfig imFontConfig = new ImFontConfig();
-            imFontConfig.setRasterizerMultiply(1);
-            imFontConfig.setOversampleH(3);
-            imFontConfig.setOversampleV(3);
-            imFontConfig.setPixelSnapH(true);
-            fonts.put("JetBrainsMono-Regular", fontAtlas.addFontFromMemoryTTF(bytes, 64, imFontConfig, newArray));
-        } catch (Exception exception) {
-            CubeCode.LOGGER.error(exception.getMessage());
-        }
+        //TODO: В нормальном виде сделать добавление ренжей
+        short[] ranges = ImGui.getIO().getFonts().getGlyphRangesCyrillic();
+        short[] newArray = new short[ranges.length + 2];
+        System.arraycopy(ranges, 0, newArray, 0, ranges.length);
+        newArray[ranges.length] = 8592;
+        newArray[ranges.length + 1] = 8703;
+
+        standardFontConfig.setGlyphRanges(newArray);
+
+        loadFont("Monocraft", ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/Monocraft.ttf"), fontAtlas, standardFontConfig);
+        loadFont("JetBrainsMono-Regular", ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/JetBrainsMono-Regular.ttf"), fontAtlas, standardFontConfig);
 
         try {
             Files.list(CubeCodeConfig.fontsDir).forEach(fontPath -> {
-                if (fontPath.toFile().getName().endsWith(".ttf")) {
-                    try (FileInputStream fileInputStream = new FileInputStream(fontPath.toString())) {
-                        byte[] bytes = fileInputStream.readAllBytes();
-                        ImFontConfig imFontConfig = new ImFontConfig();
-                        imFontConfig.setRasterizerMultiply(1.0F);
-                        imFontConfig.setOversampleH(5);
-                        imFontConfig.setOversampleV(5);
-                        fonts.put(fontPath.toFile().getName().replace(".ttf", ""), fontAtlas.addFontFromMemoryTTF(bytes, 16, imFontConfig, io.getFonts().getGlyphRangesCyrillic()));
-                    } catch (Exception exception) {
-                        CubeCode.LOGGER.error(exception.getMessage());
-                    }
+                if (!fontPath.toFile().getName().endsWith(".ttf")) {
+                    return;
                 }
+                String name = fontPath.toFile().getName().replace(".ttf", "");
+                InputStream inputStream;
+                try {
+                    inputStream = new FileInputStream(fontPath.toString());
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+                loadFont(name, inputStream, fontAtlas, standardFontConfig);
             });
         } catch (IOException e) {
             CubeCode.LOGGER.error(e.getMessage());
         }
 
-        fontConfig.destroy();
-
         fontAtlas.build();
 
+        standardFontConfig.destroy();
+
         currentFontName = CubeCodeConfig.getSettingsConfig().general.appearance.font;
+    }
+
+    public void loadFont(String name, InputStream inputStream, ImFontAtlas fontAtlas, ImFontConfig imFontConfig) {
+        try (InputStream is = inputStream) {
+            fonts.put(name, fontAtlas.addFontFromMemoryTTF(is.readAllBytes(), 64, imFontConfig));
+        } catch (Exception exception) {
+            CubeCode.LOGGER.error(exception.getMessage());
+        }
     }
 
     public static List<CubeFont> getFonts() {
@@ -107,9 +94,7 @@ public class FontManager {
         List<String> fontNames = new ArrayList<>();
 
         fonts.forEach(font -> {
-            if (!new File(font.getFilePath()).getName().equalsIgnoreCase("Monocraft.ttf")) {
-                fontNames.add(new File(font.getFilePath()).getName().replace(".ttf", ""));
-            }
+            fontNames.add(new File(font.getFilePath()).getName().replace(".ttf", ""));
         });
 
         fontNames.add("Monocraft");
