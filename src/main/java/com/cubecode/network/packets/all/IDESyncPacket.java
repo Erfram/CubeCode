@@ -59,7 +59,10 @@ public class IDESyncPacket extends AbstractPacket {
         @Override
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, IDESyncPacket packet) {
             ImGuiLoader.getViews(CubeCodeIDEView.class).forEach(view -> {
+                String name = view.selectedNode.getName();
                 view.nodes = new CopyOnWriteArrayList<>(packet.nodes);
+                view.selectedNode = view.nodes.stream().filter(n -> n.getName().equals(name)).findFirst().orElse(null);
+                view.preSelectedNode = view.selectedNode;
             });
         }
     }

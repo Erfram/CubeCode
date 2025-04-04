@@ -9,6 +9,7 @@ import dev.latvian.mods.rhino.RhinoException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.cubecode.CubeCode.projectManager;
 import static com.cubecode.CubeCode.scriptExecutor;
@@ -108,13 +109,12 @@ public class Script {
             String details = e.details().replaceFirst("TypeError: ", "");
             errorLine = e.lineNumber();
             StringBuilder lines = new StringBuilder();
-            lines.append(" ".repeat(Math.max(0, e.columnNumber())));
+            lines.append(" ".repeat(Math.max(0, e.columnNumber() + 6)));
             errorMessage = errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
-                    lines + " |\n" +
-                    lines + "\\/\n" +
-                    //"Code: " + this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
-                    "Code: " + e.lineSource();
+                    lines + "↓\n" +
+                    //lines + "\\/\n" +
+                    "Code: " + this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
         }
         else {
             errorMessage = exception.getClass().getSimpleName() + ": " + exception.getLocalizedMessage();

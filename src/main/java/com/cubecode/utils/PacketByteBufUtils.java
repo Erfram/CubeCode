@@ -15,11 +15,15 @@ public class PacketByteBufUtils {
         buf.writeString(script.getName());
         buf.writeString(script.getCode());
         buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
+        buf.writeInt(script.getLastLaunchErrorLine());
+        buf.writeString(script.getLastLaunchErrorMessage());
     }
 
     public static Script readScript(PacketByteBuf buf) {
         Script script = new Script(buf.readString(), buf.readString(), ScriptType.SERVER);
         script.setLibraries(buf.readCollection(ArrayList::new, PacketByteBuf::readString));
+        script.setLastLaunchErrorLine(buf.readInt());
+        script.setLastLaunchErrorMessage(buf.readString());
 
         return script;
     }
@@ -37,11 +41,7 @@ public class PacketByteBufUtils {
             }
         } else if (node instanceof ScriptNode) {
             ScriptNode scriptNode = (ScriptNode) node;
-            Script script = scriptNode.getScript();
-            buf.writeString(script.getName());
-            buf.writeString(script.getCode());
-            buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
-            buf.writeEnumConstant(script.getSide());
+            writeScript(buf, scriptNode.getScript());
         }
     }
 
@@ -60,14 +60,7 @@ public class PacketByteBufUtils {
             folderNode.setPath(path);
             return folderNode;
         } else if (type == NodeType.SCRIPT) {
-            String scriptName = buf.readString();
-            String scriptCode = buf.readString();
-            List<String> scriptLibraries = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
-            ScriptType scriptType = buf.readEnumConstant(ScriptType.class);
-            Script script = new Script(scriptName, scriptCode, scriptType);
-
-            script.setLibraries(scriptLibraries);
-
+            Script script = readScript(buf);
             return new ScriptNode(name, script, path);
         }
         return null;

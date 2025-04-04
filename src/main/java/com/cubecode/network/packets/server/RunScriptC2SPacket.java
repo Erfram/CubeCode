@@ -2,8 +2,10 @@ package com.cubecode.network.packets.server;
 
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
+import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
+import com.cubecode.network.packets.all.IDESyncPacket;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.PacketByteBufUtils;
 import com.cubecode.api.scripts.Script;
@@ -54,10 +56,13 @@ public class RunScriptC2SPacket extends AbstractPacket {
             );
 
             try {
-                packet.script.run(packet.script.getName(), properties);
+                Script script1 = CubeCode.projectManager.getScript(packet.script.getName());
+                script1.run(script1.getName(), properties);
             } catch (CubeCodeException cce) {
                 player.sendMessage(Text.of("§c" + cce.getMessage()));
                 cce.printStackTrace();
+            } finally {
+                Dispatcher.sendTo(new IDESyncPacket(CubeCode.projectManager.getNodes()), player);
             }
         }
     }

@@ -159,8 +159,8 @@ public class SettingManager extends DirectoryManager {
     public static class ScriptSetting {
         ScriptType side;
         List<String> libraries;
-        int lastLaunchErrorLine;
-        String lastLaunchErrorMessage;
+        public int lastLaunchErrorLine;
+        public String lastLaunchErrorMessage;
 
         public ScriptSetting(ScriptType side, List<String> libraries, int lastLaunchErrorLine, String lastLaunchErrorMessage) {
             this.side = side;

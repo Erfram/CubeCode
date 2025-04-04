@@ -783,7 +783,7 @@ public class CubeCodeIDEView extends View {
                             MinecraftClient.getInstance().world);
 
                     try {
-                        Script script = CubeCodeClient.projectManager.getScript(scriptNode.getScript().getName());
+                        Script script = scriptNode.getScript();
                         if (script != null) {
                             script.run(script.getName(), properties);
                         }
@@ -791,7 +791,6 @@ public class CubeCodeIDEView extends View {
                         MinecraftClient.getInstance().player.sendMessage(Text.of("§c"+e.getMessage()));
                     }
                 }
-                Dispatcher.sendToServer(new IDESyncPacket());
             }
         }
     }
@@ -833,7 +832,7 @@ public class CubeCodeIDEView extends View {
         this.codeEditor.setTabSize(CubeCodeConfig.getIdeaSettingsConfig().tabSize);
 
         if (this.selectedNode instanceof ScriptNode) {
-            Script script = CubeCodeClient.projectManager.getScript(((ScriptNode) this.selectedNode).getScript().getName());
+            Script script = ((ScriptNode) this.selectedNode).getScript();
             //TODO: Не работает, не видит ошибку в проджект менеджере. мб сохранять её в settings.json
             if(script != null && !script.getLastLaunchErrorMessage().isEmpty()) {
                 HashMap<Integer, String> errors = new HashMap<>();
