@@ -1,12 +1,12 @@
 package com.cubecode.client.imgui;
 
 import com.cubecode.CubeCodeClient;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.gifs.Gif;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.imgui.basic.ImGuiFrameBuffer;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.screens.DashboardScreen;
 import com.cubecode.utils.Icons;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -632,15 +632,15 @@ public class CubeImGui {
         horizontalSplitter(view, splitterId, 4, availableWidth, availableHeight, 0.3f, 0.1f, 0.9f);
     }
 
-    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction, Runnable rightClickAction) {
+    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction, Runnable rightClickAction, float fontSize) {
         boolean treeProject = ImGui.treeNodeEx("##"+treeId, imGuiTreeNodeFlags);
 
-        if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+        if (ImGui.isItemClicked(ImGuiMouseButton.Right) && rightClickAction != null) {
             rightClickAction.run();
         }
 
         ImGui.sameLine(0, 9);
-        ImGui.image(icon.getGlId(), 16, 16);
+        ImGui.image(icon.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text(label);
@@ -651,34 +651,12 @@ public class CubeImGui {
         }
     }
 
-    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction) {
-        boolean treeProject = ImGui.treeNodeEx("##"+treeId, imGuiTreeNodeFlags);
-
-        ImGui.sameLine(0, 9);
-        ImGui.image(icon.getGlId(), 16, 16);
-
-        ImGui.sameLine(0, 4);
-        ImGui.text(label);
-
-        if (treeProject) {
-            treeNodeAction.run();
-            ImGui.treePop();
-        }
+    public static void treeNodeEx(String treeId, String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction, float sizeMultiplier) {
+        treeNodeEx(treeId, label, icon, imGuiTreeNodeFlags, treeNodeAction, sizeMultiplier);
     }
 
-    public static void treeNodeEx(String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction) {
-        boolean treeProject = ImGui.treeNodeEx("##"+label, imGuiTreeNodeFlags);
-
-        ImGui.sameLine(0, 9);
-        ImGui.image(icon.getGlId(), 16, 16);
-
-        ImGui.sameLine(0, 4);
-        ImGui.text(label);
-
-        if (treeProject) {
-            treeNodeAction.run();
-            ImGui.treePop();
-        }
+    public static void treeNodeEx(String label, Icons icon, int imGuiTreeNodeFlags, Runnable treeNodeAction, float sizeMultiplier) {
+        treeNodeEx(label, label, icon, imGuiTreeNodeFlags, treeNodeAction, null, sizeMultiplier);
     }
 
     public static void selectable(String selectableId, String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable rightClickAction, Runnable selectableAction) {
@@ -719,9 +697,9 @@ public class CubeImGui {
 
     public static void selectable(String label, boolean isSelected, Icons icon, int imGuiSelectableFlags, Runnable selectableAction) {
         boolean selectableScript = ImGui.selectable("##"+label, isSelected, imGuiSelectableFlags);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         ImGui.sameLine(0, 0);
-        ImGui.image(icon.getGlId(), 16, 16);
+        ImGui.image(icon.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text(label);
@@ -733,9 +711,9 @@ public class CubeImGui {
 
     public static void treeNode(String label, Icons icon, int imguiTreeNodeFlags, Runnable render) {
         boolean tree = ImGui.treeNodeEx("##"+label, imguiTreeNodeFlags);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         ImGui.sameLine(0, 4);
-        ImGui.image(icon.getGlId(), 16, 16);
+        ImGui.image(icon.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text(label);

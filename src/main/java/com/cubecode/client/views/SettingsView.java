@@ -8,6 +8,7 @@ import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.utils.Icons;
 import imgui.ImGui;
+import imgui.flag.ImGuiSliderFlags;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;
@@ -50,8 +51,14 @@ public class SettingsView extends View {
                 .title(getName())
                 .onExit(this::onClose)
                 .callback(() -> {
-                    CubeImGui.beginChild("Settings Pane", 200, 0, false, this::renderSettingsPane);
+                    float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
+                    float variableSplitter = this.getVariable("splitter") == null ? 100f : this.getVariable("splitter");
 
+
+                    CubeImGui.beginChild("Settings Pane", availableWidth * variableSplitter, 0, false, this::renderSettingsPane);
+
+                    ImGui.sameLine();
+                    CubeImGui.verticalSplitter(this, "splitter", 4, availableWidth, ImGui.getItemRectMaxY(), 0.3f, 0.1f, 0.9f);
                     ImGui.sameLine();
 
                     CubeImGui.beginChild("Content Pane", 0, 0, true, selectedSetting);
@@ -60,19 +67,20 @@ public class SettingsView extends View {
     }
 
     private void renderSettingsPane() {
+        float fontSize = CubeCodeConfig.getFontSize();
         CubeImGui.treeNodeEx(Text.translatable("imgui.cubecode.windows.settings.general").getString(), Icons.FLAG, ImGuiTreeNodeFlags.SpanAvailWidth, () -> {
             CubeImGui.selectable(Text.translatable("imgui.cubecode.windows.settings.appearance").getString(), false, Icons.APPEARANCE, 0, () -> {
                 this.selectedSetting = this::renderAppearanceContent;
             });
-
             CubeImGui.selectable("IDEA", false, Icons.SERVER, 0, () -> {
                 this.selectedSetting = this::renderIDEAContent;
             });
-        });
+        }, fontSize);
     }
 
     private void renderAppearanceContent() {
-        ImGui.image(Icons.THEME.getGlId(), 16, 16);
+        float fontSize = CubeCodeConfig.getFontSize();
+        ImGui.image(Icons.THEME.getGlId(), fontSize, fontSize);
         ImGui.sameLine();
 
         ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.theme").getString()+": ");
@@ -84,7 +92,7 @@ public class SettingsView extends View {
             CubeCodeClient.themeManager.currentTheme = CubeCodeClient.themeManager.getTheme(th);
         });
 
-        ImGui.image(Icons.LLAMA.getGlId(), 16, 16);
+        ImGui.image(Icons.LLAMA.getGlId(), fontSize, fontSize);
         ImGui.sameLine();
 
         ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.font").getString()+": ");
@@ -96,11 +104,21 @@ public class SettingsView extends View {
         });
 
         ImGui.sameLine();
-        ImGui.image(Icons.INFO.getGlId(), 21, 21);
+        ImGui.image(Icons.INFO.getGlId(), fontSize, fontSize);
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
-            ImGui.text("После добавления шрифта в конфиг, перезагрузите игру.");
+            ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.font.tooltip").getString());
             ImGui.endTooltip();
+        }
+
+        ImGui.text(Text.translatable("imgui.cubecode.windows.settings.appearance.fontSize").getString()+": ");
+        ImGui.sameLine();
+
+        this.putVariable("fontSize", new float[]{CubeCodeConfig.getFontSize() / 64});
+        //ImGui.sliderFloat("##FontSize", this.getVariable("fontSize"), 0.5f, 100.0f);
+        ImGui.sliderFloat("##FontSize", this.getVariable("fontSize"), 0.1f, 2.0f, "%.2f", ImGuiSliderFlags.Logarithmic);
+        if (ImGui.isItemDeactivatedAfterEdit()) {
+            this.updateSettings();
         }
     }
 
@@ -120,6 +138,10 @@ public class SettingsView extends View {
 
     @Override
     public void onClose() {
+        this.updateSettings();
+    }
+
+    public void updateSettings() {
         CubeCodeConfig.saveConfig();
 
         String tabSizeId = "tabSize_" + this.getUniqueID();
@@ -129,6 +151,8 @@ public class SettingsView extends View {
         int[] tabSize = this.getVariable(tabSizeId);
         ImBoolean showWhitespaces = this.getVariable(showWhitespacesId);
         ImBoolean readOnly = this.getVariable(readOnlyId);
+
+        float[] fontSize = this.getVariable("fontSize");
 
         if (tabSize != null) {
             CubeCodeConfig.getIdeaSettingsConfig().tabSize = tabSize[0];
@@ -140,6 +164,10 @@ public class SettingsView extends View {
 
         if (readOnly != null) {
             CubeCodeConfig.getIdeaSettingsConfig().readOnly = readOnly.get();
+        }
+
+        if (fontSize != null) {
+            CubeCodeConfig.setFontSize(fontSize[0]);
         }
     }
 }

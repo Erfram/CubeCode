@@ -42,8 +42,17 @@ public class CubeCodeConfig {
             public static class Appearance {
                 public String font = DEFAULT_FONT;
                 public String theme = DEFAULT_THEME;
+                public float fontSize = 0.5F;
             }
         }
+    }
+
+    public static float getFontSize() {
+        return 64 * settingsConfig.general.appearance.fontSize;
+    }
+
+    public static void setFontSize(float size) {
+        settingsConfig.general.appearance.fontSize = size;
     }
 
     public static class IdeaSettingsConfig {

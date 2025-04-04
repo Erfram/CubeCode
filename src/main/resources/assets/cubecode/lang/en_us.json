@@ -121,6 +121,7 @@
 
   "imgui.cubecode.windows.settings.appearance.theme": "Theme",
   "imgui.cubecode.windows.settings.appearance.font": "Font",
+  "imgui.cubecode.windows.settings.appearance.fontSize": "Font size",
   "imgui.cubecode.windows.settings.appearance.font.tooltip": "After adding the font to the config, reload the game.",
 
   "imgui.cubecode.windows.settings.general": "General"

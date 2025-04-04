@@ -3,7 +3,6 @@ package com.cubecode.client.views.ide.core;
 import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
 import com.cubecode.api.scripts.ClientProperties;
-import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.client.config.CubeCodeConfig;
@@ -17,7 +16,6 @@ import com.cubecode.client.views.ide.utils.ToolItem;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.client.views.ide.ScopeView;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.all.IDESyncPacket;
 import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
 import com.cubecode.network.packets.server.*;
 import com.cubecode.utils.*;
@@ -128,7 +126,7 @@ public class CubeCodeIDEView extends View {
 
                     this.renderMenuBar();
 
-                    CubeImGui.beginChild("left_bar", 24, 0, false, this::renderLeftBar);
+                    CubeImGui.beginChild("left_bar", 1.5f * CubeCodeConfig.getFontSize(), 0, false, this::renderLeftBar);
 
                     if (this.selectedToolItem == ToolItem.PROJECT) {
                         ImGui.sameLine();
@@ -172,7 +170,8 @@ public class CubeCodeIDEView extends View {
     }
 
     public void renderScope() {
-        CubeImGui.imageButton(Icons.SERVER, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.scope").getString(), 16, 16, () -> {
+        float fontSize = CubeCodeConfig.getFontSize();
+        CubeImGui.imageButton(Icons.SERVER, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.scope").getString(), fontSize, fontSize, () -> {
             if (this.selectedNode != null && this.selectedNode.getType() == NodeType.SCRIPT) {
                 ImGuiLoader.pushView(new ScopeView(((ScriptNode)this.selectedNode).getScript()));
             }
@@ -180,18 +179,19 @@ public class CubeCodeIDEView extends View {
     }
 
     public void renderDocumentation() {
-        CubeImGui.imageButton(Icons.BOOK, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.documentation").getString(), 16, 16, () -> {
+        float fontSize = CubeCodeConfig.getFontSize();
+        CubeImGui.imageButton(Icons.BOOK, Text.translatable("imgui.cubecode.windows.CubeCodeIDE.documentation").getString(), fontSize, fontSize, () -> {
             ImGuiLoader.pushView(new DocumentationView(Documentation.parseDocs()));
         });
     }
 
     private void renderAddLibraryButton() {
         ImGui.setCursorPosX(ImGui.getWindowSize().x - 64);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         CubeImGui.imageButton(
                 Icons.NBT_LIST,
                 Text.translatable("Add Library").getString(),
-                16, 16,
+                fontSize, fontSize,
                 this::renderSelectLibrary
         );
     }
@@ -202,17 +202,18 @@ public class CubeCodeIDEView extends View {
 
     private void renderRunScriptButton() {
         ImGui.setCursorPosX(ImGui.getWindowSize().x - 32);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         CubeImGui.imageButton(
                 Icons.START,
                 Text.translatable("imgui.cubecode.windows.CubeCodeIDE.run_script").getString(),
-                16, 16,
+                fontSize, fontSize,
                 this::actionRunScript
         );
     }
 
     public void renderLeftBar() {
-        CubeImGui.imageButton(Icons.FOLDER, "Project", 16, 16, () -> {
+        float fontSize = CubeCodeConfig.getFontSize();
+        CubeImGui.imageButton(Icons.FOLDER, "Project", fontSize, fontSize, () -> {
             this.selectedToolItem = this.selectedToolItem == ToolItem.PROJECT ? ToolItem.UNKNOWN : ToolItem.PROJECT;
         });
 
@@ -224,21 +225,21 @@ public class CubeCodeIDEView extends View {
             );
         }
 
-        CubeImGui.imageButton(Icons.NBT_LIST, "Logger", 16, 16, () -> {
+        CubeImGui.imageButton(Icons.NBT_LIST, "Logger", fontSize, fontSize, () -> {
             ImGuiLoader.pushView(new LoggerView());
         });
     }
 
     public void renderFileManager() {
         boolean treeProject = ImGui.treeNodeEx("##project", ImGuiTreeNodeFlags.SpanAvailWidth | ImGuiTreeNodeFlags.DefaultOpen);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = null;
             ImGui.openPopup("file_context_menu");
         }
 
         ImGui.sameLine(0, 9);
-        ImGui.image(Icons.MODULE.getGlId(), 16, 16);
+        ImGui.image(Icons.MODULE.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text("project");
@@ -260,14 +261,14 @@ public class CubeCodeIDEView extends View {
     private void renderFolder(FolderNode folderNode) {
         int flag = folderNode.getChildren().isEmpty() ? ImGuiTreeNodeFlags.Leaf : ImGuiTreeNodeFlags.None;
         boolean treeFolder = ImGui.treeNodeEx("##"+folderNode.getName(), flag | ImGuiTreeNodeFlags.SpanAvailWidth);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = folderNode;
             ImGui.openPopup("file_context_menu");
         }
 
         ImGui.sameLine(0, 9);
-        ImGui.image(Icons.FOLDER.getGlId(), 16, 16);
+        ImGui.image(Icons.FOLDER.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text(folderNode.getName());
@@ -289,7 +290,7 @@ public class CubeCodeIDEView extends View {
     private void renderScript(ScriptNode scriptNode) {
         boolean isSelected = scriptNode.getPath().equals(this.preSelectedNode == null ? null : this.preSelectedNode.getPath());
         boolean selectableScript = ImGui.selectable("##"+scriptNode.getName(), isSelected, ImGuiSelectableFlags.AllowDoubleClick);
-
+        float fontSize = CubeCodeConfig.getFontSize();
         if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
             this.preSelectedNode = scriptNode;
             ImGui.openPopup("file_context_menu");
@@ -303,7 +304,7 @@ public class CubeCodeIDEView extends View {
 
         ImGui.sameLine(0, 25);
 
-        ImGui.image(icon.getGlId(), 16, 16);
+        ImGui.image(icon.getGlId(), fontSize, fontSize);
 
         ImGui.sameLine(0, 4);
         ImGui.text(scriptNode.getName());
@@ -489,8 +490,8 @@ public class CubeCodeIDEView extends View {
 
                         if (serverScript.hasLibraryScript(scriptName)) {
                             ImGui.setCursorPos(cursorPos.x + ImGui.calcTextSize(lengthPath).x, cursorPos.y);
-
-                            ImGui.image(Icons.PLUS.getGlId(), 16, 16);
+                            float fontSize = CubeCodeConfig.getFontSize();
+                            ImGui.image(Icons.PLUS.getGlId(), fontSize, fontSize);
                         }
                     }
                 };
@@ -556,12 +557,13 @@ public class CubeCodeIDEView extends View {
     }
 
     private void runContextMenu() {
+        float fontSize = CubeCodeConfig.getFontSize();
         if (ImGui.beginPopup("file_context_menu")) {
             if (this.preSelectedNode == null || this.preSelectedNode.getType() != NodeType.SCRIPT) {
-                CubeImGui.menu(Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.create").getString(), Icons.HAMMER, 16, 16, () -> {
+                CubeImGui.menu(Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.create").getString(), Icons.HAMMER, fontSize, fontSize, () -> {
                     CubeImGui.menuItem(Text.translatable(
                             "imgui.cubecode.windows.CubeCodeIDE.context_menu.create.folder").getString(), Icons.FOLDER,
-                            16, 16,
+                            fontSize, fontSize,
                             this::actionCreateFolder
                     );
 
@@ -569,7 +571,7 @@ public class CubeCodeIDEView extends View {
 
                     CubeImGui.menuItem(
                             Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.create.script").getString(), Icons.JS,
-                            16, 16,
+                            fontSize, fontSize,
                             this::actionCreateScript
                     );
 
@@ -584,7 +586,7 @@ public class CubeCodeIDEView extends View {
             if (this.preSelectedNode == null) {
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.paste"), Icons.PASTE,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "Ctrl + V",
                         this::actionModulePaste
@@ -595,7 +597,7 @@ public class CubeCodeIDEView extends View {
             if (this.preSelectedNode != null) {
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.cut"), Icons.CUT,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "Ctrl + X",
                         this::actionCut
@@ -603,7 +605,7 @@ public class CubeCodeIDEView extends View {
 
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.copy"), Icons.COPY,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "Ctrl + C",
                         this::actionSave
@@ -612,7 +614,7 @@ public class CubeCodeIDEView extends View {
                 if (this.preSelectedNode != null && this.preSelectedNode.getType() != NodeType.SCRIPT) {
                     CubeImGui.menuItemAndTooltip(
                             Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.paste"), Icons.PASTE,
-                            16, 16,
+                            fontSize, fontSize,
                             128, 128, 128, 255,
                             "Ctrl + V",
                             this::actionPaste
@@ -623,7 +625,7 @@ public class CubeCodeIDEView extends View {
 
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.delete"), Icons.DELETE,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "Delete",
                         this::actionDelete
@@ -631,7 +633,7 @@ public class CubeCodeIDEView extends View {
 
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.rename"), Icons.EDIT,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "Ctrl + R",
                         this::actionRename
@@ -642,7 +644,7 @@ public class CubeCodeIDEView extends View {
                 if (this.preSelectedNode != null && this.preSelectedNode.getType() == NodeType.SCRIPT) {
                     CubeImGui.menuItemAndTooltip(
                             Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.changeType"), Icons.RESET,
-                            16, 16,
+                            fontSize, fontSize,
                             128, 128, 128, 255,
                             "",
                             this::actionChangeSide
@@ -651,7 +653,7 @@ public class CubeCodeIDEView extends View {
 
                 CubeImGui.menuItemAndTooltip(
                         Text.translatable("imgui.cubecode.windows.CubeCodeIDE.context_menu.openInExplorer"), Icons.SEARCH,
-                        16, 16,
+                        fontSize, fontSize,
                         128, 128, 128, 255,
                         "",
                         this::actionOpenExplorer

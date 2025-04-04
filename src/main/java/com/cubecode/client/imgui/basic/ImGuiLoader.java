@@ -1,6 +1,7 @@
 package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
+import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.themes.CubeTheme;
 import imgui.*;
 import imgui.flag.ImGuiBackendFlags;
@@ -146,7 +147,7 @@ public class ImGuiLoader {
         }
 
         ImFont font = CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName);
-
+        ImGui.getIO().setFontGlobalScale(Math.max(0.1F, Math.min(CubeCodeConfig.getFontSize() / 64, 2.0F)));
         if (font == null) {
             font = CubeCodeClient.fontManager.fonts.get("minecraft");
         }
