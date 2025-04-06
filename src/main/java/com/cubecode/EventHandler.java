@@ -7,11 +7,10 @@ import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.api.scripts.code.blocks.ScriptBlockEntity;
 import com.cubecode.api.scripts.code.entities.ScriptPlayer;
 import com.cubecode.content.CubeCodeCommand;
-import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
+import com.cubecode.scripting.ScriptExecutor;
+import com.cubecode.scripting.ScriptManager;
 import com.cubecode.state.PlayerState;
 import com.cubecode.state.ServerState;
-import com.cubecode.api.scripts.Script;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -43,8 +42,7 @@ public class EventHandler {
                 CubeCode.LOGGER.info(String.format("#### Creating a mod directory %s for the world. ####", CubeCode.MOD_ID));
             }
 
-            CubeCode.settingManager = new SettingManager(new File(CubeCode.cubeCodeDirectory, "project"));
-            CubeCode.projectManager = new ProjectManager(new File(CubeCode.cubeCodeDirectory, "project"));
+            CubeCode.scriptManager = new ScriptManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.loggerManager = new LoggerManager(new File(CubeCode.cubeCodeDirectory, "project"));
             CubeCode.scriptExecutor = new ScriptExecutor();
 
@@ -73,9 +71,9 @@ public class EventHandler {
 
             serverState.events = EventManager.cubeEventsToNbtList(events);
 
-            List<Script> scripts = new ArrayList<>(CubeCode.projectManager.getClientScripts());
+            //List<Script> scripts = new ArrayList<>(CubeCode.projectManager.getClientScripts());
 
-            Dispatcher.sendTo(new SynchronizedClientScriptsPacket(scripts), handler.player);
+            //Dispatcher.sendTo(new SynchronizedClientScriptsPacket(scripts), handler.player);
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> CubeCode.eventManager.trigger("server_started", null, null, null, server));

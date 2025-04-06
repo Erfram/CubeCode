@@ -1,4 +1,4 @@
-package com.cubecode.api.scripts;
+package com.cubecode.scripting;
 
 import dev.latvian.mods.rhino.Context;
 import dev.latvian.mods.rhino.Scriptable;

@@ -3,7 +3,6 @@ package com.cubecode.api.scripts.code.entities;
 import com.cubecode.api.scripts.code.items.ScriptInventory;
 import com.cubecode.api.scripts.code.nbt.ScriptNbtCompound;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.all.RunScriptPacket;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
@@ -256,7 +255,7 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
      * }</pre>
      */
     public void sendTo(String scriptName) {
-        Dispatcher.sendTo(new RunScriptPacket(scriptName, new NbtCompound()), this.entity);
+        //Dispatcher.sendTo(new RunScriptPacket(scriptName, new NbtCompound()), this.entity);
     }
 
     /**
@@ -284,7 +283,7 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
      * }</pre>
      */
     public void sendTo(String scriptName, ScriptNbtCompound nbt) {
-        Dispatcher.sendTo(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()), this.entity);
+        //Dispatcher.sendTo(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()), this.entity);
     }
 
     /**
@@ -310,7 +309,7 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
      * }</pre>
      */
     public void sendTo(String script, String function) {
-        Dispatcher.sendTo(new RunScriptPacket(script, function, new NbtCompound()), this.entity);
+        //Dispatcher.sendTo(new RunScriptPacket(script, function, new NbtCompound()), this.entity);
     }
 
     /**
@@ -338,6 +337,6 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
      * }</pre>
      */
     public void sendTo(String script, String function, ScriptNbtCompound nbt) {
-        Dispatcher.sendTo(new RunScriptPacket(script, function, nbt.getMinecraftNbtCompound()), this.entity);
+        //Dispatcher.sendTo(new RunScriptPacket(script, function, nbt.getMinecraftNbtCompound()), this.entity);
     }
 }

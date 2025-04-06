@@ -15,9 +15,6 @@ import com.cubecode.client.views.ide.utils.ScriptDefinition;
 import com.cubecode.client.views.ide.utils.ToolItem;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.client.views.ide.ScopeView;
-import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.all.SynchronizedClientScriptsPacket;
-import com.cubecode.network.packets.server.*;
 import com.cubecode.utils.*;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
@@ -474,11 +471,9 @@ public class CubeCodeIDEView extends View {
                     if (!scriptName.equals(((ScriptNode)this.selectedNode).getScript().getName())) {
                         if (ImGui.selectable(scriptName)) {
                             if (serverScript.hasLibraryScript(scriptName)) {
-                                CubeCodeClient.projectManager.removeLibraryScript(serverScript.getName(), scriptName);
-                                Dispatcher.sendToServer(new RemoveLibraryC2SPacket(((ScriptNode)this.selectedNode), scriptName));
+                               // CubeCodeClient.projectManager.removeLibraryScript(serverScript.getName(), scriptName);
                             } else {
-                                CubeCodeClient.projectManager.addLibraryScript(serverScript.getName(), scriptName);
-                                Dispatcher.sendToServer(new AddLibraryC2SPacket(((ScriptNode)this.selectedNode), scriptName));
+                               // CubeCodeClient.projectManager.addLibraryScript(serverScript.getName(), scriptName);
                             }
 
                             if (((ScriptNode)this.selectedNode).getScript().hasLibraryScript(scriptName)) {
@@ -521,8 +516,6 @@ public class CubeCodeIDEView extends View {
                 }
             }
 
-            Dispatcher.sendToServer(new SaveScriptC2SPacket((ScriptNode) this.selectedNode));
-
             List<Script> clientScripts = new ArrayList<>();
 
             for (IdeaNode node : this.nodes) {
@@ -538,12 +531,10 @@ public class CubeCodeIDEView extends View {
             List<Script> scripts = new ArrayList<>();
 
             for (Script script : clientScripts) {
-                scripts.add(new Script(script.getName(), script.getCode(), ScriptType.CLIENT, script.getLibraries()));
+                scripts.add(new Script(script.getUUID(), script.getName(), script.getCode(), ScriptType.CLIENT, script.getLibraries()));
             }
 
-            CubeCodeClient.projectManager.setScripts(scripts);
-
-            Dispatcher.sendToServer(new SynchronizedClientScriptsPacket(clientScripts));
+            //CubeCodeClient.projectManager.setScripts(scripts);
         }
     }
 
@@ -687,7 +678,7 @@ public class CubeCodeIDEView extends View {
             }
 
             if (!NodeUtils.hasNodeByPathIgnoreCase(this.nodes, path)) {
-                Dispatcher.sendToServer(new InsertElementC2SPacket(this.saveNode, ""));
+                //Dispatcher.sendToServer(new InsertElementC2SPacket(this.saveNode, ""));
             }
         }
     }
@@ -721,7 +712,7 @@ public class CubeCodeIDEView extends View {
             }
 
             if (isSendPacket) {
-                Dispatcher.sendToServer(new InsertElementC2SPacket(this.saveNode, folderNode.getPath()));
+                //Dispatcher.sendToServer(new InsertElementC2SPacket(this.saveNode, folderNode.getPath()));
             }
         }
     }
@@ -757,9 +748,9 @@ public class CubeCodeIDEView extends View {
             }
         }
 
-        CubeCodeClient.projectManager.setScriptSide(((ScriptNode)this.preSelectedNode).getScript().getName(), side);
+        //CubeCodeClient.projectManager.setScriptSide(((ScriptNode)this.preSelectedNode).getScript().getName(), side);
 
-        Dispatcher.sendToServer(new ChangeSideScriptC2SPacket((ScriptNode) this.preSelectedNode, side));
+        //Dispatcher.sendToServer(new ChangeSideScriptC2SPacket((ScriptNode) this.preSelectedNode, side));
     }
 
     private void actionOpenExplorer() {
@@ -776,7 +767,7 @@ public class CubeCodeIDEView extends View {
                 this.saveContentScript();
                 ScriptNode scriptNode = (ScriptNode) this.selectedNode;
                 if (scriptNode.getScript().getSide() == ScriptType.SERVER) {
-                    Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getScript()));
+                    //Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getScript()));
                 } else {
                     ClientProperties properties = ClientProperties.create(
                             scriptNode.getScript().getName(),
@@ -803,7 +794,7 @@ public class CubeCodeIDEView extends View {
             String path = this.preSelectedNode.getPath();
             String parent = path.substring(0, path.lastIndexOf("/"));
 
-            Dispatcher.sendToServer(new DeleteElementC2SPacket(path, this.preSelectedNode.getType()));
+            //Dispatcher.sendToServer(new DeleteElementC2SPacket(path, this.preSelectedNode.getType()));
 
             for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
                 IdeaNode nodeByPath = NodeUtils.findNodeByPath(view.nodes, parent);

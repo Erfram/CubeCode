@@ -1,9 +1,8 @@
 package com.cubecode;
 
-import com.cubecode.api.scripts.ScriptExecutor;
+import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.image.ImageManager;
-import com.cubecode.client.scripts.ClientProjectManager;
 import com.cubecode.utils.Icons;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +24,6 @@ public class EventHandlerClient {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             //CubeCodeClient.windowStateManager = new WindowStateManager();
 
-            CubeCodeClient.projectManager = new ClientProjectManager();
             CubeCodeClient.scriptExecutor = new ScriptExecutor();
             CubeCodeClient.imageManager = new ImageManager();
         });

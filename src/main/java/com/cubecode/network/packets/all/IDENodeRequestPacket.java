@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class IDERequestedPacket extends AbstractPacket {
+public class IDENodeRequestPacket extends AbstractPacket {
     public List<IdeaNode> nodes = new ArrayList<>();
 
-    public IDERequestedPacket() {}
+    public IDENodeRequestPacket() {}
 
-    public IDERequestedPacket(List<IdeaNode> nodes) {
+    public IDENodeRequestPacket(List<IdeaNode> nodes) {
         this.nodes = nodes;
     }
 
@@ -46,16 +46,16 @@ public class IDERequestedPacket extends AbstractPacket {
         return new Identifier("cubecode", "idea_requested_packet");
     }
 
-    public static class ServerHandler implements ServerPacketHandler<IDERequestedPacket>  {
+    public static class ServerHandler implements ServerPacketHandler<IDENodeRequestPacket>  {
         @Override
-        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, IDERequestedPacket packet) {
-            Dispatcher.sendTo(new IDERequestedPacket(CubeCode.projectManager.getNodes()), player);
+        public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, IDENodeRequestPacket packet) {
+            Dispatcher.sendTo(new IDENodeRequestPacket(CubeCode.scriptManager.getNodes()), player);
         }
     }
 
-    public static class ClientHandler implements ClientPacketHandler<IDERequestedPacket> {
+    public static class ClientHandler implements ClientPacketHandler<IDENodeRequestPacket> {
         @Override
-        public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, IDERequestedPacket packet) {
+        public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, IDENodeRequestPacket packet) {
             ImGuiLoader.pushView(new CubeCodeIDEView(new CopyOnWriteArrayList<>(packet.nodes)));
         }
     }

@@ -1,6 +1,6 @@
 package com.cubecode.api.scripts;
 
-import com.cubecode.utils.DirectoryManager;
+import com.cubecode.utils.manager.DirectoryManager;
 
 import java.io.File;
 import java.io.IOException;

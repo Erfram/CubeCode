@@ -2,14 +2,13 @@ package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
 import com.cubecode.client.config.CubeCodeConfig;
-import com.cubecode.client.views.DashboardView;
 import com.cubecode.client.views.EventsView;
 import com.cubecode.client.views.SettingsView;
 import com.cubecode.client.views.StatesView;
 import com.cubecode.client.views.ide.core.CubeCodeIDEView;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
-import com.cubecode.network.packets.all.IDERequestedPacket;
+import com.cubecode.network.packets.all.IDENodeRequestPacket;
 import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.GsonManager;
@@ -32,7 +31,7 @@ public class ViewDataManager {
     public File fileDataViews = CubeCodeConfig.configDir.resolve("data_views.json").toFile();
 
     public ViewDataManager() {
-        this.viewsRunnable.put(CubeCodeIDEView.class, () -> Dispatcher.sendToServer(new IDERequestedPacket()));
+        this.viewsRunnable.put(CubeCodeIDEView.class, () -> Dispatcher.sendToServer(new IDENodeRequestPacket()));
         this.viewsRunnable.put(EventsView.class, () -> Dispatcher.sendToServer(new EventsRequestedPacket()));
         this.viewsRunnable.put(StatesView.class, () -> Dispatcher.sendToServer(new StatesRequestedPacket()));
         this.viewsRunnable.put(SettingsView.class, () -> ImGuiLoader.pushView(new SettingsView()));

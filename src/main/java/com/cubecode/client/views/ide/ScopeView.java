@@ -3,7 +3,6 @@ package com.cubecode.client.views.ide;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.server.RequestScriptScopeC2SPacket;
 import com.cubecode.api.scripts.Script;
 import imgui.ImGui;
 import net.minecraft.nbt.NbtCompound;
@@ -28,7 +27,7 @@ public class ScopeView extends View {
     }
 
     public void updateScope() {
-        Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(this.script));
+        //Dispatcher.sendToServer(new RequestScriptScopeC2SPacket(this.script));
     }
 
     @Override

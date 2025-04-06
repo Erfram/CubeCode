@@ -2,7 +2,7 @@ package com.cubecode.network.packets.all;
 
 import com.cubecode.CubeCode;
 import com.cubecode.CubeCodeClient;
-import com.cubecode.api.scripts.ScriptExecutor;
+import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
@@ -19,17 +19,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class CreateScriptPacket extends AbstractPacket {
+    String scriptUUID;
     String scriptName;
     String scriptPath;
     ScriptType scriptType;
 
-    public CreateScriptPacket(String scriptName, String scriptPath, ScriptType scriptType) {
+    public CreateScriptPacket(String UUID, String scriptName, String scriptPath, ScriptType scriptType) {
         this.scriptName = scriptName;
         this.scriptPath = scriptPath;
         this.scriptType = scriptType;
     }
 
-    public CreateScriptPacket(String scriptName, String scriptPath) {
+    public CreateScriptPacket(String UUID, String scriptName, String scriptPath) {
         this.scriptName = scriptName;
         this.scriptPath = scriptPath;
         this.scriptType = ScriptType.CLIENT;
@@ -62,12 +63,14 @@ public class CreateScriptPacket extends AbstractPacket {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, CreateScriptPacket packet) {
             String code = packet.scriptType == ScriptType.SERVER ? ScriptExecutor.DEFAULT_SCRIPT : ScriptExecutor.DEFAULT_CLIENT_SCRIPT;
-
-            CubeCode.projectManager.createTxtFile(packet.scriptName, packet.scriptPath, code);
-            CubeCode.settingManager.addScript(packet.scriptName, packet.scriptType);
+            Script script = CubeCode.scriptManager.getScript(packet.scriptUUID);
+            script.setCode(code);
+            script.setSide(packet.scriptType);
+            script.setPath(packet.scriptPath);
+            CubeCode.scriptManager.saveScript(script);
 
             if (packet.scriptType == ScriptType.CLIENT) {
-                Dispatcher.sendToAll(new CreateScriptPacket(packet.scriptName, packet.scriptPath), server);
+                Dispatcher.sendToAll(new CreateScriptPacket(packet.scriptUUID, packet.scriptName, packet.scriptPath), server);
             }
         }
     }
@@ -75,7 +78,7 @@ public class CreateScriptPacket extends AbstractPacket {
     public static class ClientHandler implements ClientPacketHandler<CreateScriptPacket> {
         @Override
         public void run(MinecraftClient client, ClientPlayNetworkHandler handler, PacketSender responseSender, CreateScriptPacket packet) {
-            CubeCodeClient.projectManager.createScript(new Script(packet.scriptPath, ScriptExecutor.DEFAULT_CLIENT_SCRIPT, ScriptType.CLIENT));
+            //CubeCode.scriptManager.createScript(new Script(packet.scriptUUID, packet.scriptPath, ScriptExecutor.DEFAULT_CLIENT_SCRIPT, ScriptType.CLIENT));
         }
     }
 }

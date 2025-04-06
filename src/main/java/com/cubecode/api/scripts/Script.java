@@ -1,6 +1,8 @@
 package com.cubecode.api.scripts;
 
 import com.cubecode.CubeCode;
+import com.cubecode.scripting.ScriptExecutor;
+import com.cubecode.scripting.ScriptScope;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.utils.ScriptType;
 import dev.latvian.mods.rhino.Context;
@@ -9,33 +11,36 @@ import dev.latvian.mods.rhino.RhinoException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static com.cubecode.CubeCode.projectManager;
 import static com.cubecode.CubeCode.scriptExecutor;
+import static com.cubecode.CubeCode.scriptManager;
 
 public class Script {
-
+    private String UUID;
     private String name;
     private String code;
     private ScriptType side;
     private List<String> libraries;
     private Context context;
     private ScriptScope scope;
-    private int lastLaunchErrorLine = 0;
+    private int lastLaunchErrorLine = -1;
     private String lastLaunchErrorMessage = "";
+    private String path;
 
-    public Script(String name, String code, ScriptType side, List<String> libraries) {
-        this.name = name;
-        this.code = code;
-        this.side = side;
-        this.libraries = libraries;
+    public Script(String UUID, String name, String code, ScriptType side, List<String> libraries) {
+        this.setUUID(UUID);
+        this.setName(name);
+        this.setCode(code);
+        this.setSide(side);
+        this.setLibraries(libraries);
     }
 
-    public Script(String name, String code, ScriptType side) {
-        this(name, code, side, new ArrayList<>());
+    public Script(String UUID, String name, String code, ScriptType side) {
+        this(UUID, name, code, side, new ArrayList<>());
     }
 
+
+    //region Getter's and Setter's
     public String getName() {
         return name;
     }
@@ -63,6 +68,49 @@ public class Script {
     public void setSide(ScriptType side) {
         this.side = side;
     }
+
+    public String getUUID() {
+        return this.UUID;
+    }
+
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
+
+    public ScriptScope getScope() {
+        return this.scope;
+    }
+
+    public Context getContext() {
+        return this.context;
+    }
+
+
+    public int getLastLaunchErrorLine() {
+        return lastLaunchErrorLine;
+    }
+
+    public void setLastLaunchErrorLine(int lastLaunchErrorLine) {
+        this.lastLaunchErrorLine = lastLaunchErrorLine;
+    }
+
+    public void setLastLaunchErrorMessage(String errorMessage) {
+        this.lastLaunchErrorMessage = errorMessage;
+    }
+
+    public String getLastLaunchErrorMessage() {
+        return this.lastLaunchErrorMessage;
+    }
+
+    public String getPath() {
+        return this.path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    //endregion
 
     public void setLibraries(List<String> libraries) {
         this.libraries = libraries;
@@ -128,13 +176,6 @@ public class Script {
         throw new CubeCodeException(errorMessage, sourceName);
     }
 
-    public void setLastLaunchErrorMessage(String errorMessage) {
-        this.lastLaunchErrorMessage = errorMessage;
-    }
-
-    public String getLastLaunchErrorMessage() {
-        return this.lastLaunchErrorMessage;
-    }
 
     public void prepare() {
         this.context = Context.enter();
@@ -160,7 +201,7 @@ public class Script {
         ScriptScope libraryScope = new ScriptScope(this.name + "_lib", this.context);
         libraryScope.setParentScope(ScriptExecutor.globalScope);
         for (String library : this.libraries) {
-            Script script = projectManager.getScript(library);
+            Script script = scriptManager.getScript(library);
             if (script != null) {
                 script.evaluate(this.context, libraryScope,  script.getCode(), sourceName);
             }
@@ -169,30 +210,5 @@ public class Script {
             }
         }
         this.scope.setParentScope(libraryScope);
-    }
-
-    public ScriptScope getScope() {
-        return this.scope;
-    }
-
-    public Context getContext() {
-        return this.context;
-    }
-
-    public void setScope(ScriptScope scope) {
-        this.scope = scope;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-
-    public int getLastLaunchErrorLine() {
-        return lastLaunchErrorLine;
-    }
-
-    public void setLastLaunchErrorLine(int lastLaunchErrorLine) {
-        this.lastLaunchErrorLine = lastLaunchErrorLine;
     }
 }

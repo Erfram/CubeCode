@@ -30,7 +30,7 @@ public final class CubeCodeCommand {
 
         Properties properties = CubeCodeCommand.createProperties(scriptName, "main", context);
 
-        Script script = CubeCode.projectManager.getScript(scriptName);
+        Script script = CubeCode.scriptManager.getScript(scriptName);
 
         try {
             script.run(function.isEmpty() ? "main" : function, scriptName, properties);

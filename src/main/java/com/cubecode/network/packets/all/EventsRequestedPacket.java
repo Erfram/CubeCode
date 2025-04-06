@@ -62,7 +62,7 @@ public class EventsRequestedPacket extends AbstractPacket {
         if (buf.readBoolean()) {
             this.events = (NbtList) buf.readNbt(NbtSizeTracker.ofUnlimitedBytes());
         }
-        this.scripts = buf.readList(PacketByteBufUtils::readScript);
+        //this.scripts = buf.readList(PacketByteBufUtils::readScript);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class EventsRequestedPacket extends AbstractPacket {
             Dispatcher.sendTo(new EventsRequestedPacket(
                     ServerState.getServerState(server).events,
                     EventManager.cubeEventsToNbtList(CubeCode.eventManager.events),
-                    CubeCode.projectManager.getScripts()
+                    CubeCode.scriptManager.getScripts()
             ), player);
         }
     }

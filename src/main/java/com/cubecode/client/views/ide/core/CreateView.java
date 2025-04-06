@@ -1,13 +1,12 @@
 package com.cubecode.client.views.ide.core;
 
 import com.cubecode.api.scripts.Script;
-import com.cubecode.api.scripts.ScriptExecutor;
+import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.server.CreateFolderC2SPacket;
 import com.cubecode.network.packets.all.CreateScriptPacket;
 import com.cubecode.utils.ScriptType;
 import imgui.ImGui;
@@ -17,6 +16,7 @@ import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class CreateView extends View {
@@ -98,13 +98,14 @@ public class CreateView extends View {
     }
 
     private void createScript() {
+        String uuid = UUID.randomUUID().toString();
         String name = ((ImString) this.getVariable("##name"+this.getUniqueID())).get();
 
         if (name.isEmpty() || name.length() > 255 || !VALID_FILENAME_PATTERN.matcher(name).matches())
             return;
 
         if (this.type == NodeType.SCRIPT) {
-            name = name.endsWith(".js") ? name : name + ".js";
+            name = name.endsWith(".script") ? name : name + ".script";
         }
 
         for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
@@ -131,7 +132,7 @@ public class CreateView extends View {
 
             } else {
                 ScriptNode scriptNode = new ScriptNode(
-                    new Script(name,
+                    new Script(uuid, name,
                         this.side == ScriptType.SERVER ? ScriptExecutor.DEFAULT_SCRIPT : ScriptExecutor.DEFAULT_CLIENT_SCRIPT,
                         this.side
                     )
@@ -153,6 +154,5 @@ public class CreateView extends View {
 
         String path = folderNode == null ? "/" : folderNode.getPath();
 
-        Dispatcher.sendToServer(this.type == NodeType.FOLDER ? new CreateFolderC2SPacket(name, path) : new CreateScriptPacket(name, path, this.side));
     }
 }

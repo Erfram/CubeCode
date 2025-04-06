@@ -3,7 +3,7 @@ package com.cubecode.api.events;
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.code.ScriptEvent;
-import com.cubecode.utils.DirectoryManager;
+import com.cubecode.utils.manager.DirectoryManager;
 import com.cubecode.utils.GsonManager;
 import com.cubecode.utils.CubeCodeException;
 import com.cubecode.api.scripts.Script;
@@ -53,7 +53,7 @@ public class EventManager extends DirectoryManager {
     }
 
     public void updateEventsFromFile() {
-        GsonManager.writeJSON(this.DIRECTORY, this.events);
+        GsonManager.writeJSON(this.directory, this.events);
     }
 
     public void trigger(String eventName, Entity subject, Entity object, World world, MinecraftServer server) {
@@ -93,7 +93,7 @@ public class EventManager extends DirectoryManager {
 
             newScriptEvent.setValues(scriptEvent.getValues());
 
-            Script script = CubeCode.projectManager.getScript(eventScript.name);
+            Script script = CubeCode.scriptManager.getScript(eventScript.name);
 
             if (script != null) {
                 script.run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
@@ -142,7 +142,7 @@ public class EventManager extends DirectoryManager {
 
     public void register() {
         Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
-        List<CubeEvent> existingEvents = GsonManager.readJSON(this.DIRECTORY, eventListType);
+        List<CubeEvent> existingEvents = GsonManager.readJSON(this.directory, eventListType);
 
         if (existingEvents == null) {
             existingEvents = new ArrayList<>();
@@ -177,12 +177,12 @@ public class EventManager extends DirectoryManager {
             this.registerEvent(event);
         }
 
-        GsonManager.writeJSON(this.DIRECTORY, existingEvents);
+        GsonManager.writeJSON(this.directory, existingEvents);
     }
 
     public void updateEvents() {
         Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
-        List<CubeEvent> existingEvents = GsonManager.readJSON(this.DIRECTORY, eventListType);
+        List<CubeEvent> existingEvents = GsonManager.readJSON(this.directory, eventListType);
 
         if (existingEvents == null) {
             existingEvents = new ArrayList<>();
@@ -217,7 +217,7 @@ public class EventManager extends DirectoryManager {
             this.registerEvent(event);
         }
 
-        GsonManager.writeJSON(this.DIRECTORY, existingEvents);
+        GsonManager.writeJSON(this.directory, existingEvents);
     }
 
     public static List<CubeEvent> nbtListToCubeEvents(NbtList nbtList) {

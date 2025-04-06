@@ -7,7 +7,6 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.server.EventsSyncC2SPacket;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.utils.TextUtils;
 import imgui.ImGui;
@@ -67,7 +66,6 @@ public class EventsView extends View {
     @Override
     public void onClose() {
         GifManager.clear();
-        Dispatcher.sendToServer(new EventsSyncC2SPacket(EventManager.cubeEventsToNbtList(events)));
     }
 
     public void renderEvents() {

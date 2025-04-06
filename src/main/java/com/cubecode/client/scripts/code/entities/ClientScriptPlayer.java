@@ -7,7 +7,6 @@ import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.screens.TestScreen;
 import com.cubecode.client.scripts.code.ui.ClientCubeCodeUI;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.all.RunScriptPacket;
 import com.cubecode.state.PlayerState;
 import com.cubecode.state.ServerState;
 import net.minecraft.client.MinecraftClient;
@@ -233,19 +232,19 @@ public class ClientScriptPlayer extends ClientScriptEntity<ClientPlayerEntity> {
     }
 
     public void sendToServer(String scriptName) {
-        Dispatcher.sendToServer(new RunScriptPacket(scriptName, "server", new NbtCompound()));
+        //Dispatcher.sendToServer(new RunScriptPacket(scriptName, "server", new NbtCompound()));
     }
 
     public void sendToServer(String scriptName, String function) {
-        Dispatcher.sendToServer(new RunScriptPacket(scriptName, function, new NbtCompound()));
+        //Dispatcher.sendToServer(new RunScriptPacket(scriptName, function, new NbtCompound()));
     }
 
     public void sendToServer(String scriptName, String function, ScriptNbtCompound nbt) {
-        Dispatcher.sendToServer(new RunScriptPacket(scriptName, function, nbt.getMinecraftNbtCompound()));
+        //Dispatcher.sendToServer(new RunScriptPacket(scriptName, function, nbt.getMinecraftNbtCompound()));
     }
 
     public void sendToServer(String scriptName, ScriptNbtCompound nbt) {
-        Dispatcher.sendToServer(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()));
+        //Dispatcher.sendToServer(new RunScriptPacket(scriptName, nbt.getMinecraftNbtCompound()));
     }
 
     public void setHandRender(boolean handRender) {

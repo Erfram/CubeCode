@@ -1,4 +1,4 @@
-package com.cubecode.api.scripts;
+package com.cubecode.scripting;
 
 import com.cubecode.api.scripts.code.JavaUtils;
 import com.cubecode.api.scripts.code.ScriptFactory;
@@ -23,7 +23,7 @@ public class ScriptExecutor {
     public ScriptExecutor() {
 
         globalContext.setRemapper(remapper);
-        globalContext.setApplicationClassLoader(ProjectManager.class.getClassLoader());
+        globalContext.setApplicationClassLoader(ScriptManager.class.getClassLoader());
         globalContext.setMaximumInterpreterStackDepth(500);
         globalScope.setParentScope(globalContext.initStandardObjects());
 
@@ -45,7 +45,7 @@ public class ScriptExecutor {
         ScriptableObject scope = context.initSafeStandardObjects();
 
         context.setRemapper(remapper);
-        context.setApplicationClassLoader(ProjectManager.class.getClassLoader());
+        context.setApplicationClassLoader(ScriptManager.class.getClassLoader());
 
         if (properties != null) {
             for (Map.Entry<String, Object> property : properties.entrySet()) {

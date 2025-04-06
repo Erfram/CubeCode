@@ -10,7 +10,7 @@ public class ScriptNode implements IdeaNode {
     public ScriptNode(Script script) {
         this.name = script.getName();
         this.script = script;
-        this.path = "/" + script.getName();
+        this.path = "/" + script.getPath();
     }
 
     public ScriptNode(Script script, String path) {
@@ -54,7 +54,7 @@ public class ScriptNode implements IdeaNode {
 
     @Override
     public IdeaNode copy() {
-        return new ScriptNode(new Script(this.script.getName(), this.script.getCode(), this.script.getSide()), this.path);
+        return new ScriptNode(new Script(this.script.getUUID(), this.script.getName(), this.script.getCode(), this.script.getSide()), this.path);
     }
 
     public Script getScript() {

@@ -1,7 +1,7 @@
 package com.cubecode.client.image;
 
 import com.cubecode.CubeCodeClient;
-import com.cubecode.utils.DirectoryManager;
+import com.cubecode.utils.manager.DirectoryManager;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
@@ -22,7 +22,7 @@ public class ImageManager extends DirectoryManager {
     public ImageManager() {
         super(CubeCodeClient.imageDir);
 
-        this.registerImages(this.DIRECTORY);
+        this.registerImages(this.directory);
     }
 
     public int getImage(String path) {

@@ -19,15 +19,6 @@ public class PacketByteBufUtils {
         buf.writeString(script.getLastLaunchErrorMessage());
     }
 
-    public static Script readScript(PacketByteBuf buf) {
-        Script script = new Script(buf.readString(), buf.readString(), ScriptType.SERVER);
-        script.setLibraries(buf.readCollection(ArrayList::new, PacketByteBuf::readString));
-        script.setLastLaunchErrorLine(buf.readInt());
-        script.setLastLaunchErrorMessage(buf.readString());
-
-        return script;
-    }
-
     public static void writeIdeaNode(PacketByteBuf buf, IdeaNode node) {
         buf.writeString(node.getName());
         buf.writeString(node.getPath());
@@ -60,8 +51,8 @@ public class PacketByteBufUtils {
             folderNode.setPath(path);
             return folderNode;
         } else if (type == NodeType.SCRIPT) {
-            Script script = readScript(buf);
-            return new ScriptNode(name, script, path);
+            // Script script = readScript(buf);
+            //return new ScriptNode(name, script, path);
         }
         return null;
     }

@@ -7,7 +7,6 @@ import com.cubecode.client.imgui.components.InputText;
 import com.cubecode.client.imgui.components.Window;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.network.Dispatcher;
-import com.cubecode.network.packets.server.RenameElementC2SPacket;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiWindowFlags;
@@ -72,7 +71,7 @@ public class RenameView extends View {
                                 for (CubeCodeIDEView view : ImGuiLoader.getViews(CubeCodeIDEView.class)) {
                                     if (!NodeUtils.hasNodeByPathIgnoreCase(view.nodes, copyNode.getPath())) {
                                         if (isSendToServer) {
-                                            Dispatcher.sendToServer(new RenameElementC2SPacket(ideaNode.getPath(), name, ideaNode.getType()));
+                                            //Dispatcher.sendToServer(new RenameElementC2SPacket(ideaNode.getPath(), name, ideaNode.getType()));
                                         }
 
                                         isSendToServer = false;

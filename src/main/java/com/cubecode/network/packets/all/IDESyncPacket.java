@@ -52,7 +52,7 @@ public class IDESyncPacket extends AbstractPacket {
     public static class ServerHandler implements ServerPacketHandler<IDESyncPacket> {
         @Override
         public void run(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketSender responseSender, IDESyncPacket packet) {
-            Dispatcher.sendTo(new IDESyncPacket(CubeCode.projectManager.getNodes()), player);
+            Dispatcher.sendTo(new IDESyncPacket(CubeCode.scriptManager.getNodes()), player);
         }
     }
 

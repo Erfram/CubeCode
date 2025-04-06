@@ -1,11 +1,7 @@
 package com.cubecode.api.scripts.code;
 
-import com.cubecode.api.scripts.ScriptScope;
+import com.cubecode.scripting.ScriptScope;
 import dev.latvian.mods.rhino.*;
-import net.minecraft.client.option.GameOptions;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 
 public class JavaUtils {
     private final Context cx;
