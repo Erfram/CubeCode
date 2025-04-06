@@ -36,7 +36,7 @@ public class DashboardView extends View {
                     Dispatcher.sendToServer(new EventsRequestedPacket());
                 });
 
-                CubeImGui.menuItem("States", () -> {
+                CubeImGui.menuItem("States \ueb67", () -> {
                     Dispatcher.sendToServer(new StatesRequestedPacket());
                 });
             });
@@ -47,15 +47,13 @@ public class DashboardView extends View {
                 });
             });
 
-            float windowWidth = ImGui.getWindowWidth();
-            float menuBarHeight = ImGui.getFrameHeight();
+            CubeImGui.menu("Dev", () -> {
+                ImGuiLoader.pushView(new DevView());
+            });
 
-            float iconSize = menuBarHeight - 4;
-            float iconPosX = windowWidth - iconSize - 10;
+            ImGui.sameLine(ImGui.getWindowWidth() - ImGui.getFontSize() * 5.5f);
 
-            ImGui.setCursorPosX(iconPosX);
-
-            CubeImGui.imageButton(Icons.SAVE, Text.translatable("imgui.cubecode.dashboard.saveWindows.title").getString(), 16, 16, () -> {
+            CubeImGui.imageButton(Icons.SAVE, Text.translatable("imgui.cubecode.dashboard.saveWindows.title").getString(), ImGui.getFontSize(), ImGui.getFontSize(), () -> {
                 CubeCodeClient.viewDataManager.clearViewsData();
 
                 for (View view : ImGuiLoader.getViews()) {
@@ -73,15 +71,15 @@ public class DashboardView extends View {
                 }
             });
 
-            ImGui.setCursorPosX(iconPosX - 32);
+            ImGui.sameLine();
 
-            CubeImGui.imageButton(Icons.LLAMA, Text.translatable("imgui.cubecode.dashboard.support.title").getString(), 16, 16, () -> {
+            CubeImGui.imageButton(Icons.LLAMA, Text.translatable("imgui.cubecode.dashboard.support.title").getString(), ImGui.getFontSize(), ImGui.getFontSize(), () -> {
                 Util.getOperatingSystem().open("https://boosty.to/jenyuyhj");
             });
 
-            ImGui.setCursorPosX(iconPosX - 64);
+            ImGui.sameLine();
 
-            CubeImGui.imageButton(Icons.DISCORD, Text.translatable("imgui.cubecode.dashboard.discord.title").getString(), 16, 16, () -> {
+            CubeImGui.imageButton(Icons.DISCORD, Text.translatable("imgui.cubecode.dashboard.discord.title").getString(), ImGui.getFontSize(), ImGui.getFontSize(), () -> {
                 Util.getOperatingSystem().open("https://discord.gg/wjYnZGSKjT");
             });
         });

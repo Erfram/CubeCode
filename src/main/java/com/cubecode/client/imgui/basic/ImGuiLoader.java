@@ -149,7 +149,7 @@ public class ImGuiLoader {
         ImFont font = CubeCodeClient.fontManager.fonts.get(CubeCodeClient.fontManager.currentFontName);
         ImGui.getIO().setFontGlobalScale(Math.max(0.1F, Math.min(CubeCodeConfig.getFontSize() / 64, 2.0F)));
         if (font == null) {
-            font = CubeCodeClient.fontManager.fonts.get("minecraft");
+            font = CubeCodeClient.fontManager.fonts.get("Monocraft");
         }
 
         ImGui.pushFont(font);

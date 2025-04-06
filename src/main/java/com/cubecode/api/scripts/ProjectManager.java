@@ -85,21 +85,29 @@ public class ProjectManager extends DirectoryManager {
                 String scriptContent = this.readFileToString(file.getPath());
                 String side = "SERVER";
                 List<String> libraries = new ArrayList<>();
+                int lastLaunchErrorLine = 0;
+                String lastLaunchErrorMessage = "";
 
                 if (!this.isValidSetting(scriptPath)) {
                     JsonObject setting = new JsonObject();
                     setting.addProperty("Side", side);
                     setting.add("Libraries", new JsonArray());
+                    setting.addProperty("LastLaunchErrorLine", 0);
+                    setting.addProperty("LastLaunchErrorMessage", "");
                     settingsJson.add(scriptPath, setting);
                 } else {
                     side = settingsJson.getAsJsonObject(scriptPath).get("Side").getAsString();
                     settingsJson.getAsJsonObject(scriptPath).get("Libraries").getAsJsonArray().forEach(jsonElement -> {
                         libraries.add(jsonElement.getAsString());
                     });
+                    lastLaunchErrorLine = settingsJson.getAsJsonObject(scriptPath).get("LastLaunchErrorLine").getAsInt();
+                    lastLaunchErrorMessage = settingsJson.getAsJsonObject(scriptPath).get("LastLaunchErrorMessage").getAsString();
                 }
 
                 Script script = new Script(scriptPath, scriptContent, ScriptType.valueOf(side.toUpperCase()), libraries);
 
+                script.setLastLaunchErrorLine(lastLaunchErrorLine);
+                script.setLastLaunchErrorMessage(lastLaunchErrorMessage);
                 scripts.add(script);
                 nodes.add(new ScriptNode(fileName, script, "/" + scriptPath));
             }
@@ -115,6 +123,8 @@ public class ProjectManager extends DirectoryManager {
                     JsonObject jsonScriptSetting = new JsonObject();
                     jsonScriptSetting.addProperty("Side", ScriptType.SERVER.name());
                     jsonScriptSetting.add("Libraries", new JsonArray());
+                    jsonScriptSetting.addProperty("LastLaunchErrorLine", 0);
+                    jsonScriptSetting.addProperty("LastLaunchErrorMessage", "");
 
                     jsonSetting.add(script.getName(), jsonScriptSetting);
                 }

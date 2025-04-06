@@ -98,7 +98,7 @@ public class DocumentationView extends View {
     }
 
     private void renderSearchChapter() {
-        ImGui.image(Icons.SEARCH.getGlId(), 16, 16);
+        ImGui.image(Icons.SEARCH.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
 
         ImGui.sameLine();
 
