@@ -1,6 +1,7 @@
 package com.cubecode.client.views.ide.core;
 
 import com.cubecode.api.scripts.Script;
+import com.cubecode.network.packets.all.ScriptSaveC2SPacket;
 import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
@@ -137,6 +138,7 @@ public class CreateView extends View {
                         this.side
                     )
                 );
+                Dispatcher.sendToServer(new ScriptSaveC2SPacket(scriptNode.getScript(), scriptNode.getPath()));
 
                 if (folderNode != null) {
                     FolderNode findNode = (FolderNode) NodeUtils.findNodeByPath(view.nodes, folderNode.getPath());

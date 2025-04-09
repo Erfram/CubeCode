@@ -15,17 +15,24 @@ public class Dispatcher {
     private static final AbstractDispatcher DISPATCHER = new AbstractDispatcher() {
         @Override
         public void register() {
+            /* Scripting system */
             this.registerPacket(IDENodeRequestPacket.class, IDENodeRequestPacket.ClientHandler.class, EnvType.CLIENT);
-            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
-            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ClientHandler.class, EnvType.CLIENT);
-            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ClientHandler.class, EnvType.CLIENT);
-            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ClientHandler.class, EnvType.CLIENT);
-
-            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ServerHandler.class, EnvType.SERVER);
-            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ServerHandler.class, EnvType.SERVER);
-            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
-            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ServerHandler.class, EnvType.SERVER);
             this.registerPacket(IDENodeRequestPacket.class, IDENodeRequestPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(IDESyncPacket.class, IDESyncPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(CreateScriptPacket.class, CreateScriptPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(ScriptRunC2SPacket.class, ScriptRunC2SPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(ScriptExecutionResultPacket.class, ScriptExecutionResultPacket.ServerHandler.class, EnvType.SERVER);
+            this.registerPacket(ScriptSaveC2SPacket.class, ScriptSaveC2SPacket.ServerHandler.class, EnvType.SERVER);
+
+            /* Events */
+            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(EventsRequestedPacket.class, EventsRequestedPacket.ServerHandler.class, EnvType.SERVER);
+
+            /* States */
+            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ClientHandler.class, EnvType.CLIENT);
+            this.registerPacket(StatesRequestedPacket.class, StatesRequestedPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 

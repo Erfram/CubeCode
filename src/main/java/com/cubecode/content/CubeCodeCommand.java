@@ -2,6 +2,7 @@ package com.cubecode.content;
 
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.Script;
+import com.cubecode.scripting.ScriptExecutionResult;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
@@ -32,11 +33,9 @@ public final class CubeCodeCommand {
 
         Script script = CubeCode.scriptManager.getScript(scriptName);
 
-        try {
-            script.run(function.isEmpty() ? "main" : function, scriptName, properties);
-        } catch (CubeCodeException exception) {
-            context.getSource().sendError(Text.of(exception.getMessage()));
-        }
+        ScriptExecutionResult result = script.run(function.isEmpty() ? "main" : function, scriptName, properties);
+
+        if (result.error) context.getSource().sendError(Text.of(result.errorMessage));
 
         return Command.SINGLE_SUCCESS;
     }

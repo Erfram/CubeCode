@@ -3,12 +3,15 @@ package com.cubecode;
 import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.client.gifs.GifManager;
 import com.cubecode.client.image.ImageManager;
+import com.cubecode.scripting.ScriptManager;
 import com.cubecode.utils.Icons;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+
+import java.io.File;
 
 @Environment(EnvType.CLIENT)
 public class EventHandlerClient {
@@ -23,6 +26,8 @@ public class EventHandlerClient {
 
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             //CubeCodeClient.windowStateManager = new WindowStateManager();
+
+            CubeCodeClient.scriptManager = new ScriptManager(new File(CubeCodeClient.cubeCodePath.toFile(), "project"));
 
             CubeCodeClient.scriptExecutor = new ScriptExecutor();
             CubeCodeClient.imageManager = new ImageManager();

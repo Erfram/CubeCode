@@ -8,6 +8,7 @@ import com.cubecode.client.imgui.fonts.FontManager;
 import com.cubecode.client.imgui.themes.ThemeManager;
 import com.cubecode.content.CubeCodeKeyBindings;
 import com.cubecode.network.Dispatcher;
+import com.cubecode.scripting.ScriptManager;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -25,6 +26,7 @@ public class CubeCodeClient implements ClientModInitializer {
     public static FontManager fontManager;
     public static ThemeManager themeManager;
     public static ScriptExecutor scriptExecutor;
+    public static ScriptManager scriptManager;
     public static ImageManager imageManager;
     public static ViewDataManager viewDataManager;
 
@@ -32,7 +34,7 @@ public class CubeCodeClient implements ClientModInitializer {
 
     public static Logger LOGGER;
 
-    private static Path cubeCodePath;
+    public static Path cubeCodePath;
 
     static {
         LOGGER = LogUtils.getLogger();

@@ -12,11 +12,27 @@ import java.util.List;
 
 public class PacketByteBufUtils {
     public static void writeScript(PacketByteBuf buf, Script script) {
+        buf.writeString(script.getUUID());
         buf.writeString(script.getName());
         buf.writeString(script.getCode());
+        buf.writeEnumConstant(script.getSide());
         buf.writeCollection(script.getLibraries(), PacketByteBuf::writeString);
         buf.writeInt(script.getLastLaunchErrorLine());
         buf.writeString(script.getLastLaunchErrorMessage());
+    }
+
+    public static Script readScript(PacketByteBuf buf) {
+        String UUID = buf.readString();
+        String name = buf.readString();
+        String code = buf.readString();
+        ScriptType scriptType = buf.readEnumConstant(ScriptType.class);
+        ArrayList<String> libraries = buf.readCollection(ArrayList::new, PacketByteBuf::readString);
+        int lastLaunchErrorLine = buf.readInt();
+        String lastLaunchErrorMessage = buf.readString();
+        Script script = new Script(UUID, name, code, scriptType, libraries);
+        script.setLastLaunchErrorLine(lastLaunchErrorLine);
+        script.setLastLaunchErrorMessage(lastLaunchErrorMessage);
+        return script;
     }
 
     public static void writeIdeaNode(PacketByteBuf buf, IdeaNode node) {
@@ -51,8 +67,8 @@ public class PacketByteBufUtils {
             folderNode.setPath(path);
             return folderNode;
         } else if (type == NodeType.SCRIPT) {
-            // Script script = readScript(buf);
-            //return new ScriptNode(name, script, path);
+            Script script = readScript(buf);
+            return new ScriptNode(name, script, path);
         }
         return null;
     }

@@ -1,6 +1,8 @@
 package com.cubecode.api.scripts;
 
-import com.cubecode.CubeCode;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.ScriptExecutionResultPacket;
+import com.cubecode.scripting.ScriptExecutionResult;
 import com.cubecode.scripting.ScriptExecutor;
 import com.cubecode.scripting.ScriptScope;
 import com.cubecode.utils.CubeCodeException;
@@ -25,7 +27,6 @@ public class Script {
     private ScriptScope scope;
     private int lastLaunchErrorLine = -1;
     private String lastLaunchErrorMessage = "";
-    private String path;
 
     public Script(String UUID, String name, String code, ScriptType side, List<String> libraries) {
         this.setUUID(UUID);
@@ -102,14 +103,6 @@ public class Script {
         return this.lastLaunchErrorMessage;
     }
 
-    public String getPath() {
-        return this.path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
     //endregion
 
     public void setLibraries(List<String> libraries) {
@@ -134,46 +127,44 @@ public class Script {
         this.libraries.remove(scriptName);
     }
 
-    public void run(String sourceName, Properties properties) throws CubeCodeException {
-        this.run(this.side == ScriptType.CLIENT ? "client" : "server", sourceName, properties);
+    public ScriptExecutionResult run(String sourceName, Properties properties)  {
+        return this.run(this.side == ScriptType.CLIENT ? "client" : "server", sourceName, properties);
     }
 
-    public void run(String function, String sourceName, Properties properties) throws CubeCodeException {
+    public ScriptExecutionResult run(String function, String sourceName, Properties properties) {
         this.prepare();
+        ScriptExecutionResult result = new ScriptExecutionResult("");
         try {
             this.evaluateLibraries(sourceName);
             this.evaluate();
-            scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
-//            this.setLastLaunchErrorLine(0);
-//            this.setLastLaunchErrorMessage("");
+            Object invokeResult = scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
+            result.result = invokeResult.toString();
         } catch (Exception e) {
-            this.handleException(sourceName, e);
+            result = this.handleException(sourceName, e);
+        } finally {
+            Dispatcher.sendToServer(new ScriptExecutionResultPacket(result));
+            return result;
         }
     }
 
-    public void handleException(String sourceName, Exception exception) throws CubeCodeException {
-        String errorMessage = "";
-        int errorLine = 0;
+    public ScriptExecutionResult handleException(String sourceName, Exception exception) {
+        String errorMessage;
+        int errorLine = -1;
         if (exception instanceof RhinoException e) {
             String errorType = (e instanceof EvaluatorException) ? "SyntaxError" : "EcmaError";
             String details = e.details().replaceFirst("TypeError: ", "");
             errorLine = e.lineNumber();
-            StringBuilder lines = new StringBuilder();
-            lines.append(" ".repeat(Math.max(0, e.columnNumber() + 6)));
             errorMessage = errorType + ": " + details + "\n" +
                     "Script: " + sourceName + "\n" + "Line: " + e.lineNumber() + ", Column: " + e.columnNumber() + "\n" +
-                    lines + "↓\n" +
-                    //lines + "\\/\n" +
+                    " ".repeat(Math.max(0, e.columnNumber() + 6)) + "↓\n" +
                     "Code: " + this.code.split("\n")[e.lineNumber() - 1].replace("\t", "");
         }
         else {
             errorMessage = exception.getClass().getSimpleName() + ": " + exception.getLocalizedMessage();
         }
-        this.setLastLaunchErrorLine(errorLine);
-        this.setLastLaunchErrorMessage(errorMessage);
-        //TODO: Предлагаю тут сохранять в settings.json
-        CubeCode.loggerManager.error(this.name, errorMessage.replaceAll("\\n", "\n&c"));
-        throw new CubeCodeException(errorMessage, sourceName);
+        ScriptExecutionResult scriptExecutionResult = new ScriptExecutionResult("");
+        scriptExecutionResult.setError(errorLine, errorMessage.replaceAll("\\n", "\n&c"));
+        return scriptExecutionResult;
     }
 
 

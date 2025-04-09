@@ -1,5 +1,6 @@
 package com.cubecode.scripting;
 
+import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Script;
 import com.cubecode.client.views.ide.utils.node.FolderNode;
 import com.cubecode.client.views.ide.utils.node.IdeaNode;
@@ -33,7 +34,6 @@ public class ScriptManager extends DirectoryManager {
                 this.fillNodes(folderNode.getChildren());
             } else if (file.isFile() && file.getName().endsWith(".script")) {
                 Script script = GsonManager.readJSON(file, Script.class);
-                script.setPath(file.getPath());
                 this.scripts.put(script.getUUID(), script);
                 nodes.add(new ScriptNode(script));
             }
@@ -48,16 +48,16 @@ public class ScriptManager extends DirectoryManager {
         this.scripts.put(script.getUUID(), script);
     }
 
-    public void saveScript(Script script) {
-        GsonManager.writeJSON(new File(this.directory, script.getPath()), script);
+    public void saveScript(Script script, String relativePath) {
+        GsonManager.writeJSON(new File(this.directory, relativePath + script.getName()), script);
     }
 
-    public void saveAllScripts() {
-        this.scripts.forEach((uuid, script) -> this.saveScript(script));
+    public Script getScript(String uuid) {
+        return this.scripts.get(uuid);
     }
 
-    public Script getScript(String name) {
-        return this.scripts.get(name);
+    public void putScript(Script script) {
+        this.scripts.put(script.getUUID(), script);
     }
 
     public List<Script> getScripts() {
@@ -66,5 +66,11 @@ public class ScriptManager extends DirectoryManager {
 
     public List<IdeaNode> getNodes() {
         return this.nodes;
+    }
+
+    public void handleScriptExecutionResult(ScriptExecutionResult result) {
+        if (result.error) {
+            CubeCode.loggerManager.error("", result.errorMessage);
+        }
     }
 }

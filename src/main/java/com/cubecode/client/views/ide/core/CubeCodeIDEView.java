@@ -15,6 +15,9 @@ import com.cubecode.client.views.ide.utils.ScriptDefinition;
 import com.cubecode.client.views.ide.utils.ToolItem;
 import com.cubecode.client.views.ide.utils.node.*;
 import com.cubecode.client.views.ide.ScopeView;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.ScriptRunC2SPacket;
+import com.cubecode.network.packets.all.ScriptSaveC2SPacket;
 import com.cubecode.utils.*;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
@@ -513,28 +516,9 @@ public class CubeCodeIDEView extends View {
                 ScriptNode scriptNode = (ScriptNode) NodeUtils.findNodeByPath(view.nodes, this.selectedNode.getPath());
                 if (scriptNode != null) {
                     scriptNode.getScript().setCode(this.codeEditor.getText().replaceAll("\\n+$", ""));
+                    Dispatcher.sendToServer(new ScriptSaveC2SPacket(scriptNode.getScript(), scriptNode.getPath()));
                 }
             }
-
-            List<Script> clientScripts = new ArrayList<>();
-
-            for (IdeaNode node : this.nodes) {
-                if (node.getType() == NodeType.SCRIPT) {
-                    if (((ScriptNode)node).getScript().getSide() == ScriptType.CLIENT) {
-                        clientScripts.add(((ScriptNode) node).getScript());
-                    }
-                } else {
-                    this.scanFolder((FolderNode) node, clientScripts);
-                }
-            }
-
-            List<Script> scripts = new ArrayList<>();
-
-            for (Script script : clientScripts) {
-                scripts.add(new Script(script.getUUID(), script.getName(), script.getCode(), ScriptType.CLIENT, script.getLibraries()));
-            }
-
-            //CubeCodeClient.projectManager.setScripts(scripts);
         }
     }
 
@@ -767,7 +751,7 @@ public class CubeCodeIDEView extends View {
                 this.saveContentScript();
                 ScriptNode scriptNode = (ScriptNode) this.selectedNode;
                 if (scriptNode.getScript().getSide() == ScriptType.SERVER) {
-                    //Dispatcher.sendToServer(new RunScriptC2SPacket(scriptNode.getScript()));
+                    Dispatcher.sendToServer(new ScriptRunC2SPacket(scriptNode.getScript()));
                 } else {
                     ClientProperties properties = ClientProperties.create(
                             scriptNode.getScript().getName(),
@@ -776,13 +760,9 @@ public class CubeCodeIDEView extends View {
                             null,
                             MinecraftClient.getInstance().world);
 
-                    try {
-                        Script script = scriptNode.getScript();
-                        if (script != null) {
-                            script.run(script.getName(), properties);
-                        }
-                    } catch (CubeCodeException e) {
-                        MinecraftClient.getInstance().player.sendMessage(Text.of("§c"+e.getMessage()));
+                    Script script = scriptNode.getScript();
+                    if (script != null) {
+                        script.run(script.getName(), properties);
                     }
                 }
             }

@@ -79,28 +79,23 @@ public class EventManager extends DirectoryManager {
     }
 
     private void executeScriptEvent(CubeEvent.EventScript eventScript, Properties properties) {
-        try {
-            ScriptEvent scriptEvent = (ScriptEvent) properties.get("Context");
+        ScriptEvent scriptEvent = (ScriptEvent) properties.get("Context");
 
-            ScriptEvent newScriptEvent = new ScriptEvent(
-                    eventScript.name,
-                    eventScript.function,
-                    scriptEvent.getSubject(),
-                    scriptEvent.getObject(),
-                    scriptEvent.getWorld(),
-                    scriptEvent.getServer()
-            );
+        ScriptEvent newScriptEvent = new ScriptEvent(
+                eventScript.name,
+                eventScript.function,
+                scriptEvent.getSubject(),
+                scriptEvent.getObject(),
+                scriptEvent.getWorld(),
+                scriptEvent.getServer()
+        );
 
-            newScriptEvent.setValues(scriptEvent.getValues());
+        newScriptEvent.setValues(scriptEvent.getValues());
 
-            Script script = CubeCode.scriptManager.getScript(eventScript.name);
+        Script script = CubeCode.scriptManager.getScript(eventScript.name);
 
-            if (script != null) {
-                script.run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
-            }
-        } catch (CubeCodeException e) {
-            CubeCode.LOGGER.error("Error executing script: {} - {}", eventScript.name, e.getMessage());
-            CubeCode.loggerManager.error(eventScript.name, e.getMessage().replaceAll("\\n", "\n&c"));
+        if (script != null) {
+            script.run(eventScript.function, eventScript.name, properties.setValue("Context", newScriptEvent));
         }
     }
 
@@ -141,7 +136,8 @@ public class EventManager extends DirectoryManager {
     }
 
     public void register() {
-        Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
+        Type eventListType = new TypeToken<List<CubeEvent>>() {
+        }.getType();
         List<CubeEvent> existingEvents = GsonManager.readJSON(this.directory, eventListType);
 
         if (existingEvents == null) {
@@ -181,7 +177,8 @@ public class EventManager extends DirectoryManager {
     }
 
     public void updateEvents() {
-        Type eventListType = new TypeToken<List<CubeEvent>>(){}.getType();
+        Type eventListType = new TypeToken<List<CubeEvent>>() {
+        }.getType();
         List<CubeEvent> existingEvents = GsonManager.readJSON(this.directory, eventListType);
 
         if (existingEvents == null) {

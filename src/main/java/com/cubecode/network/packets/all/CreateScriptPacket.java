@@ -66,8 +66,7 @@ public class CreateScriptPacket extends AbstractPacket {
             Script script = CubeCode.scriptManager.getScript(packet.scriptUUID);
             script.setCode(code);
             script.setSide(packet.scriptType);
-            script.setPath(packet.scriptPath);
-            CubeCode.scriptManager.saveScript(script);
+            CubeCode.scriptManager.saveScript(script, packet.scriptPath);
 
             if (packet.scriptType == ScriptType.CLIENT) {
                 Dispatcher.sendToAll(new CreateScriptPacket(packet.scriptUUID, packet.scriptName, packet.scriptPath), server);

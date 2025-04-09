@@ -10,7 +10,7 @@ public class ScriptNode implements IdeaNode {
     public ScriptNode(Script script) {
         this.name = script.getName();
         this.script = script;
-        this.path = "/" + script.getPath();
+        this.path = "/" + script.getName();
     }
 
     public ScriptNode(Script script, String path) {
