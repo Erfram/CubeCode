@@ -56,8 +56,8 @@ public class RunScriptC2SPacket extends AbstractPacket {
             );
 
             try {
-                Script script1 = CubeCode.projectManager.getScript(packet.script.getName());
-                script1.run(script1.getName(), properties);
+                Script script = CubeCode.projectManager.getScript(packet.script.getName());
+                script.run(script.getName(), properties);
             } catch (CubeCodeException cce) {
                 player.sendMessage(Text.of("§c" + cce.getMessage()));
                 cce.printStackTrace();

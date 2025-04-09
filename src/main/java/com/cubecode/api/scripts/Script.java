@@ -96,6 +96,8 @@ public class Script {
             this.evaluateLibraries(sourceName);
             this.evaluate();
             scriptExecutor.invokeFunction(this.context, this.scope, function, properties.getMap().values().toArray());
+//            this.setLastLaunchErrorLine(0);
+//            this.setLastLaunchErrorMessage("");
         } catch (Exception e) {
             this.handleException(sourceName, e);
         }

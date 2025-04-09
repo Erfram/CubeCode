@@ -78,8 +78,8 @@ public class ProjectManager extends DirectoryManager {
                 this.scanDirectory(Arrays.asList(file.listFiles()), scripts, folderNode.getChildren(), settingsJson);
                 nodes.add(folderNode);
             } else {
-                if (file.getName().equals("settings.json")) return;
-                if (file.getName().endsWith(".log")) return;
+                if (fileName.equals("settings.json")) return;
+                if (fileName.endsWith(".log")) return;
 
                 String scriptPath = this.getRelativePath(file);
                 String scriptContent = this.readFileToString(file.getPath());
@@ -283,6 +283,8 @@ public class ProjectManager extends DirectoryManager {
                     JsonObject paramObject = jsonObject.getAsJsonObject(key);
                     boolean isSide = false;
                     boolean isLibraries = false;
+                    boolean isLastLaunchErrorLine = false;
+                    boolean isLastLaunchErrorMessage = false;
 
                     if (paramObject.has("Side")) {
                         String sideValue = paramObject.get("Side").getAsString();
@@ -292,7 +294,15 @@ public class ProjectManager extends DirectoryManager {
                         isLibraries = paramObject.get("Libraries").isJsonArray();
                     }
 
-                    return isSide && isLibraries;
+                    if (paramObject.has("LastLaunchErrorLine")) {
+                        isLastLaunchErrorLine = paramObject.get("LastLaunchErrorLine").isJsonPrimitive();
+                    }
+
+                    if (paramObject.has("LastLaunchErrorMessage")) {
+                        isLastLaunchErrorMessage = paramObject.get("LastLaunchErrorMessage").isJsonPrimitive();
+                    }
+
+                    return isSide && isLibraries && isLastLaunchErrorLine && isLastLaunchErrorMessage;
                 }
             }
         } catch (JsonSyntaxException e) {

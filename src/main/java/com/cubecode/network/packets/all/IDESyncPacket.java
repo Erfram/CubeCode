@@ -61,6 +61,7 @@ public class IDESyncPacket extends AbstractPacket {
             ImGuiLoader.getViews(CubeCodeIDEView.class).forEach(view -> {
                 String name = view.selectedNode.getName();
                 view.nodes = new CopyOnWriteArrayList<>(packet.nodes);
+                //TODO НЕ ПРАВИЛЬНО СДЕЛАНО, СКРИПТЫ КОТОРЫЕ В ПАПКАХ, БУДУТ НЕ ВИДНЫ!
                 view.selectedNode = view.nodes.stream().filter(n -> n.getName().equals(name)).findFirst().orElse(null);
                 view.preSelectedNode = view.selectedNode;
             });

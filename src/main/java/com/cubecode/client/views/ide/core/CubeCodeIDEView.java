@@ -156,13 +156,17 @@ public class CubeCodeIDEView extends View {
 
     public void renderMenuBar() {
         if (ImGui.beginMenuBar()) {
-            renderScope();
+            this.renderScope();
 
             this.renderDocumentation();
 
             if (this.selectedNode != null) {
-                this.renderAddLibraryButton();
-                this.renderRunScriptButton();
+                ImGui.setCursorPosX(ImGui.getWindowWidth() - ImGui.getFontSize() * 2 - ImGui.getStyle().getItemSpacingX() * 4);
+                ImGui.beginGroup();
+                    this.renderAddLibraryButton();
+                    ImGui.sameLine();
+                    this.renderRunScriptButton();
+                ImGui.endGroup();
             }
 
             ImGui.endMenuBar();
@@ -186,7 +190,6 @@ public class CubeCodeIDEView extends View {
     }
 
     private void renderAddLibraryButton() {
-        ImGui.setCursorPosX(ImGui.getWindowSize().x - 64);
         float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(
                 Icons.NBT_LIST,
@@ -201,7 +204,6 @@ public class CubeCodeIDEView extends View {
     }
 
     private void renderRunScriptButton() {
-        ImGui.setCursorPosX(ImGui.getWindowSize().x - 32);
         float fontSize = ImGui.getFontSize();
         CubeImGui.imageButton(
                 Icons.START,
@@ -842,6 +844,8 @@ public class CubeCodeIDEView extends View {
 
 
         this.codeEditor.render("IDEA");
+
+        this.codeEditor.setErrorMarkers(new HashMap<>());
 
         this.isIDEFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
     }

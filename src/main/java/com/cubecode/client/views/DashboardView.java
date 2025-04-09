@@ -5,16 +5,13 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.basic.ViewDataManager;
-import com.cubecode.client.imgui.components.Window;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.all.IDERequestedPacket;
 import com.cubecode.network.packets.all.StatesRequestedPacket;
 import com.cubecode.utils.Icons;
 import imgui.*;
-import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiDockNodeFlags;
-import imgui.flag.ImGuiWindowFlags;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -51,7 +48,7 @@ public class DashboardView extends View {
                 ImGuiLoader.pushView(new DevView());
             });
 
-            ImGui.sameLine(ImGui.getWindowWidth() - ImGui.getFontSize() * 5.5f);
+            ImGui.setCursorPosX(ImGui.getWindowWidth() - ImGui.getFontSize() * 3 - ImGui.getStyle().getItemSpacingX() * 6);
 
             CubeImGui.imageButton(Icons.SAVE, Text.translatable("imgui.cubecode.dashboard.saveWindows.title").getString(), ImGui.getFontSize(), ImGui.getFontSize(), () -> {
                 CubeCodeClient.viewDataManager.clearViewsData();

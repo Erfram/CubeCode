@@ -55,8 +55,7 @@ public class SettingsView extends View {
                     float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
                     float variableSplitter = this.getVariable("splitter") == null ? 100f : this.getVariable("splitter");
 
-
-                    CubeImGui.beginChild("Settings Pane", availableWidth * variableSplitter, 0, false, this::renderSettingsPane);
+                    CubeImGui.beginChild("Settings Pane", availableWidth * variableSplitter, 0, true, this::renderSettingsPane);
 
                     ImGui.sameLine();
                     CubeImGui.verticalSplitter(this, "splitter", 4, availableWidth, ImGui.getItemRectMaxY(), 0.3f, 0.1f, 0.9f);
