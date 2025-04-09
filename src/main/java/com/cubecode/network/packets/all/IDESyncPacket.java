@@ -4,6 +4,7 @@ import com.cubecode.CubeCode;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.views.ide.core.CubeCodeIDEView;
 import com.cubecode.client.views.ide.utils.node.IdeaNode;
+import com.cubecode.client.views.ide.utils.node.NodeUtils;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ClientPacketHandler;
@@ -61,8 +62,7 @@ public class IDESyncPacket extends AbstractPacket {
             ImGuiLoader.getViews(CubeCodeIDEView.class).forEach(view -> {
                 String name = view.selectedNode.getName();
                 view.nodes = new CopyOnWriteArrayList<>(packet.nodes);
-                //TODO НЕ ПРАВИЛЬНО СДЕЛАНО, СКРИПТЫ КОТОРЫЕ В ПАПКАХ, БУДУТ НЕ ВИДНЫ!
-                view.selectedNode = view.nodes.stream().filter(n -> n.getName().equals(name)).findFirst().orElse(null);
+                view.selectedNode = NodeUtils.findNodeByPath(view.nodes, name);
                 view.preSelectedNode = view.selectedNode;
             });
         }
