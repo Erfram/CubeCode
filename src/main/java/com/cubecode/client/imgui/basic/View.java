@@ -72,20 +72,6 @@ public abstract class View {
      */
     protected final void loop() {
         if (!isInit) {
-//            if (!(this instanceof DashboardView)) {
-//                try {
-//                    UUID viewUUID = CubeCodeClient.viewDataManager.getViewUUID(this.getClass().getName());
-//                    ViewDataManager.ViewData viewData = CubeCodeClient.viewDataManager.getViewData(this.getClass().getName() + "#" + viewUUID);
-//
-//                    ImGui.setNextWindowPos(viewData.pos.x, viewData.pos.y);
-//                    ImGui.setNextWindowSize(viewData.size.x, viewData.size.y);
-//                    ImGui.setNextWindowCollapsed(viewData.collapsed);
-//
-//                    this.deserializeData(viewData.data);
-//                } catch (CubeCodeException e) {
-//                    CubeCodeClient.LOGGER.error(e.getMessage());
-//                }
-//            }
 
             this.init();
 
