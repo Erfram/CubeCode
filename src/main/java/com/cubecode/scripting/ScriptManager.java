@@ -40,16 +40,8 @@ public class ScriptManager extends DirectoryManager {
         }
     }
 
-    public void readScript(File file) {
-        Script script = GsonManager.readJSON(file, Script.class);
-        if (script.getUUID().isEmpty()) {
-            script.setUUID(UUID.randomUUID().toString());
-        }
-        this.scripts.put(script.getUUID(), script);
-    }
-
     public void saveScript(Script script, String relativePath) {
-        GsonManager.writeJSON(new File(this.directory, relativePath + script.getName()), script);
+        GsonManager.writeJSON(new File(this.directory, relativePath), script);
     }
 
     public Script getScript(String uuid) {
