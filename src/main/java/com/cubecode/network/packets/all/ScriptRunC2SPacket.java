@@ -3,21 +3,16 @@ package com.cubecode.network.packets.all;
 import com.cubecode.CubeCode;
 import com.cubecode.api.scripts.Properties;
 import com.cubecode.api.scripts.Script;
-import com.cubecode.api.scripts.code.ScriptEvent;
-import com.cubecode.api.scripts.code.ScriptWorld;
-import com.cubecode.api.scripts.code.entities.ScriptEntity;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.basic.ServerPacketHandler;
 import com.cubecode.scripting.ScriptExecutionResult;
 import com.cubecode.utils.PacketByteBufUtils;
-import com.cubecode.utils.ScriptType;
+import com.cubecode.utils.TextUtils;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ScriptRunC2SPacket extends AbstractPacket {
@@ -57,7 +52,7 @@ public class ScriptRunC2SPacket extends AbstractPacket {
             ScriptExecutionResult result = script.run(script.getName(), properties);
 
             if (result.error) {
-                player.sendMessage(Text.literal(result.errorMessage).withColor(0xe3256b));
+                player.sendMessage(TextUtils.formatText(result.errorMessage).withColor(0xe3256b));
             }
         }
     }

@@ -40,7 +40,7 @@ public class LoggerView extends View {
                         if (log.startsWith("&7[&")) { // Start of new log entry
                             color = getColor(log); // Error color
                         }
-                        CubeImGui.textMutable(TextUtils.formatText(log + "\uf1bf").withColor(color));
+                        CubeImGui.textMutable(TextUtils.formatText(log).withColor(color));
                     }
                 });
             })
