@@ -22,7 +22,7 @@ public class CubeCodeConfig {
     private static SettingsConfig settingsConfig;
     private static IdeaSettingsConfig ideaSettingsConfig;
 
-    public static final String DEFAULT_FONT = "default";
+    public static final String DEFAULT_FONT = "Monocraft";
     public static final String DEFAULT_THEME = "Catppuccin Mocha";
 
     public static final int DEFAULT_TAB_SIZE = 4;
