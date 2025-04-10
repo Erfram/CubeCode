@@ -35,11 +35,21 @@ public class LoggerView extends View {
                 }
 
                 CubeImGui.beginChild("logs", 0, 0, true, () -> {
+                    int color = 0xffffff;
                     for (String log : CubeCode.loggerManager.getLogs()) {
-                        CubeImGui.textMutable(TextUtils.formatText(log));
+                        if (log.startsWith("&7[&")) { // Start of new log entry
+                            color = getColor(log); // Error color
+                        }
+                        CubeImGui.textMutable(TextUtils.formatText(log + "\uf1bf").withColor(color));
                     }
                 });
             })
             .render(this);
+    }
+
+    public int getColor(String log) {
+        if (log.startsWith("&7[&4")) return 0xE3256B; // Error
+        if (log.startsWith("&7[&c")) return 0xFAD201; // Warning
+        return 0xFFFFFF;
     }
 }

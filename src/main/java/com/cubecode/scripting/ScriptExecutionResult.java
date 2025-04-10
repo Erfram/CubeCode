@@ -5,6 +5,7 @@ public class ScriptExecutionResult {
     public int errorLine = -1;
     public String errorMessage = "";
     public String result = "";
+    public String source = "";
 
     public ScriptExecutionResult(String result) {
         this.result = result;
@@ -14,5 +15,9 @@ public class ScriptExecutionResult {
         this.error = true;
         this.errorLine = errorLine;
         this.errorMessage = errorMessage;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

@@ -62,7 +62,7 @@ public class ScriptManager extends DirectoryManager {
 
     public void handleScriptExecutionResult(ScriptExecutionResult result) {
         if (result.error) {
-            CubeCode.loggerManager.error("", result.errorMessage);
+            CubeCode.loggerManager.error(result.source, result.errorMessage);
         }
     }
 }

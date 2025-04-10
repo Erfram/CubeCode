@@ -38,6 +38,7 @@ public class ScriptExecutionResultPacket extends AbstractPacket {
         buf.writeInt(result.errorLine);
         buf.writeString(result.errorMessage);
         buf.writeString(result.result);
+        buf.writeString(result.source);
     }
 
     @Override
@@ -46,10 +47,12 @@ public class ScriptExecutionResultPacket extends AbstractPacket {
         int errorLine = buf.readInt();
         String errorMessage = buf.readString();
         String result = buf.readString();
+        String source = buf.readString();
         ScriptExecutionResult scriptExecutionResult = new ScriptExecutionResult(result);
         scriptExecutionResult.error = error;
         scriptExecutionResult.errorLine = errorLine;
         scriptExecutionResult.errorMessage = errorMessage;
+        scriptExecutionResult.setSource(source);
         this.result = scriptExecutionResult;
     }
 

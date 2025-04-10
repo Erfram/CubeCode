@@ -163,7 +163,8 @@ public class Script {
             errorMessage = exception.getClass().getSimpleName() + ": " + exception.getLocalizedMessage();
         }
         ScriptExecutionResult scriptExecutionResult = new ScriptExecutionResult("");
-        scriptExecutionResult.setError(errorLine, errorMessage.replaceAll("\\n", "\n&c"));
+        scriptExecutionResult.setError(errorLine, errorMessage);
+        scriptExecutionResult.setSource(sourceName);
         return scriptExecutionResult;
     }
 

@@ -33,22 +33,22 @@ public class LoggerManager extends DirectoryManager {
     }
 
     public void error(String source, String error) {
-        String message = "[&4" + source + "&r]" + ": &c" + error;
+        String message = "&7[&4ERROR&7] [" + source + "&7]" + ": &r" + error;
         this.addLine(message + "\n");
     }
 
     public void info(String source, String info) {
-        String message = "[&6" + source + "&r]" + ": " + info;
+        String message = "&7[&fINFO&7] [" + source + "&7]" + ": &r" + info;
         this.addLine(message + "\n");
     }
 
     public void warning(String source, String warn) {
-        String message = "[&c" + source + "&r]" + ": " + warn;
+        String message = "&7[&cWARN&7] [" + source + "&7]" + ": &r" + warn;
         this.addLine(message + "\n");
     }
 
     public void debug(String source, String debug) {
-        String message = "[&b" + source + "&r]" + ": " + debug;
+        String message = "&7[&bDEBUG&7] [" + source + "&7]" + ": &r" + debug;
         this.addLine(message + "\n");
     }
 
