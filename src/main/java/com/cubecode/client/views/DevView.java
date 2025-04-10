@@ -14,6 +14,7 @@ public class DevView extends View {
     @Override
     protected void render() {
         Window.create()
+                .onExit(this::onClose)
                 .callback(() -> {
                     int columns = Math.max(1, (int)(ImGui.getContentRegionAvailX() / 150));
 
@@ -37,6 +38,8 @@ public class DevView extends View {
     @Override
     protected void init() {
         super.init();
+
+        icons.clear();
 
         icons.put("10k", "\ue951");
         icons.put("10mp", "\ue952");
