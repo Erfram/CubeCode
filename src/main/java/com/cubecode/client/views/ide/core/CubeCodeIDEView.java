@@ -101,6 +101,7 @@ public class CubeCodeIDEView extends View {
         super.init();
 
         this.codeEditor.setPalette(this.codeEditor.getDarkPalette());
+        this.codeEditor.setColorizerEnable(true);
     }
 
     @Override
@@ -835,19 +836,39 @@ public class CubeCodeIDEView extends View {
 
         if (this.selectedNode instanceof ScriptNode) {
             Script script = ((ScriptNode) this.selectedNode).getScript();
-            if(script != null && !script.getLastLaunchErrorMessage().isEmpty()) {
-                HashMap<Integer, String> errors = new HashMap<>();
-                errors.put(script.getLastLaunchErrorLine(), script.getLastLaunchErrorMessage());
-                this.codeEditor.setErrorMarkers(errors);
-            }
+            HashMap<Integer, String> errors = new HashMap<>();
+            errors.put(script.getLastLaunchErrorLine(), script.getLastLaunchErrorMessage());
+            this.codeEditor.setErrorMarkers(errors);
         }
 
+        float windowPosX = ImGui.getCursorScreenPosX();
+        float windowPosY = ImGui.getCursorScreenPosY();
 
-        this.codeEditor.render("IDEA");
+        this.codeEditor.render("IDE");
 
-        this.codeEditor.setErrorMarkers(new HashMap<>());
+        this.renderAutocomplete(windowPosX, windowPosY);
 
         this.isIDEFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
+    }
+
+    private void autocomplete() {
+        String textLine = this.codeEditor.getCurrentLineText();
+        int column = this.codeEditor.getCursorPositionColumn();
+    }
+
+    private void renderAutocomplete(float windowPosX, float windowPosY) {
+        float x = windowPosX +
+                ImGui.calcTextSize("1").x +
+                ImGui.getFontSize() +
+                ImGui.getStyle().getItemSpacingX() +
+                ImGui.calcTextSize(this.codeEditor.getCurrentLineText().substring(0, this.codeEditor.getCursorPositionColumn())).x;
+        float y = windowPosY + ImGui.calcTextSize("A").y * this.codeEditor.getCursorPositionLine();
+
+        ImGui.getWindowDrawList().addRectFilled(x, y, x + ImGui.calcTextSize("Б").x, y + ImGui.calcTextSize("A").y, ImGui.colorConvertFloat4ToU32(255, 255, 255, 255));
+    }
+
+    private boolean isJsIdentifierChar(char c) {
+        return Character.isLetterOrDigit(c) || c == '_' || c == '$';
     }
 
     @Override
