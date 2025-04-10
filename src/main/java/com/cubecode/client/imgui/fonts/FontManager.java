@@ -44,18 +44,6 @@ public class FontManager {
         loadFont("Monocraft", ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/Monocraft.ttf"), fontAtlas, standardFontConfig);
         loadFont("JetBrainsMono-Regular", ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/fonts/JetBrainsMono-Regular.ttf"), fontAtlas, standardFontConfig);
 
-        ImFontConfig fontConfig = new ImFontConfig();
-        fontConfig.setMergeMode(true); // Режим слияния с основным шрифтом
-        fontConfig.setPixelSnapH(true);
-        fontConfig.setGlyphOffset(1f, 0f);
-        short[] iconRanges = new short[] {(short) 0xE000, (short) 0xF8FD, 0 };
-
-        try (InputStream is = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/material.ttf")) {
-            fontAtlas.addFontFromMemoryTTF(is.readAllBytes(), 64, fontConfig, iconRanges);
-        } catch (Exception exception) {
-            CubeCode.LOGGER.error(exception.getMessage());
-        }
-
         try {
             Files.list(CubeCodeConfig.fontsDir).forEach(fontPath -> {
                 if (!fontPath.toFile().getName().endsWith(".ttf")) {
@@ -79,7 +67,6 @@ public class FontManager {
         fontAtlas.build();
 
         standardFontConfig.destroy();
-        fontConfig.destroy();
 
         currentFontName = CubeCodeConfig.getSettingsConfig().general.appearance.font;
     }
@@ -87,7 +74,18 @@ public class FontManager {
     public void loadFont(String name, InputStream inputStream, ImFontAtlas fontAtlas, ImFontConfig imFontConfig) {
         try (InputStream is = inputStream) {
             fonts.put(name, fontAtlas.addFontFromMemoryTTF(is.readAllBytes(), 64, imFontConfig));
-        } catch (Exception exception) {
+
+            ImFontConfig fontConfig = new ImFontConfig();
+            fontConfig.setMergeMode(true); // Режим слияния с основным шрифтом
+            fontConfig.setPixelSnapH(true);
+            fontConfig.setGlyphOffset(1f, 11f); // Иконки высоковато, опустим пониже
+            short[] iconRanges = new short[] {(short) 0xE000, (short) 0xF8FD, 0 };
+            InputStream isMaterial = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/material.ttf");
+            fontAtlas.addFontFromMemoryTTF(isMaterial.readAllBytes(), 64, fontConfig, iconRanges);
+
+            fontConfig.destroy();
+        }
+        catch (Exception exception) {
             CubeCode.LOGGER.error(exception.getMessage());
         }
     }
