@@ -45,7 +45,9 @@ public class DashboardView extends View {
             });
 
             CubeImGui.menu("Dev", () -> {
-                ImGuiLoader.pushView(new DevView());
+                CubeImGui.menuItem("Dev", () -> {
+                    ImGuiLoader.pushView(new DevView());
+                });
             });
 
             ImGui.setCursorPosX(ImGui.getWindowWidth() - ImGui.getFontSize() * 3 - ImGui.getStyle().getItemSpacingX() * 6);

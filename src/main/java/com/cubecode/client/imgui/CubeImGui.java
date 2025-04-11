@@ -361,6 +361,17 @@ public class CubeImGui {
         return variable;
     }
 
+    public static ImString inputTextWithHint(View view, String label, String hint, Consumer<String> inputTextAction) {
+        view.putVariable(label + view.getUniqueID(), new ImString(30));
+
+        ImString variable = view.getVariable(label + view.getUniqueID());
+        if (ImGui.inputTextWithHint(label, hint, variable)) {
+            inputTextAction.accept(variable.get());
+        }
+
+        return variable;
+    }
+
     public static ImString inputText(View view, String label, Consumer<String> inputTextAction, int imGuiInputTextFlags) {
         view.putVariable(label + view.getUniqueID(), new ImString(30));
 
@@ -377,6 +388,17 @@ public class CubeImGui {
 
         ImString variable = view.getVariable(label + view.getUniqueID());
         if (ImGui.inputText(label, variable)) {
+            inputTextAction.accept(variable.get());
+        }
+
+        return variable;
+    }
+
+    public static ImString inputTextWithHint(View view, String label, String hint, int maxLength, Consumer<String> inputTextAction) {
+        view.putVariable(label + view.getUniqueID(), new ImString(maxLength));
+
+        ImString variable = view.getVariable(label + view.getUniqueID());
+        if (ImGui.inputTextWithHint(label, hint, variable)) {
             inputTextAction.accept(variable.get());
         }
 
@@ -472,7 +494,7 @@ public class CubeImGui {
     }
 
     public static void buttonAndImage(Icons icon, String text, Runnable runnable) {
-        ImGui.image(icon.getGlId(), 16, 16);
+        ImGui.image(icon.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
 
         ImGui.sameLine();
 

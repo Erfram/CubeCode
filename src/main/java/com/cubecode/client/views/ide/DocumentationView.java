@@ -104,7 +104,7 @@ public class DocumentationView extends View {
 
         ImGui.pushItemWidth(ImGui.getWindowContentRegionMaxX() - ImGui.getStyle().getWindowPaddingX() - ImGui.getStyle().getItemSpacingX() - 16);
 
-        CubeImGui.inputText(this, "##SearchChapter", findChapter -> {
+        CubeImGui.inputTextWithHint(this, "##SearchChapter", "Chapter", findChapter -> {
             this.usedDocs = new HashMap<>(this.docs);
             for (EnvType envType : this.usedDocs.keySet()) {
                 List<Documentation.Chapter> chapters = this.usedDocs.get(envType);
@@ -195,16 +195,17 @@ public class DocumentationView extends View {
     }
 
     private void renderMethods() {
-        ImGui.image(Icons.SEARCH.getGlId(), 16, 16);
+        ImGui.image(Icons.SEARCH.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
 
         ImGui.sameLine();
 
         ImGui.pushItemWidth(ImGui.getWindowContentRegionMaxX() - ImGui.getStyle().getWindowPaddingX() - ImGui.getStyle().getItemSpacingX() - 16);
 
-        this.putVariable("##SearchMethod", new ImString(999));
-        ImString searchMethod = this.getVariable("##SearchMethod");
+        CubeImGui.inputTextWithHint(this, "##SearchMethod", "Method", 999, (str) -> {
 
-        ImGui.inputText("##SearchMethod", searchMethod);
+        });
+
+        ImString searchMethod = this.getVariable("##SearchMethod"+this.getUniqueID());
 
         List<Documentation.Method> methods = this.selectedChapter.methods.stream().filter(method -> {
             String[] chapterNameSeparator = method.name.split("(?=[A-Z])");
@@ -223,7 +224,9 @@ public class DocumentationView extends View {
         float methodHeight = ImGui.calcTextSize("A").y * 3.2f;
         for (int i = 0; i < methods.size(); i++) {
             Documentation.Method method = methods.get(i);
-            CubeImGui.beginChild("##"+method.name + "_" + i, 0, methodHeight, true, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse, () -> this.renderMethod(method));
+            CubeImGui.beginChild("##"+method.name + "_" + i, 0, methodHeight, true, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse,
+                    () -> this.renderMethod(method)
+            );
         }
     }
 

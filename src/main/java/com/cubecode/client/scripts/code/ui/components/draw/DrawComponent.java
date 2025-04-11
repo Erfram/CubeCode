@@ -20,7 +20,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRect(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255)
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1)
         );
     }
 
@@ -28,7 +28,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRect(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255),
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1),
                 rounding
         );
     }
@@ -37,7 +37,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRect(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 
@@ -45,7 +45,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRect(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(r, g, b, a),
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255),
                 rounding
         );
     }
@@ -54,7 +54,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRectFilled(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255)
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1)
         );
     }
 
@@ -62,7 +62,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRectFilled(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255),
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1),
                 rounding
         );
     }
@@ -71,7 +71,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRectFilled(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 
@@ -79,19 +79,13 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addRectFilled(
                 ImGui.getWindowPosX() + minX, ImGui.getWindowPosY() + minY,
                 ImGui.getWindowPosX() + maxX, ImGui.getWindowPosY() + maxY,
-                ColorUtils.rgbaToImguiColor(r, g, b, a),
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255),
                 rounding
         );
     }
 
     public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-        this.onRender = () -> this.drawList.addQuad(
-                ImGui.getWindowPosX() + x1, ImGui.getWindowPosY() + y1,
-                ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
-                ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
-                ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255)
-        );
+        this.quad(x1, y1, x2, y2, x3, y3, x4, y4, 0, 0, 0, 255);
     }
 
     public void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, int r, int g, int b, int a) {
@@ -100,7 +94,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
                 ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
                 ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 
@@ -110,7 +104,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
                 ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
                 ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255),
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1),
                 thickness
         );
     }
@@ -121,7 +115,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
                 ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
                 ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(r, g, b, a),
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255),
                 thickness
         );
     }
@@ -132,7 +126,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
                 ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
                 ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255)
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1)
         );
     }
 
@@ -142,7 +136,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
                 ImGui.getWindowPosX() + x3, ImGui.getWindowPosY() + y3,
                 ImGui.getWindowPosX() + x4, ImGui.getWindowPosY() + y4,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 
@@ -150,7 +144,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addLine(
                 ImGui.getWindowPosX() + x1, ImGui.getWindowPosY() + y1,
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 
@@ -158,7 +152,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addLine(
                 ImGui.getWindowPosX() + x1, ImGui.getWindowPosY() + y1,
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255)
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1)
         );
     }
 
@@ -166,7 +160,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addLine(
                 ImGui.getWindowPosX() + x1, ImGui.getWindowPosY() + y1,
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
-                ColorUtils.rgbaToImguiColor(r, g, b, a),
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255),
                 thickness
         );
     }
@@ -175,7 +169,7 @@ public class DrawComponent extends AbstractComponent {
         this.onRender = () -> this.drawList.addLine(
                 ImGui.getWindowPosX() + x1, ImGui.getWindowPosY() + y1,
                 ImGui.getWindowPosX() + x2, ImGui.getWindowPosY() + y2,
-                ColorUtils.rgbaToImguiColor(0, 0, 0, 255),
+                ImGui.colorConvertFloat4ToU32(0, 0, 0, 1),
                 thickness
         );
     }
@@ -185,7 +179,7 @@ public class DrawComponent extends AbstractComponent {
                 ImGui.getWindowPosX() + centerX,
                 ImGui.getWindowPosY() + centerY,
                 radius,
-                ColorUtils.rgbaToImguiColor(r, g, b, a)
+                ImGui.colorConvertFloat4ToU32(r/255, g/255, b/255, a/255)
         );
     }
 

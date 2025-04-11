@@ -24,6 +24,7 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.extension.texteditor.TextEditor;
 import imgui.flag.*;
+import imgui.type.ImString;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -63,6 +64,8 @@ public class CubeCodeIDEView extends View {
 
     private boolean isDeletePopupModalRender = false;
     private boolean isSelectLibraryPopupModalRender = false;
+    private boolean isReplacementRender = false;
+    private boolean isFinderRender = false;
 
     Map<Character, Character> pairs = new HashMap<>();
 
@@ -102,6 +105,7 @@ public class CubeCodeIDEView extends View {
 
         this.codeEditor.setPalette(this.codeEditor.getDarkPalette());
         this.codeEditor.setColorizerEnable(true);
+        this.codeEditor.setImGuiChildIgnored(true);
     }
 
     @Override
@@ -145,7 +149,14 @@ public class CubeCodeIDEView extends View {
 
                     ImGui.sameLine();
 
-                    CubeImGui.beginChild("edit", 0, 0, true, this::renderEdit);
+                    CubeImGui.beginChild("right_panel", 0, 0, true, () -> {
+                        if (this.isReplacementRender || this.isFinderRender) {
+                            this.renderReplacementAndFinder();
+                        }
+
+                        if (this.selectedNode != null)
+                            CubeImGui.beginChild("edit", 0, 0, false, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar, this::renderEdit);
+                    });
 
                     this.manageKeybinding();
                     this.manageMouse();
@@ -337,10 +348,19 @@ public class CubeCodeIDEView extends View {
                     List<String> textLines = new ArrayList<>(List.of(this.codeEditor.getTextLines()));
 
                     textLines.add(this.codeEditor.getCursorPositionLine(), currentLine);
-
                     this.codeEditor.setText(String.join("\n", textLines));
 
                     this.codeEditor.setCursorPosition(this.codeEditor.getCursorPositionLine()+1, this.codeEditor.getCursorPositionColumn());
+                }
+
+                if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && ImGui.isKeyPressed(GLFW.GLFW_KEY_R)) {
+                    this.isReplacementRender = !this.isReplacementRender;
+                    this.isFinderRender = false;
+                }
+
+                if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && ImGui.isKeyPressed(GLFW.GLFW_KEY_F)) {
+                    this.isFinderRender = !this.isFinderRender;
+                    this.isReplacementRender = false;
                 }
             }
         } else {
@@ -424,9 +444,67 @@ public class CubeCodeIDEView extends View {
         }
     }
 
+    private void renderReplacementAndFinder() {
+        float height = this.isReplacementRender ? ImGui.calcTextSize("A").y*3 + ImGui.getStyle().getItemSpacingY() * 2 : ImGui.calcTextSize("A").y*2;
+        CubeImGui.beginChild("replacement", 0, height, true, ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoScrollbar, () -> {
+            float initialPosY = ImGui.getCursorPosY();
+            ImGui.image(Icons.SEARCH.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
+
+            ImGui.sameLine();
+
+            ImGui.pushItemWidth(ImGui.getFontSize() + 150);
+                CubeImGui.inputTextWithHint(this, "##Search", "Search", (str) -> {});
+            ImGui.popItemWidth();
+
+            int numberSearchWord;
+            ImString search = this.getVariable("##Search" + this.getUniqueID());
+
+            numberSearchWord = (int) Arrays.stream(this.codeEditor.getText().split("\\W+"))
+                            .filter(word -> word.equals(search.get()))
+                            .count();
+
+            ImGui.sameLine();
+            ImGui.text(numberSearchWord+"/?");
+            if (this.isReplacementRender) {
+                ImGui.image(Icons.SEARCH.getGlId(), ImGui.getFontSize(), ImGui.getFontSize());
+                ImGui.sameLine();
+
+                ImGui.pushItemWidth(ImGui.getFontSize() + 150);
+                    CubeImGui.inputTextWithHint(this, "##Replace", "Replace", (str) -> {});
+                ImGui.popItemWidth();
+
+                ImGui.sameLine();
+
+                ImString replace = this.getVariable("##Replace" + this.getUniqueID());
+                CubeImGui.button("Replace", () -> {
+                    String replacedCode = this.codeEditor.getText().replaceFirst(search.get(), replace.get());
+                    this.codeEditor.setText(replacedCode.substring(0, replacedCode.length() - 1));
+                });
+
+                ImGui.sameLine();
+
+                CubeImGui.button("Replace All", () -> {
+                    String replacedCode = this.codeEditor.getText().replaceAll(search.get(), replace.get());
+                    this.codeEditor.setText(replacedCode.substring(0, replacedCode.length() - 1));
+                });
+            }
+
+            float buttonSize = ImGui.getFontSize(); // Размер кнопки (квадратная)
+            float rightEdge = ImGui.getWindowWidth() - buttonSize - ImGui.getStyle().getWindowPaddingX() - ImGui.getStyle().getItemSpacingX();
+
+            ImGui.setCursorPosX(rightEdge);
+            ImGui.setCursorPosY(initialPosY);
+
+            CubeImGui.imageButton(Icons.MINUS, "Close", ImGui.getFontSize(), ImGui.getFontSize(), () -> {
+                this.isFinderRender = false;
+                this.isReplacementRender = false;
+            });
+        });
+    }
+
     private void renderDeletePopupModal() {
         if (this.isDeletePopupModalRender) {
-            ImGui.pushStyleColor(ImGuiCol.Border, ColorUtils.rgbaToImguiColor(255, 255, 255, 255));
+            ImGui.pushStyleColor(ImGuiCol.Border, ImGui.colorConvertFloat4ToU32(1, 1, 1, 1));
             ImGui.openPopup("confirm_delete");
 
             ImGui.pushStyleColor(ImGuiCol.ModalWindowDimBg, ImGui.getColorU32(0.0f, 0.0f, 0.0f, 0.5f)); // Устанавливаем цвет фона
@@ -824,9 +902,6 @@ public class CubeCodeIDEView extends View {
     }
 
     private void renderEdit() {
-        if (this.selectedNode == null)
-            return;
-
         this.codeEditor.setLanguageDefinition(ScriptDefinition.javaScript());
         this.codeEditor.setPalette(ScriptDefinition.getJavaScriptPalette());
 
@@ -841,14 +916,69 @@ public class CubeCodeIDEView extends View {
             this.codeEditor.setErrorMarkers(errors);
         }
 
-        float windowPosX = ImGui.getCursorScreenPosX();
-        float windowPosY = ImGui.getCursorScreenPosY();
+        float codeEditorScreenX = ImGui.getCursorScreenPosX();
+        float codeEditorScreenY = ImGui.getCursorScreenPosY();
+        float codeEditorWidth = ImGui.getWindowWidth();
+        float codeEditorHeight = ImGui.getWindowHeight();
+
+        this.renderIDEBackground(codeEditorScreenX + ImGui.getScrollX(), codeEditorScreenY + ImGui.getScrollY(), codeEditorWidth, codeEditorHeight);
+
+        boolean hadSelectionBeforeRender = this.codeEditor.hasSelection();
 
         this.codeEditor.render("IDE");
 
-        this.renderAutocomplete(windowPosX, windowPosY);
+        if (this.codeEditor.hasSelection()) {
+            // Получаем позицию курсора мыши
+            ImVec2 mousePos = new ImVec2();
+            ImGui.getMousePos(mousePos);
+
+            // Проверяем выход за границы редактора
+            boolean outsideRight = mousePos.x > codeEditorScreenX + ImGui.getScrollX() + codeEditorWidth;
+            boolean outsideLeft = mousePos.x < codeEditorScreenX + ImGui.getScrollX();
+            boolean outsideBottom = mousePos.y > codeEditorScreenY + ImGui.getScrollY() + codeEditorHeight;
+            boolean outsideTop = mousePos.y < codeEditorScreenY + ImGui.getScrollY();
+
+            System.out.println(outsideLeft);
+
+            // Если выделение было и курсор вышел за границы
+            if (hadSelectionBeforeRender && (outsideRight || outsideLeft || outsideBottom || outsideTop)) {
+                // Получаем текущую прокрутку
+                float scrollX = ImGui.getScrollX();
+                float scrollY = ImGui.getScrollY();
+
+                // Рассчитываем новую прокрутку
+                if (outsideRight) {
+                    scrollX += 20.0f; // Прокручиваем вправо
+                } else if (outsideLeft) {
+                    scrollX -= 20.0f; // Прокручиваем влево
+                }
+
+                if (outsideBottom) {
+                    scrollY += 20.0f; // Прокручиваем вниз
+                } else if (outsideTop) {
+                    scrollY -= 20.0f; // Прокручиваем вверх
+                }
+
+                // Устанавливаем новую прокрутку
+                ImGui.setScrollX(scrollX);
+                ImGui.setScrollY(scrollY);
+            }
+        }
+
+        this.renderAutocomplete(codeEditorScreenX, codeEditorScreenY);
+        this.renderFinderWords(codeEditorScreenX, codeEditorScreenY);
 
         this.isIDEFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
+    }
+
+    private void renderIDEBackground(float codeEditorScreenX, float codeEditorScreenY, float codeEditorWidth, float codeEditorHeight) {
+        ImGui.getWindowDrawList().addRectFilled(
+                codeEditorScreenX,
+                codeEditorScreenY,
+                codeEditorScreenX + codeEditorWidth,
+                codeEditorScreenY + codeEditorHeight,
+                ImGui.getColorU32(0.15f, 0.15f, 0.15f, 1f)
+        );
     }
 
     private void autocomplete() {
@@ -856,15 +986,57 @@ public class CubeCodeIDEView extends View {
         int column = this.codeEditor.getCursorPositionColumn();
     }
 
-    private void renderAutocomplete(float windowPosX, float windowPosY) {
-        float x = windowPosX +
-                ImGui.calcTextSize("1").x +
-                ImGui.getFontSize() +
-                ImGui.getStyle().getItemSpacingX() +
-                ImGui.calcTextSize(this.codeEditor.getCurrentLineText().substring(0, this.codeEditor.getCursorPositionColumn())).x;
-        float y = windowPosY + ImGui.calcTextSize("A").y * this.codeEditor.getCursorPositionLine();
+    private void renderAutocomplete(float codeEditorScreenX, float codeEditorScreenY) {
+        if (this.codeEditor.getCurrentLineText().length() >= this.codeEditor.getCursorPositionColumn()) {
+            float x = codeEditorScreenX +
+                    ImGui.calcTextSize(String.valueOf(this.codeEditor.getTextLines().length)).x +
+                    ImGui.getFontSize() +
+                    ImGui.getStyle().getItemSpacingX() +
+                    ImGui.calcTextSize(this.codeEditor.getCurrentLineText().substring(0, this.codeEditor.getCursorPositionColumn())).x;
+            float y = codeEditorScreenY + ImGui.calcTextSize("A").y * this.codeEditor.getCursorPositionLine();
 
-        ImGui.getWindowDrawList().addRectFilled(x, y, x + ImGui.calcTextSize("Б").x, y + ImGui.calcTextSize("A").y, ImGui.colorConvertFloat4ToU32(255, 255, 255, 255));
+            ImGui.getWindowDrawList().addRectFilled(x, y, x + ImGui.calcTextSize("Б").x, y + ImGui.calcTextSize("A").y, ImGui.getColorU32(1f, 1f, 1f, 0.5f));
+        }
+    }
+
+    private void renderFinderWords(float codeEditorScreenX, float codeEditorScreenY) {
+        ImString search = this.getVariable("##Search" + this.getUniqueID());
+        if (search == null || search.get().isEmpty()) return;
+
+        String[] textLines = this.codeEditor.getTextLines();
+        if (textLines == null) return;
+
+        float lineHeight = ImGui.calcTextSize("A").y;
+        float widthLeftBar = ImGui.calcTextSize(String.valueOf(this.codeEditor.getTextLines().length)).x + ImGui.getFontSize() + ImGui.getStyle().getItemSpacingX();
+
+        String searchTerm = search.get();
+        int searchLength = searchTerm.length();
+        int highlightColor = ImGui.getColorU32(0, 0.8f, 1, 0.5f); // Голубой цвет подсветки
+
+        for (int lineNum = 0; lineNum < textLines.length; lineNum++) {
+            String line = textLines[lineNum];
+            int fromIndex = 0;
+
+            while ((fromIndex = line.indexOf(searchTerm, fromIndex)) != -1) {
+                float x = codeEditorScreenX + widthLeftBar + ImGui.calcTextSize(line.substring(0, fromIndex)).x;
+                float y = codeEditorScreenY + lineHeight * lineNum;
+                float width = ImGui.calcTextSize(searchTerm).x;
+
+                ImGui.getWindowDrawList().addRectFilled(
+                        x, y,
+                        x + width, y + lineHeight,
+                        highlightColor
+                );
+
+                ImGui.getWindowDrawList().addRect(
+                        x, y,
+                        x + width, y + lineHeight,
+                        ImGui.getColorU32(1, 1, 1, 0.5f)
+                );
+
+                fromIndex += searchLength;
+            }
+        }
     }
 
     private boolean isJsIdentifierChar(char c) {

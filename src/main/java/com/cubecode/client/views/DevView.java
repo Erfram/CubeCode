@@ -1,9 +1,11 @@
 package com.cubecode.client.views;
 
+import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import imgui.ImGui;
 import imgui.flag.ImGuiTableFlags;
+import imgui.type.ImString;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,18 +17,25 @@ public class DevView extends View {
     protected void render() {
         Window.create()
                 .onExit(this::onClose)
+                .title("Lox")
                 .callback(() -> {
                     int columns = Math.max(1, (int)(ImGui.getContentRegionAvailX() / 150));
 
+                    CubeImGui.inputTextWithHint(this, "##Search", "Search", (str) -> {
+
+                    });
+
                     if (ImGui.beginTable("AutoGrid", columns, ImGuiTableFlags.Borders | ImGuiTableFlags.Resizable)) {
                         icons.forEach((name, code) -> {
-                            ImGui.tableNextColumn();
-                            ImGui.text(code);
-                            if (ImGui.isItemHovered()) {
-                                ImGui.beginTooltip();
-                                ImGui.text(name);
-                                ImGui.text("0x" + Integer.toHexString(code.charAt(0)));
-                                ImGui.endTooltip();
+                            if (name.startsWith(((ImString)this.getVariable("##Search"+this.getUniqueID())).get())) {
+                                ImGui.tableNextColumn();
+                                ImGui.text(code);
+                                if (ImGui.isItemHovered()) {
+                                    ImGui.beginTooltip();
+                                    ImGui.text(name);
+                                    ImGui.text("0x" + Integer.toHexString(code.charAt(0)));
+                                    ImGui.endTooltip();
+                                }
                             }
                         });
                         ImGui.endTable();
