@@ -7,7 +7,7 @@ import imgui.extension.texteditor.TextEditorLanguageDefinition;
 import java.util.Map;
 
 public class CubeTextEditor {
-    TextEditor textEditor = new TextEditor();
+    public TextEditor textEditor = new TextEditor();
 
     public Vec2i getCursorPosition() {
         return new Vec2i(
@@ -137,145 +137,111 @@ public class CubeTextEditor {
         this.textEditor.setTabSize(tabSize);
     }
 
-    public native int getTabSize(); /*
-        return TEXT_EDITOR->GetTabSize();
-    */
+    public int getTabSize() {
+        return this.textEditor.getTabSize();
+    }
 
-    public native void insertText(String value); /*
-        TEXT_EDITOR->InsertText(value);
-    */
+    public void insertText(String text) {
+        this.textEditor.insertText(text);
+    }
 
-    public native void moveUp(int amount, boolean select); /*
-        TEXT_EDITOR->MoveUp(amount, select);
-    */
+    public void moveUp(int amount, boolean select) {
+        this.textEditor.moveUp(amount, select);
+    }
 
-    public native void moveDown(int amount, boolean select); /*
-        TEXT_EDITOR->MoveDown(amount, select);
-    */
+    public void moveDown(int amount, boolean select) {
+        this.textEditor.moveDown(amount, select);
+    }
 
-    public native void moveLeft(int amount, boolean select, boolean wordMode); /*
-        TEXT_EDITOR->MoveLeft(amount, select, wordMode);
-    */
+    public void moveLeft(int amount, boolean select, boolean wordMode) {
+        this.textEditor.moveLeft(amount, select, wordMode);
+    }
 
-    public native void moveRight(int amount, boolean select, boolean wordMode); /*
-        TEXT_EDITOR->MoveRight(amount, select, wordMode);
-    */
+    public void moveRight(int amount, boolean select, boolean wordMode) {
+        this.textEditor.moveRight(amount, select, wordMode);
+    }
 
-    public native void moveTop(boolean select); /*
-        TEXT_EDITOR->MoveTop(select);
-    */
+    public void moveTop(boolean select) {
+        this.textEditor.moveTop(select);
+    }
 
-    public native void moveBottom(boolean select); /*
-        TEXT_EDITOR->MoveBottom(select);
-    */
+    public void moveBottom(boolean select) {
+        this.textEditor.moveBottom(select);
+    }
 
-    public native void moveHome(boolean select); /*
-        TEXT_EDITOR->MoveHome(select);
-    */
+    public void moveHome(boolean select) {
+        this.textEditor.moveHome(select);
+    }
 
-    public native void moveEnd(boolean select); /*
-        TEXT_EDITOR->MoveEnd(select);
-    */
+    public void moveEnd(boolean select) {
+        this.textEditor.moveEnd(select);
+    }
 
-    public native void setSelectionStart(int line, int column); /*
-        TEXT_EDITOR->SetSelectionStart({ line, column });
-    */
+    public void setSelectionStart(int line, int column) {
+        this.textEditor.setSelectionStart(line, column);
+    }
 
-    public native void setSelectionEnd(int line, int column); /*
-        TEXT_EDITOR->SetSelectionEnd({ line, column });
-    */
+    public void setSelectionEnd(int line, int column) {
+        this.textEditor.setSelectionEnd(line, column);
+    }
 
-    public native void setSelection(int lineStart, int columnStart, int lineEnd, int columnEnd, int selectionMode); /*
-        TEXT_EDITOR->SetSelection({ lineStart, columnStart }, { lineEnd, columnEnd },
-            static_cast<TextEditor::SelectionMode>(selectionMode));
-    */
+    public void setSelection(int lineStart, int columnStart, int lineEnd, int columnEnd, int selectionMode) {
+        this.textEditor.setSelection(lineStart, columnStart, lineEnd, columnEnd, selectionMode);
+    }
 
-    public native void selectWordUnderCursor(); /*
-        TEXT_EDITOR->SelectWordUnderCursor();
-    */
+    public void selectWordUnderCursor() {
+        this.textEditor.selectWordUnderCursor();
+    }
 
-    public native void selectAll(); /*
-        TEXT_EDITOR->SelectAll();
-    */
+    public void selectAll() {
+        this.textEditor.selectAll();
+    }
 
-    public native boolean hasSelection(); /*
-        return TEXT_EDITOR->HasSelection();
-    */
+    public boolean hasSelection() {
+        return this.textEditor.hasSelection();
+    }
 
-    public native void copy(); /*
-        TEXT_EDITOR->Copy();
-    */
+    public void copy() {
+        this.textEditor.copy();
+    }
 
-    public native void cut(); /*
-        TEXT_EDITOR->Cut();
-    */
+    public void cut() {
+        this.textEditor.cut();
+    }
 
-    public native void paste(); /*
-        TEXT_EDITOR->Paste();
-    */
+    public void paste() {
+        this.textEditor.paste();
+    }
 
-    public native void delete(); /*
-        TEXT_EDITOR->Delete();
-    */
+    public  void delete() {
+        this.textEditor.delete();
+    }
 
-    public native boolean canUndo(); /*
-        return TEXT_EDITOR->CanUndo();
-    */
+    public boolean canUndo() {
+        return this.textEditor.canUndo();
+    }
 
-    public native boolean canRedo(); /*
-        return TEXT_EDITOR->CanRedo();
-    */
+    public boolean canRedo() {
+        return this.textEditor.canRedo();
+    }
 
-    public native void undo(int steps); /*
-        TEXT_EDITOR->Undo(steps);
-    */
+    public void undo(int steps) {
+        this.textEditor.undo(steps);
+    }
 
-    public native void redo(int steps); /*
-        TEXT_EDITOR->Redo(steps);
-    */
+    public void redo(int steps) {
+        this.textEditor.redo(steps);
+    }
 
-    public native int[] getDarkPalette(); /*
-        const auto& palette = TEXT_EDITOR->GetDarkPalette();
+    public int[] getDarkPalette() {
+        return this.textEditor.getDarkPalette();
+    }
 
-        jintArray res = env->NewIntArray(palette.size());
+    public int[] getLightPalette() {
+        return this.textEditor.getLightPalette();
+    }
 
-        jint arr[palette.size()];
-        for (int i = 0; i < palette.size(); i++) {
-            arr[i] = palette[i];
-        }
-
-        env->SetIntArrayRegion(res, 0, palette.size(), arr);
-
-        return res;
-    */
-
-    public native int[] getLightPalette(); /*
-        const auto& palette = TEXT_EDITOR->GetLightPalette();
-
-        jintArray res = env->NewIntArray(palette.size());
-
-        jint arr[palette.size()];
-        for (int i = 0; i < palette.size(); i++) {
-            arr[i] = palette[i];
-        }
-
-        env->SetIntArrayRegion(res, 0, palette.size(), arr);
-
-        return res;
-    */
-
-    public native int[] getRetroBluePalette(); /*
-        const auto& palette = TEXT_EDITOR->GetRetroBluePalette();
-
-        jintArray res = env->NewIntArray(palette.size());
-
-        jint arr[palette.size()];
-        for (int i = 0; i < palette.size(); i++) {
-            arr[i] = palette[i];
-        }
-
-        env->SetIntArrayRegion(res, 0, palette.size(), arr);
-
-        return res;
-    */
+    public int[] getRetroBluePalette() {
+        return this.textEditor.getRetroBluePalette();
+    }
 }

@@ -12,6 +12,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import imgui.ImDrawList;
 import imgui.ImGui;
+import imgui.ImGuiStyle;
 import imgui.ImVec2;
 import imgui.flag.*;
 import imgui.type.ImInt;
@@ -727,6 +728,54 @@ public class CubeImGui {
 
         if (selectableScript) {
             selectableAction.run();
+        }
+    }
+
+    public static void modal(String id) {
+        modal(id, 0, () -> {}, () -> {});
+    }
+
+    public static void modal(String id, int imGuiWindowFlags) {
+        modal(id, imGuiWindowFlags, () -> {}, () -> {});
+    }
+
+    public static void modal(String id, int imGuiWindowFlags, Runnable renderCallback) {
+        modal(id, imGuiWindowFlags, renderCallback, () -> {});
+    }
+
+    public static void modal(String id, int imGuiWindowFlags, Runnable renderCallback, Runnable closeCallback) {
+        ImGui.setNextWindowPos(
+                ImGui.getIO().getDisplaySizeX() * 0.5f,
+                ImGui.getIO().getDisplaySizeY() * 0.5f,
+                ImGuiCond.Appearing, 0.5f, 0.5f
+        );
+
+        if (ImGui.beginPopupModal(id, imGuiWindowFlags)) {
+            renderCallback.run();
+
+            float windowX = ImGui.getWindowPosX();
+            float windowY = ImGui.getWindowPosY();
+            float windowWidth = ImGui.getWindowWidth();
+            float windowHeight = ImGui.getWindowHeight();
+
+            ImGui.endPopup();
+
+            if (ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
+                float mouseX = ImGui.getMousePosX();
+                float mouseY = ImGui.getMousePosY();
+
+                boolean clickedOutside = (mouseX < windowX) ||
+                        (mouseX > windowX + windowWidth) ||
+                        (mouseY < windowY) ||
+                        (mouseY > windowY + windowHeight);
+
+                if (clickedOutside) {
+                    closeCallback.run();
+                    ImGui.closeCurrentPopup();
+                }
+            }
+        } else {
+            ImGui.openPopup(id);
         }
     }
 
