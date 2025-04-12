@@ -41,7 +41,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 public class CubeCodeIDEView extends View {
-    private final CubeTextEditor codeEditor = new CubeTextEditor();
+    private final CubeTextEditor codeEditor = new CubeTextEditor("IDE");
 
     public CopyOnWriteArrayList<IdeaNode> nodes;
 
@@ -158,8 +158,7 @@ public class CubeCodeIDEView extends View {
                             this.renderFinder();
                         }
 
-                        if (this.selectedNode != null)
-                            CubeImGui.beginChild("edit", 0, 0, false, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar, this::renderEdit);
+                        CubeImGui.beginChild("edit", 0, 0, false, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar, this::renderEdit);
                     });
 
                     this.manageKeybinding();
@@ -1016,7 +1015,7 @@ public class CubeCodeIDEView extends View {
 
         boolean hadSelectionBeforeRender = this.codeEditor.hasSelection();
 
-        this.codeEditor.render("IDE");
+        this.codeEditor.render();
 
         if (this.codeEditor.hasSelection()) {
             ImVec2 mousePos = new ImVec2();
@@ -1048,7 +1047,7 @@ public class CubeCodeIDEView extends View {
             }
         }
 
-        this.renderAutocomplete(codeEditorScreenX, codeEditorScreenY);
+        //this.renderAutocomplete(codeEditorScreenX, codeEditorScreenY);
         this.renderFinderWords(codeEditorScreenX, codeEditorScreenY);
 
         this.manageMouse(codeEditorScreenX, codeEditorScreenY, codeEditorWidth, codeEditorHeight);

@@ -1,13 +1,180 @@
 package com.cubecode.client.imgui;
 
+import com.cubecode.utils.Documentation;
 import com.cubecode.utils.Vec2i;
+import imgui.ImDrawList;
+import imgui.ImGui;
+import imgui.ImVec2;
+import imgui.ImVec4;
 import imgui.extension.texteditor.TextEditor;
 import imgui.extension.texteditor.TextEditorLanguageDefinition;
+import imgui.flag.ImGuiFocusedFlags;
+import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiWindowFlags;
 
 import java.util.Map;
 
 public class CubeTextEditor {
-    public TextEditor textEditor = new TextEditor();
+    private final TextEditor textEditor = new TextEditor();
+    private final String title;
+    private final float startWidth;
+    private final float startHeight;
+
+    private float x = 0;
+    private float y = 0;
+    private float width = 0;
+    private float height = 0;
+
+    private int windowFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar;
+
+    private boolean isBackground = true;
+    private int colorBackground = ImGui.getColorU32(0.15f, 0.15f, 0.15f, 1f);
+
+    private boolean isFocused = false;
+
+    private boolean isRenderContextMenu = false;
+
+    public CubeTextEditor(String title) {
+        this(title, 0, 0);
+    }
+
+    public CubeTextEditor(String title, float startWidth, float startHeight) {
+        this.title = title;
+        this.startWidth = startWidth;
+        this.startHeight = startHeight;
+
+        this.textEditor.setPalette(this.textEditor.getDarkPalette());
+        this.textEditor.setColorizerEnable(true);
+        this.textEditor.setImGuiChildIgnored(true);
+    }
+
+    public void render() {
+        this.x = ImGui.getCursorScreenPosX();
+        this.y = ImGui.getCursorScreenPosY();
+        this.width = ImGui.getWindowWidth() - ImGui.getStyle().getWindowPadding().x;
+        this.height = ImGui.getWindowHeight();
+
+        if (ImGui.beginChild(this.title, this.startWidth, this.startHeight, true, windowFlags)) {
+            if (this.isBackground) {
+                this.renderBackground();
+            }
+
+            boolean hadSelectionBeforeRender = this.textEditor.hasSelection();
+
+            this.textEditor.render(this.title);
+
+            ImVec2 screenPos = this.getScreenPos(this.getCursorPosition().y, this.getCursorPosition().x);
+
+            ImGui.getWindowDrawList().addRectFilled(screenPos.x, screenPos.y, screenPos.x + ImGui.calcTextSize("A").x, screenPos.y + ImGui.calcTextSize("A").y, ImGui.getColorU32(1, 1, 1, 0.5f));
+
+            this.handleAutoscrollOnSelectionDrag(hadSelectionBeforeRender);
+
+            this.isFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
+        }
+        ImGui.endChild();
+
+        this.manageMouse();
+        this.renderContextMenu();
+    }
+
+    private void manageMouse() {
+        float mouseX = ImGui.getMousePosX();
+        float mouseY = ImGui.getMousePosY();
+
+        boolean clickedOutside = (mouseX >= this.x) &&
+                (mouseX <= this.x + this.width) &&
+                (mouseY >= this.y) &&
+                (mouseY <= this.y + this.height);
+
+        if (this.isFocused) {
+            if (ImGui.isMouseReleased(ImGuiMouseButton.Right) && clickedOutside) {
+                this.isRenderContextMenu = true;
+            }
+        }
+    }
+
+    private void renderContextMenu() {
+        if (!isRenderContextMenu)
+            return;
+
+        CubeImGui.popup(this.title+"_context_menu", ImGuiWindowFlags.AlwaysAutoResize,
+            () -> {
+                ImGui.text("lox");
+            },
+            () -> {
+                this.isRenderContextMenu = false;
+            }
+        );
+    }
+
+    private void handleAutoscrollOnSelectionDrag(boolean hadSelectionBeforeRender) {
+        if (this.textEditor.hasSelection()) {
+            ImVec2 mousePos = new ImVec2();
+            ImGui.getMousePos(mousePos);
+
+            boolean outsideRight = mousePos.x > this.x + ImGui.getScrollX() + this.width;
+            boolean outsideLeft = mousePos.x < this.x + ImGui.getScrollX();
+            boolean outsideBottom = mousePos.y > this.y + ImGui.getScrollY() + this.height;
+            boolean outsideTop = mousePos.y < this.y + ImGui.getScrollY();
+
+            if (hadSelectionBeforeRender && (outsideRight || outsideLeft || outsideBottom || outsideTop)) {
+                float scrollX = ImGui.getScrollX();
+                float scrollY = ImGui.getScrollY();
+
+                if (outsideRight) {
+                    scrollX += 20.0f;
+                } else if (outsideLeft) {
+                    scrollX -= 20.0f;
+                }
+
+                if (outsideBottom) {
+                    scrollY += 20.0f;
+                } else if (outsideTop) {
+                    scrollY -= 20.0f;
+                }
+
+                ImGui.setScrollX(scrollX);
+                ImGui.setScrollY(scrollY);
+            }
+        }
+    }
+
+    private void renderBackground() {
+        ImGui.getWindowDrawList().addRectFilled(
+                this.x,
+                this.y,
+                this.x + this.width,
+                this.y + this.height,
+                this.colorBackground,
+                ImGui.getStyle().getWindowRounding()
+        );
+    }
+
+    public void setColorBackground(float r, float g, float b, float a) {
+        this.colorBackground = ImGui.getColorU32(r, g, b, a);
+    }
+
+    public ImVec4 getColorBackground() {
+        ImVec4 rgba = new ImVec4();
+        ImGui.colorConvertU32ToFloat4(this.colorBackground, rgba);
+        return rgba;
+    }
+
+    public ImVec2 getScreenPos(int line, int column) {
+        StringBuilder tab = new StringBuilder();
+        for (int i = 0; i < this.textEditor.getTabSize(); i++) {
+            tab.append(" ");
+        }
+        float widthLeftBar = ImGui.calcTextSize(""+this.getTextLines().length).x +
+                ImGui.getFontSize() +
+                ImGui.getStyle().getItemSpacingX() * 2 - ImGui.getScrollX();
+        float x = this.x +
+                widthLeftBar +
+                ImGui.calcTextSize(this.getCurrentLineText().replaceAll("\n", tab.toString()).substring(0, column)).x;
+        float y = this.y + ImGui.getStyle().getWindowPaddingY() + ImGui.calcTextSize("A").y * line - ImGui.getScrollY();
+
+        return new ImVec2(x, y);
+    }
 
     public Vec2i getCursorPosition() {
         return new Vec2i(
@@ -47,8 +214,13 @@ public class CubeTextEditor {
     public void setBreakpoints(int[] breakpoints) {
         this.textEditor.setBreakpoints(breakpoints);
     }
-    public void render(String title) {
-        this.textEditor.render(title);
+
+    public void setBackground(boolean isBackground) {
+        this.isBackground = isBackground;
+    }
+
+    public boolean isBackground() {
+        return this.isBackground;
     }
 
     public void setTextLines(String[] lines) {
@@ -110,8 +282,6 @@ public class CubeTextEditor {
     public void setHandleKeyboardInputs(boolean handleKeyboardInputs) {
         this.textEditor.setHandleMouseInputs(handleKeyboardInputs);
     }
-
-
 
     public boolean isHandleKeyboardInputsEnabled() {
         return this.textEditor.isHandleKeyboardInputsEnabled();
@@ -213,7 +383,7 @@ public class CubeTextEditor {
         this.textEditor.paste();
     }
 
-    public  void delete() {
+    public void delete() {
         this.textEditor.delete();
     }
 

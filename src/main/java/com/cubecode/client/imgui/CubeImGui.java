@@ -779,6 +779,36 @@ public class CubeImGui {
         }
     }
 
+    public static void popup(String title, int imGuiWindowFlags, Runnable renderCallback, Runnable closeCallback) {
+        if (ImGui.beginPopup(title, imGuiWindowFlags)) {
+            renderCallback.run();
+
+            float windowX = ImGui.getWindowPosX();
+            float windowY = ImGui.getWindowPosY();
+            float windowWidth = ImGui.getWindowWidth();
+            float windowHeight = ImGui.getWindowHeight();
+
+            ImGui.endPopup();
+
+            if (ImGui.isMouseClicked(ImGuiMouseButton.Left)) {
+                float mouseX = ImGui.getMousePosX();
+                float mouseY = ImGui.getMousePosY();
+
+                boolean clickedOutside = (mouseX < windowX) ||
+                        (mouseX > windowX + windowWidth) ||
+                        (mouseY < windowY) ||
+                        (mouseY > windowY + windowHeight);
+
+                if (clickedOutside) {
+                    closeCallback.run();
+                    ImGui.closeCurrentPopup();
+                }
+            }
+        } else {
+            ImGui.openPopup(title);
+        }
+    }
+
     public static void treeNode(String label, Icons icon, int imguiTreeNodeFlags, Runnable render) {
         boolean tree = ImGui.treeNodeEx("##"+label, imguiTreeNodeFlags);
         ImGui.sameLine(0, 4);
