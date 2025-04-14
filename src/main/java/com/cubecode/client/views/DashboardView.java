@@ -5,6 +5,7 @@ import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.basic.ViewDataManager;
+import com.cubecode.client.views.ide.core.CubeCodeIDEView2;
 import com.cubecode.network.Dispatcher;
 import com.cubecode.network.packets.all.EventsRequestedPacket;
 import com.cubecode.network.packets.all.IDERequestedPacket;
@@ -27,6 +28,10 @@ public class DashboardView extends View {
             CubeImGui.menu(Text.translatable("imgui.cubecode.dashboard.windows.title").getString(), () -> {
                 CubeImGui.menuItem("CubeCodeIDE", () -> {
                     Dispatcher.sendToServer(new IDERequestedPacket());
+                });
+
+                CubeImGui.menuItem("CubeCodeIDE2", () -> {
+                    ImGuiLoader.pushView(new CubeCodeIDEView2());
                 });
 
                 CubeImGui.menuItem(Text.translatable("imgui.cubecode.windows.events.title").getString(), () -> {

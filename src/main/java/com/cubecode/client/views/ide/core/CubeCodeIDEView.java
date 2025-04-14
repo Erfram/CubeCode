@@ -110,6 +110,7 @@ public class CubeCodeIDEView extends View {
         this.codeEditor.setPalette(this.codeEditor.getDarkPalette());
         this.codeEditor.setColorizerEnable(true);
         this.codeEditor.setImGuiChildIgnored(true);
+        this.codeEditor.setDebugMode(true);
     }
 
     @Override
@@ -158,7 +159,9 @@ public class CubeCodeIDEView extends View {
                             this.renderFinder();
                         }
 
-                        CubeImGui.beginChild("edit", 0, 0, false, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar, this::renderEdit);
+                        this.renderEdit();
+
+                        //CubeImGui.beginChild("edit", 0, 0, false, ImGuiWindowFlags.NoMove | ImGuiWindowFlags.HorizontalScrollbar, this::renderEdit);
                     });
 
                     this.manageKeybinding();
@@ -347,23 +350,23 @@ public class CubeCodeIDEView extends View {
             if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL)) {
                 if (ImGui.isKeyPressed(GLFW.GLFW_KEY_D)) {
                     String currentLine = this.codeEditor.getCurrentLineText();
-                    Vec2i cursorPosition = this.codeEditor.getCursorPosition();
+                    CubeTextEditor.CursorPosition cursorPosition = this.codeEditor.getCursorPosition();
 
                     List<String> textLines = new ArrayList<>(List.of(this.codeEditor.getTextLines()));
 
-                    textLines.add(cursorPosition.y, currentLine);
+                    textLines.add(cursorPosition.line(), currentLine);
 
                     this.codeEditor.setText(String.join("\n", textLines));
 
-                    this.codeEditor.setCursorPosition(cursorPosition.y+1, cursorPosition.x);
+                    this.codeEditor.setCursorPosition(cursorPosition.line() +1, cursorPosition.column());
                 }
 
-                if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && ImGui.isKeyPressed(GLFW.GLFW_KEY_R)) {
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_R)) {
                     this.isReplacementRender = !this.isReplacementRender;
                     this.isFinderRender = false;
                 }
 
-                if (ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && ImGui.isKeyPressed(GLFW.GLFW_KEY_F)) {
+                if (ImGui.isKeyPressed(GLFW.GLFW_KEY_F)) {
                     this.isFinderRender = !this.isFinderRender;
                     this.isReplacementRender = false;
                 }
@@ -397,7 +400,7 @@ public class CubeCodeIDEView extends View {
         }
     }
 
-    private void manageMouse(float codeEditorScreenX, float codeEditorScreenY, float codeEditorWidth, float codeEditorHeight) {
+    private void manageMouse() {
         if (ImGui.beginPopup("Context Menu IDE", ImGuiWindowFlags.AlwaysAutoResize)) {
             Map<Documentation.Chapter, String> methodVariations = Documentation.findMethodVariations(Documentation.parseDocs, this.codeEditor.getSelectedText());
             if (!methodVariations.isEmpty()) {
@@ -444,10 +447,10 @@ public class CubeCodeIDEView extends View {
         float mouseX = ImGui.getMousePosX();
         float mouseY = ImGui.getMousePosY();
 
-        boolean clickedOutside = (mouseX >= codeEditorScreenX) &&
-                (mouseX <= codeEditorScreenX + codeEditorWidth) &&
-                (mouseY >= codeEditorScreenY) &&
-                (mouseY <= codeEditorScreenY + codeEditorHeight);
+        boolean clickedOutside = (mouseX >= this.codeEditor.x) &&
+                (mouseX <= this.codeEditor.x + this.codeEditor.width) &&
+                (mouseY >= this.codeEditor.y) &&
+                (mouseY <= this.codeEditor.y + this.codeEditor.height);
 
         if (this.isIDEFocused) {
             if (ImGui.isMouseReleased(ImGuiMouseButton.Right) && clickedOutside) {
@@ -473,6 +476,18 @@ public class CubeCodeIDEView extends View {
 
             int numberSearchWord = this.getVariable("numberSearchWord");
             ImString search = this.getVariable("##Search" + this.getUniqueID());
+
+            ImGui.sameLine();
+
+            this.putVariable("isFinderRegex", false);
+
+            if (ImGui.radioButton("Regex", this.getVariable("isFinderRegex"))) {
+                this.setVariable("isFinderRegex", !(Boolean) this.getVariable("isFinderRegex"));
+            }
+
+            ImGui.sameLine();
+
+            ImGui.text("|");
 
             ImGui.sameLine();
             ImGui.text(numberSearchWord+"/?");
@@ -505,14 +520,14 @@ public class CubeCodeIDEView extends View {
 
         ImString replace = this.getVariable("##Replace" + this.getUniqueID());
         CubeImGui.button("Replace", () -> {
-            String replacedCode = this.codeEditor.getText().replace(search.get(), replace.get());
+            String replacedCode = StringUtils.replaceFirst(this.codeEditor.getText(), search.get(), replace.get(), this.getVariable("isFinderRegex"));
             this.codeEditor.setText(replacedCode.substring(0, replacedCode.length() - 1));
         });
 
         ImGui.sameLine();
 
         CubeImGui.button("Replace All", () -> {
-            String replacedCode = this.codeEditor.getText().replaceAll(search.get(), replace.get());
+            String replacedCode = StringUtils.replaceFirst(this.codeEditor.getText(), search.get(), replace.get(), this.getVariable("isFinderRegex"));
             this.codeEditor.setText(replacedCode.substring(0, replacedCode.length() - 1));
         });
     }
@@ -1006,68 +1021,20 @@ public class CubeCodeIDEView extends View {
             this.codeEditor.setErrorMarkers(errors);
         }
 
-        float codeEditorScreenX = ImGui.getCursorScreenPosX();
-        float codeEditorScreenY = ImGui.getCursorScreenPosY();
-        float codeEditorWidth = ImGui.getWindowWidth();
-        float codeEditorHeight = ImGui.getWindowHeight();
-
-        this.renderIDEBackground(codeEditorScreenX + ImGui.getScrollX(), codeEditorScreenY + ImGui.getScrollY(), codeEditorWidth, codeEditorHeight);
-
-        boolean hadSelectionBeforeRender = this.codeEditor.hasSelection();
 
         this.codeEditor.render();
 
-        if (this.codeEditor.hasSelection()) {
-            ImVec2 mousePos = new ImVec2();
-            ImGui.getMousePos(mousePos);
-
-            boolean outsideRight = mousePos.x > codeEditorScreenX + ImGui.getScrollX() + codeEditorWidth;
-            boolean outsideLeft = mousePos.x < codeEditorScreenX + ImGui.getScrollX();
-            boolean outsideBottom = mousePos.y > codeEditorScreenY + ImGui.getScrollY() + codeEditorHeight;
-            boolean outsideTop = mousePos.y < codeEditorScreenY + ImGui.getScrollY();
-
-            if (hadSelectionBeforeRender && (outsideRight || outsideLeft || outsideBottom || outsideTop)) {
-                float scrollX = ImGui.getScrollX();
-                float scrollY = ImGui.getScrollY();
-
-                if (outsideRight) {
-                    scrollX += 20.0f;
-                } else if (outsideLeft) {
-                    scrollX -= 20.0f;
-                }
-
-                if (outsideBottom) {
-                    scrollY += 20.0f;
-                } else if (outsideTop) {
-                    scrollY -= 20.0f;
-                }
-
-                ImGui.setScrollX(scrollX);
-                ImGui.setScrollY(scrollY);
-            }
-        }
-
         //this.renderAutocomplete(codeEditorScreenX, codeEditorScreenY);
-        this.renderFinderWords(codeEditorScreenX, codeEditorScreenY);
+        this.renderFinderWords();
 
-        this.manageMouse(codeEditorScreenX, codeEditorScreenY, codeEditorWidth, codeEditorHeight);
+        this.manageMouse();
 
         this.isIDEFocused = ImGui.isWindowFocused(ImGuiFocusedFlags.ChildWindows);
     }
 
-    private void renderIDEBackground(float codeEditorScreenX, float codeEditorScreenY, float codeEditorWidth, float codeEditorHeight) {
-        ImGui.getWindowDrawList().addRectFilled(
-                codeEditorScreenX,
-                codeEditorScreenY,
-                codeEditorScreenX + codeEditorWidth,
-                codeEditorScreenY + codeEditorHeight,
-                ImGui.getColorU32(0.15f, 0.15f, 0.15f, 1f)
-        );
-    }
-
     private void autocomplete() {
         String textLine = this.codeEditor.getCurrentLineText();
-        int column = this.codeEditor.getCursorPosition().x;
+        int column = this.codeEditor.getCursorPosition().column();
     }
 
     private void renderAutocomplete(float codeEditorScreenX, float codeEditorScreenY) {
@@ -1075,13 +1042,13 @@ public class CubeCodeIDEView extends View {
                 ImGui.calcTextSize("1").x +
                 ImGui.getFontSize() +
                 ImGui.getStyle().getItemSpacingX() +
-                ImGui.calcTextSize(this.codeEditor.getCurrentLineText().substring(0, this.codeEditor.getCursorPosition().x)).x;
-        float y = codeEditorScreenY + ImGui.calcTextSize("A").y * this.codeEditor.getCursorPosition().y;
+                ImGui.calcTextSize(this.codeEditor.getCurrentLineText().substring(0, this.codeEditor.getCursorPosition().column())).x;
+        float y = codeEditorScreenY + ImGui.calcTextSize("A").y * this.codeEditor.getCursorPosition().line();
 
         ImGui.getWindowDrawList().addRectFilled(x, y, x + ImGui.calcTextSize("Б").x, y + ImGui.calcTextSize("A").y, ImGui.getColorU32(1f, 1f, 1f, 0.5f));
     }
 
-    private void renderFinderWords(float codeEditorScreenX, float codeEditorScreenY) {
+    private void renderFinderWords() {
         ImString search = this.getVariable("##Search" + this.getUniqueID());
         if (search == null || search.get().isEmpty()) return;
 
@@ -1102,8 +1069,8 @@ public class CubeCodeIDEView extends View {
             int fromIndex = 0;
 
             while ((fromIndex = line.indexOf(searchTerm, fromIndex)) != -1) {
-                float x = codeEditorScreenX + widthLeftBar + ImGui.calcTextSize(line.substring(0, fromIndex)).x;
-                float y = codeEditorScreenY + lineHeight * lineNum;
+                float x = this.codeEditor.x + widthLeftBar + ImGui.calcTextSize(line.substring(0, fromIndex)).x;
+                float y = this.codeEditor.y + lineHeight * lineNum;
                 float width = ImGui.calcTextSize(searchTerm).x;
 
                 numberSearchWord++;
