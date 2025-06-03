@@ -1,12 +1,10 @@
 package com.cubecode;
 
-import com.cubecode.api.events.EventManager;
-import com.cubecode.api.files.FileManager;
 import com.cubecode.network.Dispatcher;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
-import com.cubecode.api.scripts.ProjectManager;
 
 import java.io.File;
 
@@ -19,9 +17,9 @@ public class CubeCode implements ModInitializer {
     public static File factoryDirectory;
     public static File contentDirectory;
 
-    public static FileManager fileManager;
-    public static ProjectManager projectManager;
-    public static EventManager eventManager;
+//    public static FileManager fileManager;
+//    public static ProjectManager projectManager;
+//    public static EventManager eventManager;
 
     static {
         LOGGER = LogUtils.getLogger();
@@ -32,5 +30,9 @@ public class CubeCode implements ModInitializer {
     public void onInitialize() {
         EventHandler.init();
         Dispatcher.register();
+    }
+
+    public static Identifier createId(String path) {
+        return new Identifier(MOD_ID, path);
     }
 }
