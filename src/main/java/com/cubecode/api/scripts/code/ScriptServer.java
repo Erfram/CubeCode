@@ -23,6 +23,10 @@ public class ScriptServer {
         return this.server.getMaxPlayerCount();
     }
 
+    public String[] getPlayerNames() {
+        return this.server.getPlayerNames();
+    }
+
     public boolean isSingleplayer() {
         return this.server.isSingleplayer();
     }
