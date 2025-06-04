@@ -21,8 +21,6 @@ public class ScriptServer {
         return this.server;
     }
 
-
-
     public String[] getPlayerNames() {
         return this.server.getPlayerNames();
     }
@@ -102,16 +100,16 @@ public class ScriptServer {
         this.server.setDefaultGameMode(GameMode.byName(gamemode));
     }
 
-    public void setWhitelist(boolean isEnabled) {
-        this.server.setEnforceWhitelist(isEnabled);
+    public void setWhitelist(boolean enabled) {
+        this.server.setEnforceWhitelist(enabled);
     }
 
-    public void setFlightEnabled(boolean isEnabled) {
-        this.server.setFlightEnabled(isEnabled);
+    public void setFlightEnabled(boolean enabled) {
+        this.server.setFlightEnabled(enabled);
     }
 
-    public void setPvpEnabled(boolean isEnabled) {
-        this.server.setPvpEnabled(isEnabled);
+    public void setPvpEnabled(boolean enabled) {
+        this.server.setPvpEnabled(enabled);
     }
 
     public void setPlayerIdleTimeout(int timeout) {
