@@ -57,10 +57,5 @@ public class EventHandler {
 
             return true;
         });
-
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player != null)
-                client.player.sendMessage(Text.of(CubeCodeClient.playerState.getStates().asString()), false);
-        });
     }
 }

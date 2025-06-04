@@ -5,6 +5,8 @@
   "mixins": [
   ],
   "client": [
+    "imgui.RenderSystemMixin",
+    "imgui.WindowMixin"
   ],
   "server": [
   ],
