@@ -43,10 +43,10 @@ public class CubeFont {
             fontConfig.setGlyphRanges(newArray);
 
             byte[] bytes = is.readAllBytes();
+            this.addScaleFont(fontAtlas, bytes, 12, fontConfig);
             this.addScaleFont(fontAtlas, bytes, 16, fontConfig);
-            this.addScaleFont(fontAtlas, bytes, 24, fontConfig);
+            this.addScaleFont(fontAtlas, bytes, 22, fontConfig);
             this.addScaleFont(fontAtlas, bytes, 32, fontConfig);
-            this.addScaleFont(fontAtlas, bytes, 40, fontConfig);
         } catch (Exception exception) {
             CubeCode.LOGGER.error(exception.getMessage());
         }
