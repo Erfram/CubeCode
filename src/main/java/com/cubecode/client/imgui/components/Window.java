@@ -1,14 +1,17 @@
 package com.cubecode.client.imgui.components;
 
+import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
+import java.util.function.Consumer;
+
 public class Window {
     private String title = "default";
     private int flags = 0;
-    private Runnable callback = () -> {};
+    private Consumer<CubeImGui> consumer = (cig) -> {};
     private Runnable onExit = () -> {};
 
     public static Window create() {
@@ -25,8 +28,8 @@ public class Window {
         return this;
     }
 
-    public Window callback(Runnable callback) {
-        this.callback = callback;
+    public Window callback(Consumer<CubeImGui> consumer) {
+        this.consumer = consumer;
         return this;
     }
 
@@ -52,7 +55,7 @@ public class Window {
             } else {
                 this.manageDocking(view);
 
-                this.callback.run();
+                this.consumer.accept(new CubeImGui(view));
             }
         }
 

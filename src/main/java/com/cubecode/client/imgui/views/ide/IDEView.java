@@ -3,6 +3,7 @@ package com.cubecode.client.imgui.views.ide;
 import com.cubecode.CubeCode;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
+import imgui.ImGui;
 import imgui.extension.texteditor.TextEditor;
 
 public class IDEView extends View {
@@ -16,7 +17,11 @@ public class IDEView extends View {
     @Override
     public void render() {
         Window.create()
-            .callback(() -> {
+            .callback((cig) -> {
+                if (ImGui.button("START")) {
+
+                }
+
                 renderCode();
             })
             .render(this);

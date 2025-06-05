@@ -1,11 +1,9 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.utils.Serializable;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.Window;
-import net.minecraft.nbt.NbtCompound;
 
 import java.util.HashMap;
 import java.util.Map;

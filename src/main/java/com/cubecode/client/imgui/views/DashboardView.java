@@ -14,9 +14,13 @@ public class DashboardView extends View {
     @Override
     protected void render() {
         CubeImGui.mainMenuBar(() -> {
-            CubeImGui.menu("IDE", () -> {
+            CubeImGui.menu("Windows", () -> {
                 CubeImGui.menuItem("IDE", () -> {
                     ImGuiLoader.pushView(new IDEView());
+                });
+
+                CubeImGui.menuItem("Settings", () -> {
+                    ImGuiLoader.pushView(new SettingsView());
                 });
             });
         });
