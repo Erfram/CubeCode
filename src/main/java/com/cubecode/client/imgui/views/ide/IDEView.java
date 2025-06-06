@@ -26,6 +26,7 @@ public class IDEView extends View {
     @Override
     public void render() {
         Window.create()
+            .title("IDE")
             .callback((cig) -> {
                 if (ImGui.button("START")) {
                     Dispatcher.sendToServer(new CodeRunC2SPacket(this.codeEditor.getText()));

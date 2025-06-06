@@ -14,6 +14,7 @@ public class SettingsView extends View {
     @Override
     protected void render() {
         Window.create()
+            .title("Settings")
             .callback((cig) -> {
                 ImGui.text("Scale");
                 ImGui.sameLine();
