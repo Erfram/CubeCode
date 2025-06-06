@@ -1,4 +1,4 @@
-package com.cubecode.api.scripts.code.entities;
+package com.cubecode.api.project.scripts.code.entities;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 

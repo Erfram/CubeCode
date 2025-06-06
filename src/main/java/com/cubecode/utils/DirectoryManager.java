@@ -19,7 +19,7 @@ public class DirectoryManager {
         this.directory = null;
     }
 
-    public File getFile(String path) {
+    protected File getFile(String path) {
         for (File file : this.getFiles()) if (file.getPath().equals(path)) {
             return file;
         }
@@ -27,11 +27,11 @@ public class DirectoryManager {
         return null;
     }
 
-    public Set<File> getFiles() {
+    protected Set<File> getFiles() {
         return Set.of(Objects.requireNonNull(this.directory.listFiles()));
     }
 
-    public boolean createFile(String path) {
+    protected boolean createFile(String path) {
         try {
             return this.getFile(path).createNewFile();
         } catch (IOException ignored) {
@@ -40,15 +40,15 @@ public class DirectoryManager {
         return false;
     }
 
-    public boolean deleteFile(String path) {
+    protected boolean deleteFile(String path) {
         return this.getFile(path).delete();
     }
 
-    public boolean existFile(String path) {
+    protected boolean existFile(String path) {
         return this.getFile(path).exists();
     }
 
-    public String readFile(String path) {
+    protected String readFile(String path) {
         try {
             return Files.readString(this.directory.toPath().resolve(path), StandardCharsets.UTF_8);
         } catch (IOException ignored) {
@@ -56,14 +56,25 @@ public class DirectoryManager {
         }
     }
 
-    public void writeFile(String path, String content) {
+    protected void writeFile(String path, String content) {
         try {
             Files.writeString(this.directory.toPath().resolve(path), content);
         } catch (IOException ignored) {
         }
     }
 
-    public File getDirectory() {
+    protected String getRelativePath(File file) {
+        String path = file.getPath();
+        return new File(this.directory.getPath()).toURI().relativize(new File(path).toURI()).getPath();
+    }
+
+    protected String getFileExtension(File file) {
+        String name = file.getName();
+        int lastIndexOf = name.lastIndexOf(".");
+        return lastIndexOf == -1 ? "" : name.substring(lastIndexOf + 1);
+    }
+
+    protected File getDirectory() {
         return this.directory;
     }
 }

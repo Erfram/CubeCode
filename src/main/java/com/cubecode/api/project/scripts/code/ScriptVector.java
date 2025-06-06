@@ -1,4 +1,4 @@
-package com.cubecode.api.scripts.code;
+package com.cubecode.api.project.scripts.code;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;

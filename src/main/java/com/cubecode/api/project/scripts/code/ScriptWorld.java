@@ -1,4 +1,4 @@
-package com.cubecode.api.scripts.code;
+package com.cubecode.api.project.scripts.code;
 
 import net.minecraft.world.World;
 

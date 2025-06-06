@@ -1,11 +1,9 @@
-package com.cubecode.api.scripts.code;
+package com.cubecode.api.project.scripts.code;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.Text;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameMode;
-
-import java.util.ArrayList;
 
 /**
  * Tab with methods that can be used on server.

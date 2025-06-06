@@ -1,6 +1,6 @@
-package com.cubecode.api.scripts.code.blocks;
+package com.cubecode.api.project.scripts.code.blocks;
 
-import com.cubecode.api.scripts.code.ScriptWorld;
+import com.cubecode.api.project.scripts.code.ScriptWorld;
 import com.cubecode.exceptions.CubeCodeException;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

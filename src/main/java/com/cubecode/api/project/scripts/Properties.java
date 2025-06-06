@@ -1,9 +1,9 @@
-package com.cubecode.api.scripts;
+package com.cubecode.api.project.scripts;
 
-import com.cubecode.api.scripts.code.ScriptEvent;
-import com.cubecode.api.scripts.code.ScriptServer;
-import com.cubecode.api.scripts.code.ScriptWorld;
-import com.cubecode.api.scripts.code.entities.ScriptEntity;
+import com.cubecode.api.project.scripts.code.ScriptEvent;
+import com.cubecode.api.project.scripts.code.ScriptServer;
+import com.cubecode.api.project.scripts.code.ScriptWorld;
+import com.cubecode.api.project.scripts.code.entities.ScriptEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;

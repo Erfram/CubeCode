@@ -1,7 +1,7 @@
-package com.cubecode.api.scripts.code;
+package com.cubecode.api.project.scripts.code;
 
-import com.cubecode.api.scripts.code.entities.ScriptEntity;
-import com.cubecode.api.scripts.code.entities.ScriptPlayer;
+import com.cubecode.api.project.scripts.code.entities.ScriptEntity;
+import com.cubecode.api.project.scripts.code.entities.ScriptPlayer;
 
 import java.util.HashMap;
 import java.util.Map;

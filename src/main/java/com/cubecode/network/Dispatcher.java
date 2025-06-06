@@ -3,6 +3,8 @@ package com.cubecode.network;
 import com.cubecode.network.basic.AbstractDispatcher;
 import com.cubecode.network.basic.AbstractPacket;
 import com.cubecode.network.packets.all.PlayerStateSyncPacket;
+import com.cubecode.network.packets.server.CodeRunC2SPacket;
+import com.cubecode.network.packets.server.ScriptRunC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -15,6 +17,8 @@ public class Dispatcher {
         public void register() {
             registerPacket(PlayerStateSyncPacket.class, PlayerStateSyncPacket.ClientHandler.class, EnvType.CLIENT);
             registerPacket(PlayerStateSyncPacket.class, PlayerStateSyncPacket.ServerHandler.class, EnvType.SERVER);
+            registerPacket(ScriptRunC2SPacket.class, ScriptRunC2SPacket.ServerHandler.class, EnvType.SERVER);
+            registerPacket(CodeRunC2SPacket.class, CodeRunC2SPacket.ServerHandler.class, EnvType.SERVER);
         }
     };
 
