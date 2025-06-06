@@ -12,8 +12,14 @@ public class SettingsView extends View {
     }
 
     @Override
+    public String getName() {
+        return "Settings##"+this.getUUID();
+    }
+
+    @Override
     protected void render() {
         Window.create()
+            .title(this.getName())
             .callback((cig) -> {
                 ImGui.text("Scale");
                 ImGui.sameLine();

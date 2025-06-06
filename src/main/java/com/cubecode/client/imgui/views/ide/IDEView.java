@@ -24,8 +24,14 @@ public class IDEView extends View {
     }
 
     @Override
+    public String getName() {
+        return "IDE##"+this.getUUID();
+    }
+
+    @Override
     public void render() {
         Window.create()
+            .title(this.getName())
             .callback((cig) -> {
                 if (ImGui.button("START")) {
                     Dispatcher.sendToServer(new CodeRunC2SPacket(this.codeEditor.getText()));
