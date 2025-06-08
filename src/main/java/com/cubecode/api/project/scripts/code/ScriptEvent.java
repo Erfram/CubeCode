@@ -2,6 +2,8 @@ package com.cubecode.api.project.scripts.code;
 
 import com.cubecode.api.project.scripts.code.entities.ScriptEntity;
 import com.cubecode.api.project.scripts.code.entities.ScriptPlayer;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,6 +28,8 @@ public class ScriptEvent {
         this.object = object;
         this.world = world;
         this.server = server;
+
+        Text.empty().append("lox").setStyle(Style.EMPTY.withItalic(true));
     }
 
     public String getScript() {
@@ -131,5 +135,9 @@ public class ScriptEvent {
      */
     public boolean isCanceled() {
         return this.canceled;
+    }
+
+    public void send(String message) {
+        this.server.send(message, false);
     }
 }
