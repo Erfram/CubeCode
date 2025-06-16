@@ -1,11 +1,14 @@
 package com.cubecode.api.project.scripts.code.entities;
 
 import com.cubecode.api.project.scripts.code.ScriptVector;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameMode;
 
 public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
@@ -19,7 +22,6 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
     public ServerPlayerEntity getMinecraftPlayer() {
         return this.entity;
     }
-
 
 
     public void setGameMode(int id) {
@@ -114,8 +116,8 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
         this.entity.sleep(vector.toBlockPos());
     }
 
-    public void startFallFlying()  {
-        this.entity.startFallFlying() ;
+    public void startFallFlying() {
+        this.entity.startFallFlying();
     }
 
     public void stopFallFlying() {
@@ -132,5 +134,41 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
 
     public void wakeUp(boolean skipSleepTimer, boolean updateSleepingPlayers) {
         this.entity.wakeUp(skipSleepTimer, updateSleepingPlayers);
+    }
+
+
+
+
+
+    public boolean checkFallFlying() {
+        return this.entity.checkFallFlying();
+    }
+
+    public boolean hasReducedDebugInfo() {
+        return this.entity.hasReducedDebugInfo();
+    }
+
+    public boolean isCreative() {
+        return this.entity.isCreative();
+    }
+
+    public boolean isOp() {
+        return this.entity.isCreativeLevelTwoOp();
+    }
+
+    public boolean isDisconnected() {
+        return this.entity.isDisconnected();
+    }
+
+    public boolean isMainPlayer() {
+        return this.entity.isMainPlayer();
+    }
+
+    public boolean isSpawnForced() {
+        return this.entity.isSpawnForced();
+    }
+
+    public boolean isUsingSpyglass() {
+        return this.entity.isUsingSpyglass();
     }
 }
