@@ -1,5 +1,7 @@
 package com.cubecode.client.imgui.views;
 
+import com.cubecode.CubeCodeClient;
+import com.cubecode.client.config.ClientConfigManager;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
 import imgui.ImGui;
@@ -23,7 +25,13 @@ public class SettingsView extends View {
             .callback((cig) -> {
                 ImGui.text("Scale");
                 ImGui.sameLine();
-                cig.sliderInt("##Scale", MinecraftClient.getInstance().options.getGuiScale().getValue());
+                cig.sliderInt("##Scale", CubeCodeClient.getConfig().getViewScale());
+
+                if (ImGui.button("Применить")) {
+                    int[] variable = this.getVariable("##Scale");
+                    CubeCodeClient.getConfig().setViewScale(variable[0]);
+                    ClientConfigManager.saveConfig();
+                }
             })
             .render(this);
 

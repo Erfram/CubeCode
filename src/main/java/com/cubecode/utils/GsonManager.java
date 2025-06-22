@@ -18,19 +18,19 @@ public class GsonManager {
 
     private GsonManager() {}
 
-    public static void writeJSON(File file, Object object) {
+    public static void writeJson(File file, Object object) {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             GSON.toJson(object, writer);
         } catch (IOException ignored) {}
     }
 
-    public static void writeJSON(File file, Object object, Type type) {
+    public static void writeJson(File file, Object object, Type type) {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             GSON.toJson(object, type, writer);
         } catch (IOException ignored) {}
     }
 
-    public static <T> T readJSON(File file, Class<T> clazz) {
+    public static <T> T readJson(File file, Class<T> clazz) {
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, clazz);
         } catch (IOException ignored) {
@@ -38,7 +38,7 @@ public class GsonManager {
         }
     }
 
-    public static <T> T readJSON(File file, Type type) {
+    public static <T> T readJson(File file, Type type) {
         try (FileReader reader = new FileReader(file, StandardCharsets.UTF_8)) {
             return GSON.fromJson(reader, type);
         } catch (IOException ignored) {
@@ -46,7 +46,7 @@ public class GsonManager {
         }
     }
 
-    public static boolean isValidJSON(File file) {
+    public static boolean isValidJson(File file) {
         JsonParser parser = new JsonParser();
 
         try{
@@ -58,7 +58,7 @@ public class GsonManager {
         }
     }
 
-    public static boolean isValidJSON(String json) {
+    public static boolean isValidJson(String json) {
         JsonParser parser = new JsonParser();
 
         try{
@@ -70,7 +70,7 @@ public class GsonManager {
         }
     }
 
-    public static <T> T readJSON(String json, Class<T> clazz) {
+    public static <T> T readJson(String json, Class<T> clazz) {
         return GSON.fromJson(json, clazz);
     }
 

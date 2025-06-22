@@ -1,6 +1,7 @@
 package com.cubecode.client.imgui.fonts;
 
 import com.cubecode.CubeCode;
+import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import imgui.ImFont;
 import imgui.ImFontAtlas;
@@ -45,8 +46,8 @@ public class CubeFont {
             byte[] bytes = is.readAllBytes();
             this.addScaleFont(fontAtlas, bytes, 12, fontConfig);
             this.addScaleFont(fontAtlas, bytes, 16, fontConfig);
-            this.addScaleFont(fontAtlas, bytes, 22, fontConfig);
-            this.addScaleFont(fontAtlas, bytes, 32, fontConfig);
+            this.addScaleFont(fontAtlas, bytes, 20, fontConfig);
+            this.addScaleFont(fontAtlas, bytes, 24, fontConfig);
         } catch (Exception exception) {
             CubeCode.LOGGER.error(exception.getMessage());
         }
@@ -59,7 +60,7 @@ public class CubeFont {
     }
 
     public ImFont getScaleFont() {
-        Integer value = MinecraftClient.getInstance().options.getGuiScale().getValue();
+        Integer value = CubeCodeClient.getConfig().getViewScale();
         if (value == 0)
             value = 1;
         value--;

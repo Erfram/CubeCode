@@ -27,7 +27,9 @@ public class ProjectManager extends DirectoryManager {
         this.loadNodesAndScripts();
     }
 
-    private void loadNodesAndScripts() {
+    public void loadNodesAndScripts() {
+        this.nodes = new ArrayList<>();
+        this.scripts = new ArrayList<>();
         this.scanDirectory(this.getFiles(), this.nodes);
     }
 
@@ -52,20 +54,29 @@ public class ProjectManager extends DirectoryManager {
 
                     Script script = new Script(filePath, scriptCode, scriptSide);
 
-                    scripts.add(script);
+                    this.scripts.add(script);
                     nodes.add(new ScriptNode(fileName, script, "/" + filePath));
                 }
             }
         });
     }
 
+    public List<IDENode> getNodes() {
+        return this.nodes;
+    }
+
     public Script getScript(String name) {
-        for (Script script : scripts) {
+        for (Script script : this.scripts) {
             if (script.getName().equals(name)) {
                 return script;
             }
         }
 
         return null;
+    }
+
+    public void setScriptCode(String path, String code) {
+        this.writeFile(path, code);
+        this.loadNodesAndScripts();
     }
 }

@@ -3,7 +3,8 @@ package com.cubecode.client.imgui.views;
 import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
-import com.cubecode.client.imgui.views.ide.IDEView;
+import com.cubecode.network.Dispatcher;
+import com.cubecode.network.packets.all.IDERequestedPacket;
 
 public class DashboardView extends View {
     @Override
@@ -16,7 +17,7 @@ public class DashboardView extends View {
         CubeImGui.mainMenuBar(() -> {
             CubeImGui.menu("Windows", () -> {
                 CubeImGui.menuItem("IDE", () -> {
-                    ImGuiLoader.pushView(new IDEView());
+                    Dispatcher.sendToServer(new IDERequestedPacket());
                 });
 
                 CubeImGui.menuItem("Settings", () -> {

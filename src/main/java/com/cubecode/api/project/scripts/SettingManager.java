@@ -21,14 +21,14 @@ public class SettingManager extends DirectoryManager {
 
         try {
             this.settingsFile = dir.toPath().resolve("settings.json").toFile();
-            if (this.settingsFile.createNewFile() || !GsonManager.isValidJSON(this.readFile("settings.json"))) {
+            if (this.settingsFile.createNewFile() || !GsonManager.isValidJson(this.readFile("settings.json"))) {
                 this.writeFile("settings.json", "{}");
             }
 
         } catch (IOException ignored) {
         }
 
-        this.settings = this.jsonToSettings(GsonManager.readJSON(this.settingsFile, JsonObject.class) == null ? new JsonObject() : GsonManager.readJSON(this.settingsFile, JsonObject.class));
+        this.settings = this.jsonToSettings(GsonManager.readJson(this.settingsFile, JsonObject.class) == null ? new JsonObject() : GsonManager.readJson(this.settingsFile, JsonObject.class));
     }
 
     public void addLibrary(String scriptName, String libraryName) {
@@ -108,7 +108,7 @@ public class SettingManager extends DirectoryManager {
     }
 
     public void write() {
-        GsonManager.writeJSON(this.settingsFile, this.settingsToJson());
+        GsonManager.writeJson(this.settingsFile, this.settingsToJson());
     }
 
     public void setSettings(ConcurrentHashMap<String, ScriptSetting> settings) {
