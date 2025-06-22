@@ -50,6 +50,7 @@ public class IDEView extends View {
     public void render() {
         Window.create()
             .title(this.getName())
+            .onExit(this::saveScript)
             .callback((cig) -> {
                 float availableWidth = ImGui.getWindowSize().x - ImGui.getStyle().getWindowPaddingX();
                 this.renderTitleBar(cig);
