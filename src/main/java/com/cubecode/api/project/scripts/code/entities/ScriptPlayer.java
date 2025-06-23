@@ -1,6 +1,9 @@
 package com.cubecode.api.project.scripts.code.entities;
 
 import com.cubecode.api.project.scripts.code.ScriptVector;
+import com.cubecode.api.project.scripts.code.blocks.ScriptBlockState;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -170,5 +173,34 @@ public class ScriptPlayer extends ScriptEntity<ServerPlayerEntity> {
 
     public boolean isUsingSpyglass() {
         return this.entity.isUsingSpyglass();
+    }
+
+
+    public int getNextLevelExperience() {
+        return this.entity.getNextLevelExperience();
+    }
+
+    public int getSleepTimer() {
+        return this.entity.getSleepTimer();
+    }
+
+    public int getXpToDrop() {
+        return this.entity.getXpToDrop();
+    }
+
+    public float getEyeHeight() {
+        return this.entity.getActiveEyeHeight( this.entity.getPose(), this.entity.getDimensions( this.entity.getPose() ) );
+    }
+
+    public float getBlockBreakingSpeed(ScriptBlockState blockState) {
+        return this.entity.getBlockBreakingSpeed(blockState.getMinecraftBlockState());
+    }
+
+    public float getLuck() {
+        return this.entity.getLuck();
+    }
+
+    public float getMovementSpeed() {
+        return this.entity.getMovementSpeed();
     }
 }
