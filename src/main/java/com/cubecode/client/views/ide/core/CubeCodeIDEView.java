@@ -8,7 +8,7 @@ import com.cubecode.api.scripts.ScriptExecutor;
 import com.cubecode.api.scripts.code.ScriptVector;
 import com.cubecode.client.config.CubeCodeConfig;
 import com.cubecode.client.imgui.CubeImGui;
-import com.cubecode.client.imgui.CubeTextEditor;
+import com.cubecode.client.imgui.textEditor.CubeTextEditor;
 import com.cubecode.client.imgui.basic.ImGuiLoader;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;

@@ -1,5 +1,6 @@
-package com.cubecode.client.imgui;
+package com.cubecode.client.imgui.textEditor;
 
+import com.cubecode.client.imgui.CubeImGui;
 import com.cubecode.utils.Icons;
 import com.cubecode.utils.StringUtils;
 import imgui.ImDrawList;
@@ -227,8 +228,8 @@ public class CubeTextEditor {
                 // Безопасное получение экранных координат
                 ImVec2 startPos, endPos;
                 try {
-                    startPos = getScreenPos(lineNum, fromIndex);
-                    endPos = getScreenPos(lineNum, fromIndex + searchLength);
+                    startPos = getCursorScreenPos(lineNum, fromIndex);
+                    endPos = getCursorScreenPos(lineNum, fromIndex + searchLength);
                 } catch (Exception e) {
                     fromIndex += searchLength;
                     continue;
@@ -313,7 +314,7 @@ public class CubeTextEditor {
     }
 
     private void renderDebug() {
-        ImVec2 screenPos = this.getScreenPos(this.getCursorPosition().line, this.getCursorPosition().column);
+        ImVec2 screenPos = this.getCursorScreenPos(this.getCursorPosition().line, this.getCursorPosition().column);
 
         ImGui.getWindowDrawList().addRectFilled(screenPos.x, screenPos.y, screenPos.x + ImGui.calcTextSize("A").x, screenPos.y + ImGui.calcTextSize("A").y, ImGui.getColorU32(1, 1, 1, 0.5f));
     }
@@ -461,7 +462,7 @@ public class CubeTextEditor {
         return rgba;
     }
 
-    public final ImVec2 getScreenPos(int line, int column) {
+    public final ImVec2 getCursorScreenPos(int line, int column) {
         String tab = "";
         for (int i = 0; i < this.basic.getTabSize(); i++) {
             tab += " ";

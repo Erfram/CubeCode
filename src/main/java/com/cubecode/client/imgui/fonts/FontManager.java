@@ -76,9 +76,9 @@ public class FontManager {
             fonts.put(name, fontAtlas.addFontFromMemoryTTF(is.readAllBytes(), 64, imFontConfig));
 
             ImFontConfig fontConfig = new ImFontConfig();
-            fontConfig.setMergeMode(true); // Режим слияния с основным шрифтом
+            fontConfig.setMergeMode(true);
             fontConfig.setPixelSnapH(true);
-            fontConfig.setGlyphOffset(1f, 11f); // Иконки высоковато, опустим пониже
+            fontConfig.setGlyphOffset(1f, 11f);
             short[] iconRanges = new short[] {(short) 0xE000, (short) 0xF8FD, 0 };
             InputStream isMaterial = ImGuiLoader.class.getClassLoader().getResourceAsStream("assets/cubecode/imgui/material.ttf");
             fontAtlas.addFontFromMemoryTTF(isMaterial.readAllBytes(), 64, fontConfig, iconRanges);

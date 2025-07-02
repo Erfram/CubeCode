@@ -1,9 +1,6 @@
 package com.cubecode.client.imgui.basic;
 
-import com.cubecode.CubeCodeClient;
 import com.cubecode.client.imgui.codeThemes.CodeTheme;
-import com.cubecode.client.views.DashboardView;
-import com.cubecode.utils.CubeCodeException;
 import com.google.gson.JsonObject;
 import imgui.ImGui;
 import imgui.ImVec2;

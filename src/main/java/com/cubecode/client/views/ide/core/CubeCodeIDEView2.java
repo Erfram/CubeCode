@@ -1,12 +1,8 @@
 package com.cubecode.client.views.ide.core;
 
-import com.cubecode.client.imgui.CubeTextEditor;
-import com.cubecode.client.imgui.CubeTextEditor2;
+import com.cubecode.client.imgui.textEditor.CubeTextEditor2;
 import com.cubecode.client.imgui.basic.View;
 import com.cubecode.client.imgui.components.Window;
-import com.cubecode.utils.Icons;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 public class CubeCodeIDEView2 extends View {
     CubeTextEditor2 textEditor = new CubeTextEditor2("IDE2");
@@ -31,5 +27,11 @@ public class CubeCodeIDEView2 extends View {
 //                });
             })
             .render(this);
+    }
+
+    @Override
+    public void onClose() {
+        this.textEditor.onClose();
+        super.onClose();
     }
 }

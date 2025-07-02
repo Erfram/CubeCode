@@ -1,5 +1,6 @@
 package com.cubecode.client.screens;
 
+import com.cubecode.client.imgui.basic.View;
 import imgui.ImGui;
 import imgui.flag.ImGuiConfigFlags;
 import net.minecraft.client.gui.DrawContext;

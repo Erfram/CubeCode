@@ -35,4 +35,13 @@ public class StringUtils {
         }
         return source.replaceAll(pattern, replacement);
     }
+
+    public static String reverse(String source) {
+        StringBuilder text = new StringBuilder();
+        for (int i = source.length() - 1; i >= 0; i--) {
+            text.append(source.charAt(i));
+        }
+
+        return text.toString();
+    }
 }
