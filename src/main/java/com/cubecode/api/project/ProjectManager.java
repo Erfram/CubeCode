@@ -79,4 +79,19 @@ public class ProjectManager extends DirectoryManager {
         this.writeFile(path, code);
         this.loadNodesAndScripts();
     }
+
+    public void createScript(String path, String code) {
+        this.writeFile(path, code);
+        this.loadNodesAndScripts();
+    }
+
+    public void createScript(String path) {
+        this.writeFile(path, ScriptExecutor.DEFAULT_SCRIPT);
+        this.loadNodesAndScripts();
+    }
+
+    public void createFolder(String path) {
+        super.createDirectory(path);
+        this.loadNodesAndScripts();
+    }
 }

@@ -1,15 +1,18 @@
 package com.cubecode.client.imgui.basic;
 
 import com.cubecode.CubeCodeClient;
+import imgui.ImFontAtlas;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.ImGuiBackendFlags;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
+import imgui.type.ImInt;
 import net.minecraft.client.MinecraftClient;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;

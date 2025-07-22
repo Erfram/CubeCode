@@ -1,5 +1,6 @@
 package com.cubecode.client.imgui.fonts;
 
+import com.cubecode.CubeCodeClient;
 import imgui.*;
 
 import java.util.HashSet;

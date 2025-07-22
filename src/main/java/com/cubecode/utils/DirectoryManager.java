@@ -33,11 +33,15 @@ public class DirectoryManager {
 
     protected boolean createFile(String path) {
         try {
-            return this.getFile(path).createNewFile();
+            return this.directory.toPath().resolve(path).toFile().createNewFile();
         } catch (IOException ignored) {
         }
 
         return false;
+    }
+
+    protected boolean createDirectory(String path) {
+        return this.directory.toPath().resolve(path).toFile().mkdirs();
     }
 
     protected boolean deleteFile(String path) {
