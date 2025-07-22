@@ -1,6 +1,7 @@
 package com.cubecode.api.project.scripts.code.entities;
 
 import com.cubecode.api.project.scripts.code.ScriptVector;
+import com.cubecode.api.project.scripts.code.blocks.ScriptBlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.Entity;
@@ -427,5 +428,52 @@ public class ScriptEntity<T extends Entity> {
 
     public boolean startRiding(Entity entity) {
         return this.entity.startRiding(entity);
+    }
+
+
+
+
+    public int getAir() {
+        return this.entity.getAir();
+    }
+
+    public int getId() {
+        return this.entity.getId();
+    }
+
+    public int getFireTicks() {
+        return this.entity.getFireTicks();
+    }
+
+    public int getFrozenTicks() {
+        return this.entity.getFrozenTicks();
+    }
+
+    public int getMaxAir() {
+        return this.entity.getMaxAir();
+    }
+
+    public float distanceTo(Entity entity) {
+        return this.entity.distanceTo(entity);
+    }
+
+    public float getBodyYaw() {
+        return this.entity.getBodyYaw();
+    }
+
+    public float getBrightnessAtEyes() {
+        return this.entity.getBrightnessAtEyes();
+    }
+
+    public float getFreezingScale() {
+        return this.entity.getFreezingScale();
+    }
+
+    public float getPitch() {
+        return this.entity.getPitch();
+    }
+
+    public float getYaw() {
+        return this.entity.getYaw();
     }
 }
