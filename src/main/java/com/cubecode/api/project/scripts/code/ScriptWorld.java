@@ -1,6 +1,11 @@
 package com.cubecode.api.project.scripts.code;
 
+import com.cubecode.api.project.scripts.code.entities.ScriptEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
+
+import java.util.UUID;
 
 /**
  * Tab with methods that can be used on world.
@@ -31,4 +36,75 @@ public class ScriptWorld {
     public World getMinecraftWorld() {
         return this.world;
     }
+
+    public Entity getEntity(String uuid) {
+        return ((ServerWorld)this.world).getEntity(UUID.fromString(uuid));
+
+    }
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

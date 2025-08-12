@@ -138,6 +138,6 @@ public class ScriptEvent {
     }
 
     public void send(String message) {
-        this.server.send(message, false);
+        this.server.send(message);
     }
 }
